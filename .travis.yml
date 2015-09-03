@@ -1,25 +1,36 @@
 language:
-  - python
+- python
 python:
-  - "2.7"
+- '2.7'
 env:
-  global:
-  secure: "ZOuqvPEMm78sedRHklDC7k5yYYJyP2D7vFbRMfK9cd9p7zLPyMJT/U/3nVTdXsgSCk9uGiNXF6RE7PQW8z39veEnvuMZlG/xK6BMFJDpZTUpC7N3dKH95XTVHJ3LgoGd1raXapIIFZJ26cFEw20a+abUWnWHoBP7yTNE7wvNfS8qxMevAXWBUhii4jnFJlzIM2xBN+lB3zi2WOpc/K0uWDUjQWflOa53ZhczF1bSj/J8KSCXxo3/J2OId9S78FJ6dOTKc5NVWXncrSn8+ZE2KxogcHRbK7Ra9kA9cEkIps1v5+yas22OA5egrUC+5wuBn13riOrm1vvj4AS39x+qMG+WkcQE0TIr4Z3vHp8bSPVUf3j3tgPfe8SWGTbiKRQqwDMR/91f3v30NRaAWwNlZGxSwn16AsyDfGCEtEx+yGuIXqdkbAe0XdEOBd/FUV9RlanyppsHnTEc2zhc7+bq7B8CczAyiX5ZhuGaGrpQkM6YJY9wK6CHkUuZXhX3kVEWt30LtpUfqDB3/XOKlSWeM8CMFPgajejsuYlyJmVXEHoFD1jaSaHTD92jxYXFIes7ilJT/lp1tls8/+PIe1fGcFKWUyQoQfZtOejaREj86ohDazJJx/4i67Sb6jCCDDSWYbCzB7T4xAT2Nt7KPYmEJfW4kZQ1FGvyckLYBsoLnvc="
+  global: 
+  secure: L2wc/mG0G+bMWFqoBjyhOvwi9yhNxmnHNqOb+bQzrYxKT4tL5KgkOohxVlJKzO9Z3jrssmjU6r5ikRWlAcYavLXG/VCSAaYPt2wSUoXqumAo1PaFwlX7z5QSwC+AkNd4ecNePSAWzFS8XARYI1iEmplY23q9RQt97ew7FiKabNK+IbqJafx71FRCY3402AcTgeUNWfZXuZ3WchwZhhoNVj3ZkyDBFl8PSce4VwbiWm8Knp9O4LZlZBBq9e/YSSOh7anYDSXqYWVgvLD61u748TRXmqcGUslvFmOlhyjGl5CpyKWgbRn6DRMb34pIW+n7xDtry2fvcGNwy1wI5aH8aXNiTwn3adwfByn7pm6LJ+YndUG86aTHxAKt1XpdQ3G84YkD7h5bf6yWDHsfPxgQvkU9uyIXt8TQx8XsI3vBYiWWWIPLqBQHauWliZtJdJUw5jznHZsmS9vG9Ba4Hja7bXGbsJP+rpmSkKph9LFiVscflzYxe2atkXdhuS0P67m3FYnwZVq9uwvwyLOr1KQfLVF4cCGOGbphADMxX6OtIz82MPa1el6PlOI703ovm2FUo8fO4vVZPHrVDD+Uht4bFkuJqGSmUp4c5iHkdnfP36iI9tHlOxqR4DWXNcdOZcNipcLjGYr3+dz20hjVobjl3GLUe3KDB6jCZGzVC1IH5Mk=
 script: source .travis.sh
 after_success:
-  - set +x
-  - export GIT_COMMITTER_NAME=$GIT_NAME
-  - export GIT_COMMITTER_EMAIL=$GIT_EMAIL
-  - export GIT_AUTHOR_NAME=$GIT_NAME
-  - export GIT_AUTHOR_EMAIL=$GIT_EMAIL
-  - echo "TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST TRAVIS_BRANCH=$TRAVIS_BRANCH"
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cd ~/;            fi
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git clone --branch gh-pages https://github.com/$TRAVIS_REPO_SLUG doc;  fi
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cd doc;           fi
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cp -r $TRAVIS_BUILD_DIR/jp ./; fi
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cp -r $TRAVIS_BUILD_DIR/en ./; fi
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git status;                  fi
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git add -f jp/*.html en/*.html;                  fi
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git commit -m "Build documents from $TRAVIS_COMMIT" . ; fi
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git remote -v; fi
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git push --quiet https://$GH_TOKEN@github.com/$TRAVIS_REPO_SLUG.git gh-pages; fi
+- set +x
+- export GIT_COMMITTER_NAME=$GIT_NAME
+- export GIT_COMMITTER_EMAIL=$GIT_EMAIL
+- export GIT_AUTHOR_NAME=$GIT_NAME
+- export GIT_AUTHOR_EMAIL=$GIT_EMAIL
+- echo "TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST TRAVIS_BRANCH=$TRAVIS_BRANCH"
+- if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cd
+  ~/;            fi
+- if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git
+  clone --branch gh-pages https://github.com/$TRAVIS_REPO_SLUG doc;  fi
+- if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cd
+  doc;           fi
+- if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cp
+  -r $TRAVIS_BUILD_DIR/jp ./; fi
+- if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cp
+  -r $TRAVIS_BUILD_DIR/en ./; fi
+- if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git
+  status;                  fi
+- if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git
+  add -f jp/*.html en/*.html;                  fi
+- if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git
+  commit -m "Build documents from $TRAVIS_COMMIT" . ; fi
+- if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git
+  remote -v; fi
+- if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git
+  push --quiet https://$GH_TOKEN@github.com/$TRAVIS_REPO_SLUG.git gh-pages; fi
+dd:
