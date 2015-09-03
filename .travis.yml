@@ -4,7 +4,7 @@ python:
   - "2.7"
 env:
   global:
-    - secure: "DiDyTj0UYcuhK3U1xGhGrVv+rHLM/Rl/rM3B+8qZSELASUrO7ht8sUssPMh5rtkNWXvea+/VpO79Hta5ypJ2zJE/EhkPaahx8YH1/HQiIoQzhWTPKawlx7E9xd2SIB41U+R59nCwzHbmG2PwEZSIOJnMyh20HFlJQ4o6TgkLYzo="
+  secure: "ZQfrUkKOt0mY31xrq20H6h5k1tNhKhy9O03C+abk3pbhDbzWvPRxJTCPHB6Gp5+cKXVKOcmcDId4PsZnXEMvNJ4IAdHBjutI+o1Gjm3k/rl9yP4EMq5wfix1HFpi+0CgFeQIEFAtxup2Lgh+CC+pSM6/uks8+BaIijoXNDPa22mfx2W4qkQ2U/EJF1xspHFallIk7B/NHpFDHz5doJVVJqUjCj3Ou16x9nAn0kCWD/izYxjIPRltELF4vXs3e9sGAeQF8gToZh1Fiuo/k2TVhJNjdiMpq7Au/zoiYf9CkQOHXW5pMZdKpvBmNf1iIPFBZ4LIeNBltioAKdpu4HH4IVy+IGarTo5klYukImGFfE+rm+BZX5tngINOdnSB8f/oko93OyzKftClD4F7CVfDPROjInCYsIVhYxeGKaS43uWp13knN9eU0w3UDHIGkkovgmNrfUJmWf1xg/qqy3/LgaCST26w1NduC1hjOTiAsOPYO7T5aCIC7YRu/6ibAaCjVhJ/g4bMeKyECX0dpWWL1KwIjHK7K3OFXrqoMIrVZ513It0qxU7T2errWDutnPBy6lamG8vKDOE3w2jrHmeJmREI+LcJdUi0VcDNXzlyRlQjB+mVpc+APNJpXGNmste5b89Q8QOaz5XLkuM55jOAZ+6JJzJ9md9kFN6rHJLxo9Y="
 script: source .travis.sh
 after_success:
   - set +x
