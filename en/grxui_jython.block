@@ -1,0 +1,16 @@
+title = Jython Script
+base  = ..
+
+<h3> Preface </h3>
+<p>
+Jython is an implementation of Python written in Java.<br>
+Because Jython is implemented by Java, it is possible to use Java functions easily.<br>
+The following explains how to run and expand GrxUI using Jython script.
+</p>
+
+<h3> Jython Prompt View</h3> 
+<h3> Repeat to run the Simulation</h3> 
+<h3> Repeat to run the Demonstaration Play </h3> 
+<h3> Create a Window </h3> 
+<h3> Embed GUI parts </h3> 
+<h3> The defined function in GrxUI </h3> 

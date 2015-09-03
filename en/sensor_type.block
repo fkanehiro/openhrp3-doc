@@ -1,0 +1,206 @@
+title=How to Use Sensor
+base=..
+
+<h2> Overview </h2>
+<p>
+Here we explain how to handle various sensors and data types in the Controller.
+</p>
+<p>
+There are three kinds of sensor information, such as joint information retrieved from DynamicsSimulator, sensor information and camera information retrieved from ViewSimulator.
+Various information is retrieved in Controller::input method.
+</p>
+<h2> DynamicsSimulator </h2>
+<h3> Joint information </h3>
+<p>
+The following kinds are in joint information.
+</p>
+<table border="1" align="center">
+<tr><td>Kinds of joint information</td><td>Joint information types</td><td>Descriptions</td></tr>
+<tr><td>POSITION_GIVEN</td><td>boolean</td><td></td></tr>
+<tr><td>JOINT_VALUE</td><td>double</td><td>Joint angle/position</td></tr>
+<tr><td>JOINT_VELOCITY</td><td>double</td><td>Derivative of joint angle/position</td></tr>
+<tr><td>JOINT_ACCELERATION</td><td>double</td><td>Second-order derivative of joint angle/position</td></tr>
+<tr><td>JOINT_TORQUE</td><td>double</td><td>Joint Torque</td></tr>
+<tr><td>ABS_TRANSFORM</td><td>double*12</td><td>Joint Position (The first 3 elements specify position vector, 9 elements specify posture)</td></tr>
+<tr><td>ABS_VELOCITY</td><td>double*6</td><td>Joint Velocity(velocity vector, angular velocity vector)</td></tr>
+<tr><td>EXTERNAL_FORCE</td><td>double*6</td><td>Force, Torque</td></tr>
+</table>
+<p>
+To get them, use getCharacterLinkData method and getCharacterAllLinkData method in DynamicsSimulator.
+</p>
+<p>
+getCharacterLinkData:
+</p>
+<pre>
+dynamicsSimulator->getCharacterLinkData(Character Name, Link Name, Kind of joint information, Data);
+</pre>
+<p>
+Receive one data by specifying the character and the link like this:
+</p>
+<p>
+getCharacterAllLinkData:
+</p>
+<pre>
+dynamicsSimulator->getCharacterAllLinkData(Character Name, Kind of joint information, Data);
+</pre>
+<p>
+getCharacterAllLinkData passes all character joints with jointId in jointId order.
+The example of PDcontroller is as below.
+</p>
+<pre>
+dynamicsSimulator->getCharacterAllLinkData(characterName, DynamicsSimulator::JOINT_VALUE, q);
+</pre>
+<p>
+Here, pass all joint angles with jointId of character name characterName to the variable q of DblSequence_var type.
+</p>
+<h3> Sensor Information </h3>
+<p>
+The sensors that OpenHRP provides are as follows:
+
+</p>
+<table border="1" align="center">
+<tr><td>Sensor Type</td><td>Data</td></tr>
+<tr><td>Force Sensor</td><td>DblSequence6</td></tr>
+<tr><td>Gyro Sensor</td><td>DblSequence3</td></tr>
+<tr><td>Acceleration Sensor</td><td>DblSequence3</td></tr>
+</table>
+<p>
+Each sensor is described in VRML in the models.
+For more details on the building models, refer to <a href="./create_model.html">"Building Models"</a>
+</p>
+<p>
+Actually, it is acquired in DynamicsSimulator::getCharacterSensorValues or DynamicsSimulator::getCharacterSensorState.
+DynamicsSimulator::getCharacterSensorValues specifies the sensor name and gets one sensor information.
+DynamicsSimulator::getCharacterSensorState gets all sensors information of one character.
+</p>
+<p>
+The code you describe as follows.
+</p>
+<p>
+getCharacterSensorValues: 
+</p>
+<pre>
+dynamicsSimulator->getCharacterSensorValue(character name, sensor name, data);
+</pre>
+<p>
+Use DblSequence_var type to receive data.
+</p>
+<p>
+getCharacterSensorState:
+</p>
+<pre>
+dynamicsSimulator->getSensorState(character name, data);
+</pre>
+<p>
+This uses SensorState_var type to receive data. Here is a snippet of code which retrieves and displays all sensor data.
+</p>
+<p>
+First, declare a SensorState_var as a member variable.
+</p>
+<pre>
+SensorState_var sensors;
+</pre>
+<p>
+In Controller::input, write statements to access DynamicsSimulator and get its sensor data.
+</p>
+<pre>
+dynamicsSimulator->getCharacterSensorState(characterName, sensors);
+</pre>
+In Controller::control method, display the data actually.
+<pre>
+// force sensors list
+cout &lt;&lt; "force:" &lt;&lt; endl;
+for (unsigned int i=0; i&lt;sensors->force.length(); i++) {
+  cout &lt;&lt; i &lt;&lt; " : " &lt;&lt; endl;;
+  for (int j=0; j&lt;6; j++) {
+    cout &lt;&lt; sensors->force[i][j] &lt;&lt; " , ";
+  }
+  cout &lt;&lt; endl;
+}
+
+// gyro sensors list
+cout &lt;&lt; "rate gyro:" &lt;&lt; endl;
+for (unsigned int i=0; i&lt;sensors->rateGyro.length(); i++) {
+  cout &lt;&lt; i &lt;&lt; " : " &lt;&lt; endl;
+  for (int j=0; j&lt;3; j++) {
+    cout &lt;&lt; sensors->rateGyro[i][j] &lt;&lt; " , ";
+  }
+  cout &lt;&lt; endl;
+}
+
+// acceleration sensors list
+cout &lt;&lt; "accel:" &lt;&lt; endl;
+for (unsigned int i=0; i&lt;sensors->accel.length(); i++) {
+  cout &lt;&lt; i &lt;&lt; " : " &lt;&lt; endl;
+  for (int j=0; j&lt;3; j++) {
+    cout &lt;&lt; sensors->accel[i][j] &lt;&lt; " , ";
+  }
+  cout &lt;&lt; endl;
+}
+</pre>
+<p>
+As you can see, various kinds of sensor information are included in SensorState.
+</p>
+
+<h2> ViewSimulator </h2>
+<p>
+Operate for the instance of ViewSimulator class, viewSimulator, which is set in the controller.
+</p>
+<p>
+Procedures are at first you retrieve a list of cameras in a character using ViewSimulator::getCameraSequenceOf, and then retrieve its parameter and image of each camera.
+</p>
+<p>
+We explain with an example of VScontroller.
+</p>
+<p>
+First, prepare a member for storing various information.
+
+</p>
+<pre>
+private: 
+  CameraSequence_var cameras;
+  Camera::CameraParameter_var cparam;
+  ImageData_var image;
+protected:
+  OpenHRP::ViewSimulator_var visionsensor_;
+</pre>
+Next, override the method which sets a reference to ViewSimulator, to get its set and camera.
+<pre>
+void VSController::setViewSimulator(ViewSimulator_ptr pvisionsensor) 
+{
+  visionsensor_ = pvisionsensor;	
+  visionsensor_-&gt;getCameraSequenceOf(characterName, cameras);
+  if (cameras-&gt;length() > 0) {
+    cout &lt;&lt; cameras->length() &lt;&lt; endl;
+    cparam = cameras[0]-&gt;getCameraParameter();
+  }
+}
+</pre>
+Retrieve images by Controller::input.
+<pre>
+image = cameras[0]-&gt;getImageData();
+</pre>
+<p>
+You can perform various operations in Controller::control, getting data like this.
+</p>
+
+<p>
+Here is a code to write images to a binary file as an example of operations.
+</p>
+<p>
+We assume that cameras are stored in a array named cameras, and data of camera is long type.
+</p>
+<p>
+A member of longData in ImageData is stored in a binary format.
+</p>
+<pre>
+ImageData_var image = cameras[0]-&gt;getImageData();
+ofstream fout;
+fout.open("test.out", ios::out|ios::binary|ios::trunc);
+
+fout.write((char*)image-&gt;longData.get_buffer(), sizeof(long)*image-&gt;width*image->height*3);
+fout.close();
+</pre>
+<p>
+This code outputs a binary file named test.out in the same directory as this controller.
+</p>

@@ -1,0 +1,81 @@
+title = Server Manager View
+base  = ..
+
+<h2>Server Manager View</h2>
+<p>
+Here we explain various elements that compose Server Manager View. Windows settings are taken for 
+following example.
+</p>
+<p align=center>
+<img src="../img_new/um_007.png">
+</p>
+
+<ul>
+<ol>
+<li><p>Insert button<br>
+Click to insert Server top of the selected tab. Enter a unique ID(that becomes tab name), 
+when the "ID enter" dialog box is displayed.
+</p></li>
+<li><p>Add button<br>
+Click to add Server behind the selected tab. Enter a unique ID(that becomes tab name), 
+when the "ID enter" dialog box is displayed.
+</p></li>
+<li><p>Remove button<br>
+Click to remove the selected tab.
+</p></li>
+<li>Restore deffault button<br>
+If it clicks, change is canceled and it returns to an initial state.
+</li>
+<li><p>Path<br>
+Specify the start-up command of the Server.
+</p></li>
+<li><p>Args<br>
+Specify the parameters to be used at Server start-up.
+</p></li>
+<li><p>Reference button<br>
+Opens a dialog box that allows you to select the Server's start-up command.
+</p></li>
+<li>Restart button<br>
+Click to restart Server.
+</li>
+<li><p>Start/Stop button<br>
+Let you to start/stop Server. Button changes with the Server status.
+</p></li>
+<li><p>Automatic start<br>
+If this option is checked, Server automatically starts with the GraUI start.
+</p></li>
+<li><p>Use -ORBInitRef option<br>
+If this option is checked, following parameters are also added besides those specified in Args
+<br><br>
+-ORBInitRef NameService=corbaloc:iiop:<i>(NameService HostName)</i>:<i>(NameService PortNumber)</i>/NameService<br>
+</li>
+<li>host name<br>
+The host name of Name Server is displayed. <br>
+An update button becomes effective by changing the value. <br>
+Please input the host name based on RFC1035.
+<br>
+</li>
+<li>Port number<br>
+The port number of Name Server is displayed. <br>
+An update button becomes effective by changing the value. <br>
+Please input the values from 0 to 65535.
+</li>
+<li>Update button<br>
+The host name and port number of a Name Server are reflected at the time of next starting of Eclipse.<br>
+When the form of each value is not appropriate, since an error dialog is displayed, please input by referring to a message. 
+<br>
+</li>
+</ol>
+<ul>
+<li>
+  Environment variables can be used by specifying as $(EnvironmentVariableName) in "Path" and 
+  "Args".
+</li>
+<li>
+  Before you delete a Server using Remove button or make changes to an existing Server, beware to 
+  stop the Server using Stop button. Unless the Server will be existed and enabled when GrxUI is 
+  restarted.
+</li>
+<li>When GrxUI starts, Servers are started in the sequential order of the tab from left end.</li>
+</ul>
+</ul>

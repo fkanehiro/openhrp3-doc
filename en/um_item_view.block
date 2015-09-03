@@ -1,0 +1,124 @@
+title = Item View
+base  = ..
+
+<h2>Item View</h2>
+
+<p>
+Here we explain the various elements that compose Item View. 
+</p>
+
+<p align=center>
+<img src="../img_new/um_002.png">
+</p>
+
+<ul>
+<ol>
+<li>Project holder<br>
+
+Each item which has managed a setup of a simulation is saved. <br />
+Create, load and save operations can be done by right click menu.
+To change the project name, right click and 
+select "Save Project As..." option and save the project in another name.
+A project is saved in xml form. 
+</li>
+<li>Simulation holder<br>
+Simulation items are saved.<br />
+Create and clear all items operations can be done by right click menu.
+Although the Simulation holder can contain multiple Simulation items, only one is active at a time.
+</li>
+<li>Simulation item<br>
+It is an item which manages time, the integration method, etc. of a simulation. <br />
+Restoration of a property, rename, and clear operations can be done by right click menu.<br>
+It can be edited using Simulation View.
+If restoration of a property is performed, it can return to a setup saved in the project. 
+</li>
+<li>Model holder<br>
+Model Items are saved.<br />
+Create, load and clear all items operations can be done by right click menu.
+Model holder can contain multiple models.<br />
+The newly created model item can be edited using GrxUI. 
+</li>
+<li>Model item（Robot）<br>
+It is the VRML file which described the model. A robot's display shows the model which can have a controller.<br />
+Rename, reload and change to an environment model operations can be done by right click menu.
+</li>
+<li>Model item（environment）<br>
+It is the VRML file which described the model. An environment's display shows the model which can't have a controller.<br />
+Rename, reload and change to an robot model operations can be done by right click menu.
+</li>
+<li>World State holder<br>
+World State Items are saved.<br />
+Create, load and clrear all items operations can be done by right click menu.
+Although the World State holder can contain multiple World State items, only one is active at a time.
+</li>
+<li>
+<p>World State item<br>
+It is an item which manages the log of a simulation.<br />
+Load and save operations can be done by right click menu.
+</p>
+</li>
+<li>Collision Pair holder<br>
+Collision Pair Items are saved.<br>
+Clear all items operations can be done by right click menu. Collision Pair holder can contain 
+multiple collision pair items and it can be edited in the Collision View.
+</li>
+<li>
+<p>Collision Pair item<br>
+It is an item which manages the combination of the model which performs collision calculation.<br />
+Rename and clear operations can be done by right click menu.
+</p>
+</li>
+<li>Graph Contents holder<br>
+Graph Contents Items are saved.<br>
+Create and clear all items operations can be done by right click menu.
+Although the Group Contents holder can contain multiple graph contents items, only one is active at a time.
+<br>
+</li>
+<li>
+<p>Graph Contents item<br>
+It is an item which manages a graphical representation.<br />
+Rename and clear operations can be done by right click menu. 
+This item can be edited in the "Graph View".
+</p>
+</li>
+<li>Python Script holder<br>
+Python Script Items are saved.<br>
+Create, load and clear all items operations can be done by right click menu.
+Although the Python Script holder can contain multiple python script items, only one is active at a time.<br>
+</li>
+<li>
+<p>Python Script item<br>
+It is a Python Script file. 
+Clear and save operations can be done by right click menu.
+The active python script item can be edited in the "Text Editor View".
+</p>
+</li>
+<li>PPAlgorithm holder<br>
+PPAlgorithm Items are saved.<br />
+Create and clear all items operations can be done by right click menu.
+Although the PPAlgorithm holder can contain multiple PPAlgorithm items, only one is active at a time.<br>
+</li>
+<li>PPAlgorithm item<br>
+It is an item which manages the Path Planning parameter. <br />
+Rename and clear  operations can be done by right click menu.
+PPAlgorithm item can be edited in the Property View.
+</li>
+</ol>
+<br>
+<ul>
+<li>
+<p>Items can be swtched to enable/disable state, by double-click. Disabled items are displayed 
+surrounded by brackets as "(Item name)".
+</p>
+</li>
+<li>
+<p>When an item is selected, its details are displayed in 
+<a href="./um_property_view.html">"Property View"</a>
+</p>
+</li>
+</ul>
+</ul>
+
+
+
+

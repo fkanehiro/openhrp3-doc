@@ -1,0 +1,233 @@
+title = High-Gain mode and Torque-Control mode coorperated simulation
+base = ..
+
+<h2>Overview</h2>
+
+<p>
+In this section we use the sample model "PD_HGtest" distributed with OpenHRP package to describe the 
+simulation procedure, of "free" joint-type root joint in high-gain mode and other joints in 
+torque-control mode. Models used for sample have simple structure that composed of ROOT joint and 2 
+links. ROOT joint is provided position and posture and other links are provided joint-torque by the 
+controller. Basic procedure is as follows.
+</p>
+
+<ol>
+<li>Simulation project settings</li>
+<li>Making Controller</li>
+<li>ControllerBridge settings</li>
+</ol>
+
+<p>Hereafter these procedures are explained in detail.</p>
+
+
+<h3>Simulation project settings</h3>
+
+<p>The simulation project settings are described in <i>PD_HGtest.xml</i>.</p>
+
+<p>
+If nothing is specified, the control mode of each joint in the model is set to torque-control mode 
+in default. High-gain settings are applied only to the ROOT joint as we desired. Please see the 
+following highlighted part in red.
+</p>
+
+PD_HGtest.xml
+<div>
+<code>
+<pre>
+     :
+     :
+     &lt;item class="com.generalrobotix.ui.item.GrxModelItem" name="testRobot" select="true" url="$(PROJECT_DIR)/../model/PD_HGtest.wrl"&gt;
+            &lt;property name="isRobot" value="true"/&gt;
+            &lt;property name="controller" value="PD_HGtestController"/&gt;
+            &lt;property name="controlTime" value="0.002"/&gt;
+            &lt;property name="setupDirectory" value="$(PROJECT_DIR)/../controller/PD_HGtest"/&gt;
+            &lt;property name="setupCommand" value="PD_HGtest$(BIN_SFX)"/&gt;
+            <span style="color: red">&lt;property name="ROOT.mode" value="HighGain"/&gt;</span>
+            &lt;property name="ROOT.translation" value="0.0 0.0 1.0 "/&gt;
+     &lt;/item&gt;
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+    
+<br>
+
+<h3>Making Controller</h3>
+
+<p>
+Controller's source files are <i>sample/controller/PD_HGtest/PD_HGtest.</i>{<i>h</i>, <i>cpp</i>}.
+</p>
+
+<p>
+Here we make a simple controller that moves ROOT joint to the direction of X-axis and outputs 
+joint-torque (=0) to the other joints. X-axis vectors (position, velocity, acceleration) are 
+defined as suitable in advance and saved in <i>sample/controller/PD_HGtest/etc/root.dat</i>.
+</p>
+
+<p>
+First we set output ports for each joint. Regarding the ROOT joint, we prepare ports to output 
+position, velosity, acceleration and the data length is set to 12,6,6 in the order. 
+</p>
+
+PD_HGtest.h
+<div>
+<code>
+<pre>
+     :
+     :
+  // DataOutPort declaration
+  // &lt;rtc-template block="outport_declare"&gt;
+  TimedDoubleSeq m_torque0;
+  OutPort&lt;TimedDoubleSeq&gt; m_torque0Out;
+  TimedDoubleSeq m_torque1;
+  OutPort&lt;TimedDoubleSeq&gt; m_torque1Out;
+  <span style="color: red">
+  TimedDoubleSeq m_root_trans;
+  OutPort&lt;TimedDoubleSeq&gt; m_root_transOut;
+  TimedDoubleSeq m_root_vel;
+  OutPort&lt;TimedDoubleSeq&gt; m_root_velOut;
+  TimedDoubleSeq m_root_acc;
+  OutPort&lt;TimedDoubleSeq&gt; m_root_accOut;</span>
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+PD_HGtest.cpp
+<div>
+<code>
+<pre>
+     :
+     :
+PD_HGtest::PD_HGtest(RTC::Manager* manager)
+  : RTC::DataFlowComponentBase(manager),
+    // &lt;rtc-template block="initializer"&gt;
+    m_torque0Out("torque0", m_torque0),
+    m_torque1Out("torque1", m_torque1),
+    <span style="color: red">m_root_transOut("root_trans", m_root_trans),
+    m_root_velOut("root_vel", m_root_vel),
+    m_root_accOut("root_acc", m_root_acc)</span>
+     :
+     :
+  // Registration: InPort/OutPort/Service
+  // &lt;rtc-template block="registration"&gt;
+  // Set OutPort buffer
+  registerOutPort("torque0", m_torque0Out);
+  registerOutPort("torque1", m_torque1Out);
+  <span style="color: red">registerOutPort("root_trans", m_root_transOut);
+  registerOutPort("root_vel", m_root_velOut);
+  registerOutPort("root_acc", m_root_accOut);</span>
+  
+  m_torque0.data.length(1);
+  m_torque1.data.length(1);
+  <span style="color: red">m_root_trans.data.length(12);
+  m_root_vel.data.length(6);
+  m_root_acc.data.length(6);</span>
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+<p>Next we describe the output operation; the process that actually output a value.</p>
+
+<p>First the output values for the the ROOT joint are read from file (1).</p>
+
+<p>Next, the output values are set except for the ROOT joint (2).</p>
+
+<p>Set the position of ROOT joint (3). Data is ordered to position vector and 3x3 posture matrix.</p>
+
+<p>
+Set the velocity (acceleration) of ROOT joint (4). Data is ordered to velocity (acceleration) vector 
+and angular velocity (angular acceleration).
+</p>
+
+<p>Data is been output (5).</p>
+
+PD_HGtest.cpp
+<div>
+<code>
+<pre>
+     :
+     :
+RTC::ReturnCode_t PD_HGtest::onExecute(RTC::UniqueId ec_id)
+{
+     :
+     :
+  static double root_x_p, root_x_v, root_x_a;           (1)
+  if(!waist.eof()){
+    waist >> root_x_p;  //skip time
+    waist >> root_x_a;
+    waist >> root_x_v;
+    waist >> root_x_p;
+  }
+
+  m_torque0.data[0] = 0.0;                              (2)
+  m_torque1.data[0] = 0.0;
+  
+  for(int i=0; i<12; i++)                               (3)
+    m_root_trans.data[i] = 0;
+  m_root_trans.data[0] = root_x_p;    //x
+  m_root_trans.data[2] = 1.0;          //z
+  m_root_trans.data[3] = 1.0;
+  m_root_trans.data[7] = 1.0;
+  m_root_trans.data[11] = 1.0;
+  for(int i=0; i<6; i++)                                (4)
+      m_root_vel.data[i] = 0.0;
+  m_root_vel.data[0] = root_x_v;
+  for(int i=0; i<6; i++)                                    
+      m_root_acc.data[i] = 0.0;
+  m_root_acc.data[0] = root_x_a;
+
+  m_torque0Out.write();                                 (5)
+  m_torque1Out.write();
+  m_root_transOut.write();
+  m_root_velOut.write();
+  m_root_accOut.write();
+
+  return RTC::RTC_OK;
+  }
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+<br>
+	
+<h3>ControllerBridge settings</h3>
+
+<p>
+Next we configure ControllerBridge settings. ControllerBridge settings are described in 
+<i>sample/controller/PD_HGtest/bridge.conf</i>.
+</p>
+
+<div>
+<code>
+<pre>
+in-port= torque0:J0:JOINT_TORQUE
+in-port= torque1:J1:JOINT_TORQUE
+<span style="color: red">
+in-port= root_trans:ROOT:ABS_TRANSFORM
+in-port= root_vel:ROOT:ABS_VELOCITY
+in-port= root_acc:ROOT:ABS_ACCELERATION
+</span> 
+connection= torque0:torque0
+connection= torque1:torque1
+<span style="color: red">
+connection= root_trans:root_trans
+connection= root_vel:root_vel
+connection= root_acc:root_acc
+</span> 
+server-name= PD_HGtestController
+</pre>
+</code>
+</div>
+
+<p>By now, preparation for the simulation is done. You can now execute the simulation.</p>

@@ -1,0 +1,31 @@
+title = Programming Manual
+base = ..
+
+<p>
+Here, we will explain how to use the simulator as a library, what acquirable sensor information is, and how to create the scheduler which runs the sumilator without GrxUI.
+</p>
+
+<h2>Ver. 3.1 </h2>
+<p>
+<a href="./scheduler_3_1.html">How to create a scheduler(Ver.3.1)</a> <br />
+<a href="./view_client.html">How to create a view simulator client(Ver.3.1)</a><br />
+<a href="./calc_model_3_1.html">Model Calculation Library(Ver.3.1)</a>
+</p>
+
+<h2>Ver. 3.0 </h2>
+<p>
+<a href="./calc_model_3_0.html">Model Calculation Library</a>
+</p>
+<p>
+<a href="./scheduler_3_0.html">How to create a scheduler</a>
+</p>
+<!-- 
+<p>
+<a href="sensor_type.html">Utilization Manual for Sensor of CORBA version</a> 
+</p>
+<p>
+It is information for the old-fashioned controller development.
+In OpenHRP3, please remind that the RTC controller becomes an official controller development method.
+Because the functions for the RTC controller are not yet complete, a manual for reference is listed below.
+</p>
+-->

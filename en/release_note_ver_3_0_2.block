@@ -1,0 +1,34 @@
+title = Release Note Ver.3.0.2
+base  = ..
+
+<h2>Release Note Ver.3.0.2</h2>
+
+<p>
+Basic changes in Ver.3.0.2:
+
+<ul>
+  <li>The trouble that the Series button doesn't activate, even if the graph contents were made after creating a new project on GrxUI, was resolved.</li>
+  <li>Fixed the issue with omniNames, that had started with GrxUI doesn't exits automatically with GrxUI exit.</li>
+  <li>The issue that InPort could not be created in type of ABS_TRANSFORM in ControllerBridge, was fixed.</li>
+  <li>The Trouble that the identification name was not able to be used by specifying the input port of ControllerBridge, was corrected.</li>
+   <li>When orientation of the robot's base coordinates system and the angles of all joints were given in the NoSim mode 
+  (the mode when Forward Dynamics is deselected) and the simulation started, the issue of displaying as it moves only the 
+  base link preceded, was resolved. </li>
+   <li>Resolved the problem of which the OK/CANCEL button was not displayed, when GrxUI's OpenHRP Tab-window-size was too narrow.</li>
+  <li>Fixed the issue of that unbale to simulate SampleController, When it was executed with "Tokyo University's server" 
+  (DynamicsSimulator/server.ut).</li>
+  <li>The problem that the image generation of ViewSimulator was not going corresponding to the simulation time, was corrected.</li>
+  <li>The error occured when DynamicsSimulator was started in debug mode of VC++, was resolved.[Windows edition]</li>
+  <li>Fixed the trouble which was unable to refer jython.jar, since the jython distributors changed the installing location of 
+  jython.jar . [Linux edition]</li>
+  <li>The definitions in config.sh and config.bat were changed to include only user-definable parameters.</li>
+  <li>Java3D and JMF are now included in package it self.</li>
+  <li>OpenHRP3 has changed to use Java3D Ver 1.4.1, since we found a trouble with 1.5 series, when acquisitioning depth buffer.</li>
+  <li>Temp directory of GrxUI was changed to ${HOME}/.grxui .[Linux edition]</li>
+  <li>The format of the configuration file, read by the config-file option of ControllerBridge was changed. </li>
+  <li>The file-extension that had to specify for 'module' option in ControllerBridge was made to be able to omit.</li>
+  <li>Added a function that outputs simulation time, when receiving data from DynamicsSimulator.</li>
+  <li>English web manuals were published.</li>
+</ul>
+<div align="right">19-09-2008</div>
+</p>

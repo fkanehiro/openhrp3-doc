@@ -1,0 +1,624 @@
+title = モデル計算マニュアル(Ver.3.0)
+base = ..
+
+
+<h2> 概要 </h2>
+<p>
+通常DynamicsSimulator等各種シミュレータはCORBAサーバとして使用されますが、OpenHRP3ではライブラリとしての利用も可能になっています。ここではその使用方法を説明します。
+</p>
+
+<h3> モデルの読み込み </h3>
+<p>
+モデルの読み込みはloadBodyFromModelLoader()を使用します。これはモデルURLおよびコマンドライン引数を受け取り、ModelLoaderサーバを使用してモデルを読み込みます。
+</p>
+<pre>
+BodyPtr body = loadBodyFromModelLoader(url, argc, argv);
+</pre>
+<p>
+loadBodyFromModelLoader()は返り値としてBodyクラスへのポインタBodyPtrで返します。内容はロボットの構造を表しており、以下の木構造を持ちます。
+</p>
+<pre>
+Body 
+  + Link
+</pre>
+<p>
+Bodyにはモデル名などロボットの情報と関節リストが入っています。関節を取得するためには3種類の手段があります。
+</p>
+
+<ol>
+  <li><b>Jointノード名による取得方法</b></li>
+  <p>
+  Bodyクラスのメソッドlinkに対してノード名を渡すことでそのノードが表す関節を取得することができます。以下はsample.wrlの右ひじ関節を取得する例です。
+  </p>
+  <pre>
+  Link* link = body-&gt;link("RARM_ELBOW");
+  </pre>
+  
+  <li><b>jointIdによる取得方法</b></li>
+  <p>
+  jointメソッドに対してjointIdを渡すことでそのjointIdがつけられた関節を取得することができます。
+  </p>
+  <pre>
+  Link* link = body-&gt;joint(1);
+  </pre>
+  
+  <li><b>linkIdによる取得方法</b></li>
+  <p>
+  jointIdはモデルVRMLでつけられたIDでしたが、linkIdはモデルデータの木探索順によるIDです。よって、VRMLにおいてjointIdがつけられていない関節にもlinkIdはふられています。
+  </p>
+  <pre>
+  Link* link = body-&gt;link(1);
+  </pre>
+</ol>
+<p>
+以上のいずれかの方法を使うことにより関節クラスLinkが取得できます。
+例として、全ての関節角度を表示するプログラムを以下に示します。
+</p>
+<pre>
+for (int i=0; i&lt;body-&gt;numLinks(); i++) {
+  Link* link = body-&gt;link(i);
+  cout &lt;&lt; link-&gt;name &lt;&lt; " : " &lt;&lt; link-&gt;q &lt;&lt; endl;
+}
+</pre>
+
+<h3> オンラインビューワ </h3>
+<p>
+オンラインビューワとは、GrxUIのペイン"3DView"にモデルをCORBA経由で表示させることができる機能です。
+モデル計算ライブラリからの利用ではOnlineViewerClientクラスを使用します。
+具体的な使用方法は以下のとおりです。
+</p>
+<pre>
+OnlineViewerClient olv;
+try {
+  // 初期化
+  olv.init(argc, argv);
+  // ロード
+  olv.load( body-&gt;modelName.c_str(), url);
+  olv.clearLog();
+} catch (CORBA::SystemException& ex) {
+  cerr &lt;&lt; "Failed to connect GrxUI." &lt;&lt; endl;
+  return 1;
+}
+</pre>
+<p>
+最初に初期化としてinitメソッドにコマンドライン引数を渡します。
+次にモデル名とURLを指定してモデルを読み込みます。ここでは、先にloadBodyFromModelLoader()によってbodyに読み込まれているものとしてBody::modelNameを使用することでモデル名を取得しています。
+最後に行っているのはログのクリアです。
+</p>
+<p>
+初期化の次に表示内容のアップデートを行います。
+Body-Link構造によって得られたデータをWorldStateにコピーすることで行います。以下はサンプルヒューマノイド一体がライブラリ/OnlineViewerにロードされていることを前提にしています。
+</p>
+<pre>
+// WorldStateを作成する
+WorldState world;
+world.characterPositions.length(1);
+
+// SampleRobot用CharacterPosition
+world.collisions.length(0);
+CharacterPosition& robot = world.characterPositions[0];
+robot.characterName = CORBA::string_dup(body-&gt;modelName);
+world.time = 0;
+
+// LinkをWorldStateにコピーする。
+int n = body-&gt;numLinks();
+robot.linkPositions.length(n);
+for (int i=0; i&lt;n; i++) {
+  Link* link = body-&gt;link(i);
+  setVector3(link-&gt;p, robot.linkPositions[i].p);
+  setMatrix33ToRowMajorArray(link-&gt;R, robot.linkPositions[i].R);
+}
+
+// Update
+olv.update(world);
+</pre>
+
+<h3> 順運動学計算 </h3>
+<p>
+関節角度を表すLinkクラスのメンバqを編集し、Bodyクラス::calcForwardKinematics()を呼ぶことで計算されます。
+例えば、右肘を90度回した姿勢を計算するためには以下のようにします。
+</p>
+<pre>
+Link* elbow = body-&gt;link("RARM_ELBOW");
+elbow-&gt;q += M_PI/2;
+body-&gt;calcForwardKinematics();
+</pre>
+
+<h3> 逆運動学計算 </h3>
+<p>
+以下の流れで行われます。
+<ol>
+<li>パスを設定</li>
+<li>目標の位置ベクトルと回転行列を設定</li>
+<li>逆運動学計算を実行</li>
+</ol>
+パスの設定はBody::getJointPathメソッドを呼び出すことで行われます。引数は起点のリンクと終点のリンクです。以下に腰から右足首までのパスを取得する方法を示します。
+</p>
+<pre>
+Link* waist = body-&gt;link("WAIST");
+Link* ankle = body-&gt;link("RLEG_ANKLE_R");
+JointPathPtr path = body-&gt;getJointPath(waist, ankle);
+</pre>
+<p>
+このパスに対して終点のリンクの位置ベクトルと回転行列を設定し、逆運動学の計算を行います。
+</p>
+<pre>
+// 足首関節を上に直線運動させる
+vector3 p = ankle-&gt;p;
+p(2) += 0.01;
+matrix33 R = identity&lt;matrix33&gt;();
+// 逆運動学計算
+path-&gt;calcInverseKinematics(p, R)
+</pre>
+<p>
+これで足首関節が目標位置/姿勢になるようにパスに含まれる関節群が設定されます。
+</p>
+<br>
+
+<h2> サンプル </h2>
+<p>
+逆運動学により足を動かし、その経過をOnlineViewerで表示するプログラムを以下に示します。
+</p>
+
+<h3>ソースコード</h3>
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;string&gt;
+#include &lt;hrpModelHeaders.h&gt;
+#include &lt;OnlineViewerClient.h&gt;
+
+using namespace std;
+using namespace OpenHRP;
+
+enum {X, Y, Z};
+#define deg2rad(x) ( 3.14159265358979 / 180*(x) )
+
+int main(int argc, char* argv[])
+{
+    int i;
+    string url = "file://";
+    // -urlでモデルのURLを指定  
+    for(i=0; i &lt; argc; i++){
+        if( strcmp(argv[i], "-url") == 0 && i+1 &lt; argc) url += argv[i+1];
+    }
+
+    // モデルロード  
+    BodyPtr body = loadBodyFromModelLoader(url.c_str(), argc, argv);
+    if(body == NULL){
+        cerr << "ModelLoader: " << url << " could not be loaded" << endl;
+        return 0;
+    }
+
+    body-&gt;calcForwardKinematics();
+
+    // OnlineViewer設定  
+    OnlineViewerClient olv;
+    try {
+        olv.init(argc, argv);
+        olv.load( body-&gt;modelName.c_str(), url.c_str());
+        olv.clearLog();
+    } catch (CORBA::SystemException& ex) {
+        cerr << "Failed to connect GrxUI." << endl;
+        return 1;
+    }
+
+    // 特異点にならないよう最初は曲げておく  
+    body-&gt;joint(1)-&gt;q = deg2rad(-10);
+    body-&gt;joint(3)-&gt;q = deg2rad(20);
+    body-&gt;joint(4)-&gt;q = deg2rad(-10);
+    body-&gt;calcForwardKinematics();
+
+    // 腰から足首までのパスを設定  
+    Link* waist = body-&gt;link("WAIST");
+    Link* ankle = body-&gt;link("RLEG_ANKLE_R");
+    JointPathPtr path = body-&gt;getJointPath(waist, ankle);
+
+    // WorldStateを作成する  
+    WorldState world;
+    world.characterPositions.length(1);
+
+    // SampleRobot用CharacterPosition  
+    world.collisions.length(0);
+    CharacterPosition& robot = world.characterPositions[0];
+    robot.characterName = CORBA::string_dup((body-&gt;modelName).c_str());
+
+    // 時間は0  
+    world.time=0;
+
+    while (1) {
+        // 時間を進める  
+        world.time+=0.01;
+
+        // 少し動かす  
+        vector3 p = ankle-&gt;p;
+        matrix33 R = ankle-&gt;R;
+        p(2) += 0.002;
+
+        // もし逆運動学計算に失敗したら終わり  
+        if (!path-&gt;calcInverseKinematics(p, R)) {
+            break;
+        }
+
+        // LinkをWorldStateにコピーする。  
+        int n = body-&gt;numLinks();
+        robot.linkPositions.length(n);
+        for (int i=0; i&lt;n; i++) {
+            Link* link = body-&gt;link(i);
+            setVector3(link-&gt;p, robot.linkPositions[i].p);
+            setMatrix33ToRowMajorArray(link-&gt;R, robot.linkPositions[i].R);
+        }
+
+        // OnlineViewer アップデート  
+        try {
+            olv.update(world);
+        } catch (CORBA::SystemException& ex) {
+            cerr << "OnlineViewer could not be updated." << endl;
+            return 1;
+        }
+    }
+    return 0;
+}
+</pre>
+
+<h3 id="compile">コンパイル</h3>
+
+<h4 id="LinuxCompile"> Linux </h4>
+<p>
+Makefileを作成します。ここではプログラム名をmove_ankleとします。
+</p>
+<pre>
+all: move_ankle
+
+# OpenHRPのトップディレクトリの場所を示してください。
+TOP = ../../
+
+include $(TOP)Make.rules
+
+CXX_FLAGS += -I../../corba -I$(BOOST_INC_DIR) -I$(TVMET_INC_DIR) \ 
+  -I$(DYNAMICSSIMULATOR)/server -DTVMET_OPTIMIZE -Ipathlib/include -I$(GRXUI)/corba
+
+DYN_FLAGS = -I$(DYNAMICSSIMULATOR)/server -I$(BOOST_INC_DIR) -I$(TVMET_INC_DIR) \
+  -I$(JDK_DIR)/include -I$(JDK_DIR)/include/$(ARCH) -I$(DYNAMICSSIMULATOR)/corba
+
+DYN_LIBS = $(LPOPT)$(DYNAMICSSIMULATOR)/server $(LIBOPT)hrpModel3$(LIBSFX) \ 
+  $(DYNAMICSSIMULATOR)/server/convCORBAUtil.o $(DYNAMICSSIMULATOR)/server/ModelLoaderUtil.o \
+  $(DYNAMICSSIMULATOR)/corba/OpenHRPCommon.o $(DYNAMICSSIMULATOR)/corba/CollisionDetector.o \
+  $(DYNAMICSSIMULATOR)/corba/DynamicsSimulator.o $(DYNAMICSSIMULATOR)/corba/ViewSimulator.o \
+  $(DYNAMICSSIMULATOR)/corba/ModelLoader.o $(GRXUI)/corba/OnlineViewerClient.o \
+  $(GRXUI)/corba/OnlineViewer.o
+
+%.o: %.cpp
+    $(CXX) $(CXX_FLAGS) -g -fno-inline $(DYN_FLAGS) $(OBJOPT)$@ $<
+
+move_ankle : move_ankle.o
+    $(LINK) $(OUTOPT) $@ $^ $(LINK_FLAGS) $(OB_LIBS) $(DYN_LIBS)
+clean:
+    rm *.o move_ankle
+</pre>
+<p>
+この内容をMakefileとして作成し、コンパイルします。
+</p>
+<pre>
+% make
+</pre>
+
+<h4 id="WindowsCompile"> Windows </h4>
+<p>
+新規に空のプロジェクトを作成します。
+プロパティマネージャーで、OpenHRPのホームディレクトリにあるプロパティシート
+OpenHRP_user_release&lt;debug&gt;.vspropsを追加してください。
+<a href="./install_windows_3_0.html#compile_property">"コンパイル用プロパティ設定"</a>
+の説明通り OpenHRP プロパティページを開き（ステップ３まで）INSTALL_DIR 項目に 
+OpenHRP ホームディレクトリへのパスを指定してください。
+</p>
+<p>
+次にソリューションエクスプローラを開いてプロジェクトのソースファイルに 
+sample\move_ankle にある move_ankle.cpp を追加してください。
+適当なソリューション構成モード（release・debug）を選択し、
+ビルドメニューからビルドを実行します。
+</P>
+<p>
+sample\move_ankle に move_ankle.sln がありますので参考にしてください。
+</p>
+
+<h3>実行</h3>
+
+<h4 id="LinuxRun"> Linux </h4>
+<p>
+実行はシェルスクリプトを介して行います。
+以下の内容をmove_ankle.shとして記述してください。
+</p>
+<pre>
+#!/bin/sh
+# OpenHRPのトップディレクトリの場所を下に書いてください。
+export TOP=../..
+. $TOP/bin/unix/config.sh
+export LD_LIBRARY_PATH=.:$OB_DIR/lib:$JDK_DIR/jre/lib/i386/client:$OPENHRPHOME/DynamicsSimulator/server
+export MODEL_URL=$OPENHRPHOME/etc/sample.wrl
+./move_ankle $NS_OPT -url $MODEL_URL
+</pre>
+<p>
+実行属性を付加します。
+</p>
+<pre>
+chmod +x move_ankle.sh
+</pre>
+<p>
+実行します。この際にGrxUIが既に起動し、OnlineViewer等もネームサービスに登録されていることを確認してください。
+</p>
+<pre>
+./move_ankle.sh
+</pre>
+
+<h4 id="WindowsRun"> Windows </h4>
+<p>
+まず、OPENHRP_DIR という名前のシステム環境変数を定義してください。
+環境変数の値はOpenHRPホームディレクトリへのパスとします。
+シミュレーションの実行はバッチファイルを介して行います。
+以下の内容をmove_ankle<font color="red">&lt;d&gt;</font>.batとして記述し、
+move_ankle<font color="red">&lt;d&gt;</font>.exe 実行ファイルが作られる
+ディレクトリに保存してください。
+</p>
+<pre>
+set PATH=%OPENHRP_DIR%\bin\dos;%PATH%
+call config.bat
+move_ankle<font color="red">&lt;d&gt;</font> %NS_OPT% -url /%OPENHRPHOME%\etc\sample.wrl
+</pre>
+<p>
+バッチファイルを実行します。この際にGrxUIが既に起動し、OnlineViewer等もネーム
+サービスに登録されていることを確認してください。
+</p>
+<pre>
+move_ankle<font color="red">&lt;d&gt;</font>.bat
+</pre>
+
+<p>
+※　move_ankle<font color="red">&lt;d&gt;</font> とは：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- debug モードの場合 "move_ankled"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- release モードの場合 "move_ankle"
+</p>
+<br>
+<br>
+
+
+<h2> 動力学サーバの利用</h2>
+<p>
+これまでに説明したモデル計算ライブラリを使用することにより、順運動学/逆運動学計算を行うことができます。しかし、干渉チェックや動力学計算などのより高度な計算を行いたい場合は動力学サーバを直接利用する必要があります。以下では逆運動学により両手をくっつける方向に動かし、くっついたことを干渉チェックにより判断するというプログラムについて説明します。
+</p>
+
+<h3> サーバ群の取得 </h3>
+<p>
+<a href="./scheduler_3_0.html">スケジューラ作成マニュアル</a>の<a href="./scheduler_3_0.html#corbainit">CORBA初期化、各種サーバの取得</a>を参照して、NamingService, ModelLoader, OnlineViewer, DynamicsSimulatorの各種サーバを取得し、初期設定を行ってください。
+</p>
+<p>
+ただし、DynamicsSimulatorの初期設定に関しては、以下の初期姿勢、干渉チェックペアを設定するようにしてください。
+</p>
+
+<h4> 初期姿勢 </h4>
+<p>
+初期姿勢として以下の配列を与えます。
+</p>
+<pre>
+double init_pos[] = {0.00E+00, -3.60E-02, 0, 7.85E-02, -4.25E-02, 0.00E+00,
+                     1.75E-01, -3.49E-03, 0, -1.57E+00, 0.00E+00, 0.00E+00,
+                     0.00E+00, 0.00E+00, -3.60E-02, 0, 7.85E-02, -4.25E-02,
+                     0.00E+00, 1.75E-01, 3.49E-03, 0, -1.57E+00, 0.00E+00,
+                     0.00E+00, 0.00E+00, 0, 0, 0};
+</pre>
+<p>
+この配列init_posを関節角にセットします。
+</p>
+<pre>
+DblSequence q;
+q.length(DOF);
+for (int i=0; i&lt;DOF; i++) {
+  q[i] = init_pos[i];
+}
+dynamicsSimulator->setCharacterAllLinkData("robot", DynamicsSimulator::JOINT_VALUE, q);
+</pre>
+
+<h4> 干渉チェックペアの設定 </h4>
+<pre>
+DblSequence6 dc, sc;
+dc.length(0);
+sc.length(0);
+
+dynamicsSimulator-&gt;registerCollisionCheckPair (
+    "robot",
+    "RARM_WRIST_R",
+    "robot",
+    "LARM_WRIST_R",
+    0.5,
+    0.5,
+    dc,
+    sc);
+</pre>
+<p>
+これは、両手の先の関節どうしを干渉チェックするように設定しています。
+</p>
+
+<h3> 逆運動学計算の準備 </h3>
+<p>
+初期姿勢を記録し、そこからずらしていきます。まず、初期姿勢を両手分用意します。また、どれくらいずらしているかを表す変数dpも用意します。
+</p>
+<pre>
+double RARM_p[] = {0.197403, -0.210919, 0.93732};
+double RARM_R[] = {0.174891, -0.000607636, -0.984588,
+                   0.00348999, 0.999994, 2.77917e-06,
+                   0.984582, -0.00343669, 0.174892};
+
+double LARM_p[] = {0.197403, 0.210919, 0.93732};
+double LARM_R[] = {0.174891, 0.000607636, -0.984588,
+                  -0.00348999, 0.999994, -2.77917e-06,
+                   0.984582, 0.00343669, 0.174892};
+double dp = 0.0;
+</pre>
+
+<h3> シミュレーションループ </h3>
+<p>
+シミュレーションループでは、以下の三つの処理を行います。
+</p>
+
+<h4> 逆運動学計算 </h4>
+<p>
+両手をくっつける方向に一ステップ動かします。
+</p>
+<pre>
+LinkPosition link;
+link.p[0] = RARM_p[0];
+link.p[1] = RARM_p[1] + dp;
+link.p[2] = RARM_p[2];
+for (int i=0; i&lt;9; i++)
+  link.R[i] = RARM_R[i];
+dynamicsSimulator-&gt;calcCharacterInverseKinematics(CORBA::string_dup("robot"),
+                          CORBA::string_dup("CHEST"),
+                          CORBA::string_dup("RARM_WRIST_R"),
+                          link);
+
+link.p[0] = LARM_p[0];
+link.p[1] = LARM_p[1] - dp;
+link.p[2] = LARM_p[2];
+for (int i=0; i&lt;9; i++) 
+  link.R[i] = LARM_R[i];
+dynamicsSimulator-&gt;calcCharacterInverseKinematics(CORBA::string_dup("robot"),
+                          CORBA::string_dup("CHEST"),
+                          CORBA::string_dup("LARM_WRIST_R"),
+                          link);
+
+dynamicsSimulator-&gt;calcWorldForwardKinematics();
+dp += 0.001;
+</pre>
+
+<h4> OnlineViewer更新 </h4>
+<p>
+OnlineViewerの表示内容を更新します。スケジューラと違う点は、時間が更新されないために手動で書き換えているところです。
+</p>
+<pre>
+dynamicsSimulator-&gt;getWorldState(state);
+state-&gt;time = dp*10;
+onlineViewer-&gt;update(state);
+</pre>
+
+<h4> 干渉チェック </h4>
+<p>
+事前に登録した一組の関節ペアに対して衝突点がひとつ以上ある場合にシミュレーションループを終了させています。
+</p>
+<pre>
+dynamicsSimulator-&gt;checkCollision();
+
+if (state-&gt;collisions.length() &gt; 0) {
+    if (state-&gt;collisions[0].points.length() &gt; 0) {
+        break;
+    }
+}
+</pre>
+<br>
+
+<h2>サンプル</h2>
+<p>
+逆運動学により両手の干渉チェックを行うサンプル(clap)のコンパイルと実行方法について述べます。
+</p>
+
+<h3>ソースコード</h3>
+<p>
+完成したプログラムを表示するには以下から辿ってください。
+</p>
+<ul>
+  <li><a href="./clap_source_3_0.html">clap.cpp</a></li>
+</ul>
+
+<h3>コンパイル</h3>
+<h4>Linux</h4>
+<p>
+<a href="#LinuxCompile">move_ankle の Makefile</a> の "move_ankle" という箇所を "clap" と
+書き換えて新たな Makefile を作成してください。そして move_ankle と同様に make でコンパイル
+してください。
+</p>
+
+<h4>Windows</h4>
+<p>
+sample\clap に clap.cpp がありますので <a href="#WindowsCompile">move_ankle</a> と同様な方法で
+コンパイルしてください。<br>
+sample\clap に clap.sln がありますので参考にしてください。
+</p>
+
+<h3>実行</h3>
+<h4>Linux</h4>
+<p>
+以下の内容を clap.sh と記述してください。
+実行については <a href="#LinuxRun">move_ankle の実行方法</a>を参考にしてください。
+</p>
+<pre>
+#!/bin/sh
+# OpenHRPのトップディレクトリの場所を下に書いてください。
+export TOP=../..
+. $TOP/bin/unix/config.sh
+export LD_LIBRARY_PATH=.:$OB_DIR/lib:$JDK_DIR/jre/lib/i386/client:$OPENHRPHOME/DynamicsSimulator/server
+export MODEL_URL=$OPENHRPHOME/etc/
+./clap $NS_OPT -url $MODEL_URL
+</pre>
+
+<h4>Windows</h4>
+<p>
+実行方法は <a href="#WindowsRun">move_ankle の実行方法</a>と同様です。
+以下の内容を clap.bat と記述して用いてください。
+</p>
+<pre>
+set PATH=%OPENHRP_DIR%\bin\dos;%PATH%
+call config.bat
+clap<font color="red">&lt;d&gt;</font> %NS_OPT% -url /%OPENHRPHOME%\etc\
+</pre>
+<br>
+<br>
+
+
+<h2> 注意事項 </h2>
+
+<h3> Alias </h3>
+<p>
+alias とは、代入式において代入される変数がそのまま右辺でも使われており、その変数の値が計算中に干渉を起こしてしまうことをいいます。干渉を起こすと結果がおかしくなってしまいます。
+tvmet, ublasそれぞれの実装については以下を参照してください。
+</p>
+<p><a href="http://tvmet.sourceforge.net/notes.html#alias" target="_blank">tvmetにおけるaliasの処理</a></p>
+<p><a href="http://www.boost.org/libs/numeric/ublas/doc/operations_overview.htm#noalias" target="_blank">ublasにおけるaliasの処理</a></p>
+<p>
+tvmetはデフォルトで干渉することを想定していないので、パフォーマンスは高いのですが、干渉には十分注意する必要があります。干渉している場合はテンポラリ変数を導入するか、代入される変数にalias()をつけます。
+</p>
+<p>
+一方ublasはデフォルトで干渉することを想定しているため、通常問題は起こりません。ただし干渉を起こしていない場合には速度的に損をすることになります。この場合は代入される変数にnoalis()をつけると無駄なコピーを省くことができます。 
+</p>
+
+<h3> Expression Template </h3>
+<p>
+Expression Templateとは、式があたえられた際に計算するのではなく式自体を記憶し、必要なときに計算を
+行うというものです。例えば、a*b+cという式であれば
+</p>
+<pre>
+Add&lt; Multiple &lt; a , b &gt; , c &gt;
+</pre>
+<p>
+というようにテンプレートの形で記憶されます。
+</p>
+<p>
+注意する点としては計算のオーダがあります。n次正方行列A, B, C, Dがあったとして、A, B, Cの掛け算をD
+に代入することを考えます。
+</p>
+<pre>
+matrix<int> D(prod(A, prod(B, C)));
+matrix<int> D(prod(A, matrix<int>(prod(B, C))));
+</pre>
+<p>
+と２種類が考えられます。
+二つの違いとして、１行目の命令では途中で一時領域に保存させずそのまま計算しているのに対して、２行目
+の命令ではB*Cを保存してからかけている点があります。２行目の計算は途中で計算し一時領域に保存、もう
+一度計算し結果とするため、行列計算が2回なので掛け算の回数は2n<sup>3</sup>です。１行目のように途中で
+保存しない場合、実際に計算するのはDに代入されるときですから、その計算は以下のようになります。
+</p>
+<p align="center">
+<img src="../image/et_matrix.gif" width="350">
+</p>
+<p>
+この掛け算の量が(n+1)nの計算でDのひとつの要素が求められますが、Dはn次のため要素はn<sup>2</sup>
+ありますので、(n+1)n^3となります。よって1行目と2行目ではオーダがことなり、１行目のほうが遅くなって
+しまいます。Expression Templateを使用する際にはこの点に注意してください。
+</p>

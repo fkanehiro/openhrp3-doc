@@ -1,0 +1,362 @@
+title = View-Simulation Users Guide
+base = ..
+
+<h2>Overview</h2>
+
+<p>
+In this section we describe how to use view-simulation functionality for SamplePD (humanoid 
+walking robot sample), that comes as a sample model in OpenHRP3. The procedure lies mainly on 
+following configuration changes. 
+</p>
+
+<ol>
+<li>Camera model configuration
+<li>Simulation project settings configuration
+<li>Controller configuration
+<li>ControllerBridge settings configuration
+</ol>
+
+<p>
+Now let's look at this procedure in detail.
+</p>
+
+<h3>Camera model configuration</h3>
+
+<p>
+First we define the VRML file that contain configuration settings of camera, that attached to the 
+robot or the environmental object. Camera configuration is done by adding a 
+<a href="./create_model.html#VISIONSENSOR">VisionSensor node</a> to the VRML model.
+</p>
+
+<p>
+When it comes to humonoid robot we suppose that it has 2 camera attached to its head. The model 
+file that used for SamplePD's simulation is placed at <i>"sample/model/sample.wrl"</i> . 
+If you open this file you will note that configuration settings for 2 camera are described down the 
+CHEST link.
+</p>
+
+<div>
+<code>
+<pre>
+ :
+ :
+DEF CHEST Joint {
+      :
+      :
+  children [
+        :
+	:  
+    DEF VISION_SENSOR1 VisionSensor {
+      translation   0.15 0.05 0.15
+      rotation      0.4472 -0.4472 -0.7746 1.8235
+      name          "LeftCamera"
+      type          "DEPTH"
+      sensorId      0
+      children [
+        DEF CAMERA_SHAPE Transform {
+          rotation  1 0 0 -1.5708
+          children [
+            Shape {
+              geometry Cylinder {
+                radius      0.02
+                height      0.018
+              }
+              appearance Appearance {
+                material Material {
+                  diffuseColor      1 0 0
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+    DEF VISION_SENSOR2 VisionSensor {
+      translation   0.15 -0.05 0.15
+      rotation      0.4472 -0.4472 -0.7746 1.8235
+      name          "RightCamera"
+      type          "DEPTH"
+      sensorId      1
+      children [
+        USE CAMERA_SHAPE
+      ]
+    }
+ :
+ :
+</pre>
+</code>
+</div>
+<br>
+
+<p>
+For both cameras, output image type is originally set to "DEPTH" (distance image). We change the 
+image type to "COLOR" as follows.
+</p>
+
+<div>
+<code>
+<pre>
+DEF VISION_SENSOR1 VisionSensor {
+   :
+   :
+  type          <span style="color: red">"COLOR"</span>
+   :
+   :
+}
+DEF VISION_SENSOR2 VisionSensor {
+   :
+   :
+  type          <span style="color: red">"COLOR"</span>
+   :
+   :
+}
+</pre>
+</code>
+</div>
+<br>
+
+<p>
+Changing attribute values of VisionSensor node allows you to set other properties such as pixel 
+count and viewing angle of the image. For more details please refer 
+<a href="./create_model.html#VISIONSENSOR">here</a>.
+</p>
+<br>
+
+<h3>Simulation project settings configuration</h3>
+
+<p>
+Even a camera is attached to the model, there can be cases that the controller does not require 
+image data. Therefore view-simulation function is kept OFF by default. To enable this function, 
+you have to change the configuration settings of the simulation project using GrxUI.
+</p>
+
+<p>
+Here is how to do that. Go to <a href="./um_simulation_view.html">Simulation View</a> and select 
+"simulation" tab. Check the ViewSimulation checkbox and now view-simulation function is enabled.
+</p>
+
+<p>
+Now try to run simulation. When you start simulation on view-simulation enabled condition, a 
+window that display the camera output will be popped out and the display wil be updated with the
+simulation prograss. Two windows will be displayed since we attached 2 cameras here in this example.
+</p>
+<br>
+
+<h3>Controller configuration</h3>
+
+<p>
+To add image based operations to the controller, we edit the controller's source file 
+"<i>sample/controller/SamplePD/SamplePD.</i>{<i>h</i>, <i>cpp</i>}".
+</p>
+
+<p>
+Here we implement a simple image operation that display 10 pixel wide image data from the center 
+of the image to the left and right respectively.
+</p>
+
+<p>
+First we add the port that used to input image data.
+Color image is outout as data of <i>RTC::TimedLongSeq</i> datatype. So here we add an inport of 
+the above mentioned datatype assigning the name as "image". Please add following red colored 
+codings to your source code.
+</p>
+
+SamplePD.h
+<div>
+<code>
+<pre>
+     :
+     :
+  // DataInPort declaration
+  // &lt;rtc-template block="inport_declare"&gt;
+  TimedDoubleSeq m_angle;
+  InPort&lt;TimedDoubleSeq&gt; m_angleIn;
+  <span style="color: red">TimedLongSeq m_image;</span>
+  <span style="color: red">InPort&lt;TimedLongSeq&gt; m_imageIn;</span>
+  
+  // &lt;/rtc-template&gt;
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+SamplePD.cpp
+<div>
+<code>
+<pre>
+     :
+     :
+SamplePD::SamplePD(RTC::Manager* manager)
+  : RTC::DataFlowComponentBase(manager),
+    // &lt;rtc-template block="initializer"&gt;
+    m_angleIn("angle", m_angle),
+    <span style="color: red">m_imageIn("image", m_image),</span>
+    m_torqueOut("torque", m_torque),
+     :
+     :
+  // Registration: InPort/OutPort/Service
+  // &lt;rtc-template block="registration"&gt;
+  // Set InPort buffers
+  registerInPort("angle", m_angleIn);
+  <span style="color: red">registerInPort("image", m_imageIn);</span>
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+<p>
+Then we add the codings that performs image loading from inport and image operations (in this case 
+it outputs pixel information).
+</p>
+
+SamplePD.cpp
+<div>
+<code>
+<pre>
+     :
+     :
+RTC::ReturnCode_t SamplePD::onExecute(RTC::UniqueId ec_id)
+{
+     :
+     :
+  if(m_angleIn.isNew()){
+    m_angleIn.read();
+  }
+<span style="color: red">
+  if (m_imageIn.isNew()){
+	  m_imageIn.read();
+#if 0
+      static ::CORBA::ULong startl = 0U;
+	  if(startl == 0)
+	      startl = m_image.tm.sec;
+	  printf("t = %4.1f[s] : ",m_image.tm.sec - startl + m_image.tm.nsec*1e-9);
+#else
+      static int count = 0;
+	  printf("t = %4.1f[s] : ", count*0.1);
+      count++;
+#endif
+#define isBlack(x) (x)==0xff000000
+	  for (int i=320*120+150; i&lt;320*120+170; i++){
+		  if (isBlack(m_image.data[i])){
+			  printf("0");
+		  }else{
+			  printf("1");
+		  }
+	  }
+	  printf("\n");
+  }
+</span>
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+<p>
+Here the loaded image size is 320x240. You can change the image size by editing width and height 
+attribute values of the VisionSensor node. Each pixel is stored as 4 bytes of color data, in the 
+data portion of TimedLongSeq. In this example it prints time information that included in image 
+data. Then it performs an image operation for each pixel and prints '0' if the pixel color is black 
+and '1' for if other.
+</p>
+<br>
+	
+<h3>ControllerBridge settings configuration</h3>
+
+<p>
+Next we focus on configuring ControllerBridge settings to output image information. ControllerBridge 
+settings are configured by editing <i>"sample/controller/SamplePD/SamplePD.sh"</i> on Linux or 
+<i>"sample/controller/SamplePD/SamplePD.bat"</i> on Windows. Please add the following red colored 
+portions.
+</p>
+
+<div>
+<code>
+<pre>
+#!/bin/sh
+
+openhrp-controller-bridge \
+--server-name SamplePDController \
+--out-port angle:JOINT_VALUE \
+<span style="color: red">--out-port left-eye:0:COLOR_IMAGE:0.1</span> \
+--in-port torque:JOINT_TORQUE \
+--connection angle:angle \
+--connection torque:torque <span style="color: red">\
+--connection left-eye:image</span>
+</pre>
+</code>
+</div>
+
+<p>
+In the first added line, a port is added to the ControllerBridge for image ouput purpose. 
+This port, outputs image taken by left camera, of 2 cameras attached to the robot's head.
+Because the sensorId of left camera is 0, 0 is specified for the identifier.
+Outport name is assigned as "left-eye" and the output cycle is set to 0.1[s].
+</p>
+
+<p>
+The second added line specifies the connection between ControllerBridge and the SamplePD component. 
+It specifies the connection between the image port added to the SamplePD component and the left-eye 
+port added to the ControllerBridge.
+</p>
+
+<p>
+Please refer <a href="./controller_bridge.html">here</a> for more details about ControllerBridge 
+settings.
+</p>
+<br>
+
+<h3>Simulation execution</h3>
+
+<p>
+There you are now done with configuration changes, and let us move to execute the simulation.
+You will notice following like output, through the 
+<a href="./um_processmanager_view.html">ProcessManager View</a> window.
+</p>
+
+<div>
+<code>
+<pre>
+setting naming
+setup RT components
+detected SamplePD0
+detected the ExtTrigExecutionContext of SamplePD0
+connect VirtualRobot0:angle &lt;--&gt; SamplePD0:angle ...ok
+connect VirtualRobot0:torque &lt;--&gt; SamplePD0:torque ...ok
+connect VirtualRobot0:left-eye &lt;--&gt; SamplePD0:image ...ok
+on Activated
+t =  0.0[s] : 00000000000000000001
+t =  0.1[s] : 00000000000000001000
+t =  0.2[s] : 00000000000000000100
+t =  0.3[s] : 00000000000000001000
+t =  0.4[s] : 00000000000000001000
+t =  0.5[s] : 00000000000000010000
+t =  0.6[s] : 00000000000000010000
+t =  0.7[s] : 00000000000000100000
+t =  0.8[s] : 00000000000001000000
+t =  0.9[s] : 00000000000010000000
+t =  1.0[s] : 00000000000100000000
+t =  1.1[s] : 00000000001000000000
+t =  1.2[s] : 00000000001000000000
+t =  1.3[s] : 00000000010000000000
+t =  1.4[s] : 00000000010000000000
+t =  1.5[s] : 00000000010000000000
+t =  1.6[s] : 00000000010000000000
+t =  1.7[s] : 00000000010000000000
+    :
+    :
+    :
+</pre>
+</code>
+</div>
+
+<p>
+If grid-view is enabled in <a href="./um_3d_view.html">3DView</a> window, the generated outlook image 
+will also contain the grid. So you get an output as seen above, since the grid-view also moves with 
+the robot's movements.
+</p>

@@ -1,0 +1,31 @@
+title = The simulation which does not perform dynamics calculation
+base = ..
+
+<h2>Overview</h2>
+
+<p>
+In this section we describe about the simulation which does not perform dynamics calculation
+This sample is sample/project/SampleRH2.xml. <br />
+A robot is moved by the position and posture of a route link, and each joint angle. The data of velocity and acceleration is unnecessary. 
+</p>
+
+<h3>A setup of a simulation</h3>
+
+<p>
+Click a Simulation view and uncheck Forward Dynamics. </p>
+<p align="center">
+<img src="../img_new/forwardDynamics.png"><br>
+</p>
+<p>Specification of the control mode of a joint becomes invalid.</p>
+
+<h3>Creation of a controller </h3>
+
+<p>
+The source file of a controller is in sample/controller/SampleRH2. </p>
+
+<p>
+A controller is a simple thing which reads the position and posture of a route link from the file created beforehand, and outputs them. <br />
+Since the angle of each joint is not outputted from a controller, an initial angle is maintained. <br />
+Since the details of a controller are almost the same as the controller of the tutorial of High-gain mode and torque-control mode coorperated simulation, please refer to it there. </p>
+
+

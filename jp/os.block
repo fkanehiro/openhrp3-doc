@@ -1,0 +1,45 @@
+title = OpenHRP OS/ディストリビューション 対応状況
+base  = ..
+
+<h2>対応OS一覧</h2>
+<p>
+現在のところ、以下のOS/ディストリビューションにおいて、
+OpenHRP3の動作報告があります。
+ただし、公式対応でないOS/ディストリビューションに関しては、
+その上での動作を保証するものではありませんので、ご了承ください。
+</p>
+
+<h3>Linux</h3>
+
+<p>
+<ul>
+ <li>Ubuntu Linux
+  <ul>
+   <li>version 12.10 32bit, 64bit</li>
+   <li>version 12.04LTS 32bit, 64bit</li>
+   <li>version 11.10 32bit, 64bit</li>
+   <li>version 11.04 32bit, 64bit</li>
+   <li>version 10.04LTS 32bit, 64bit</li>
+  </ul>
+ </li>
+</ul>
+</p>
+
+
+<h3>Windows</h3>
+
+<p>
+<ul>
+ <li>Windows 7 32bit, 64bit</li>
+ <li>Windows Vista</li>
+ <li>Windows XP (SP2・SP3)</li>
+</ul>
+</p>
+
+<h3>MacOS</h3>
+
+<p>
+<ul>
+  <li>MacOS X 10.6 Snow Leopard 
+</ul>
+</p>

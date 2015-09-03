@@ -1,0 +1,186 @@
+title = How to Create Simulation Project
+base  = ..
+
+<h2> Project </h2>
+
+<p>
+Here we describe the building steps of a simulation project, by using GrxUI. 
+First, <a href="./grxui_tutorial.html#2">start GrxUI</a>.
+</p>
+
+
+<h3> Model </h3>
+
+<p>
+In this sample, we are going to create a simulation project of a walking robot.<br>
+Which means we have to have at least 2 models; the robot model and floor.
+</p>
+
+<p>
+First, Right-click on "Model" in "Item View" panel, and select "Load".<br>
+Load "sample.wrl" and "floor.wrl", placed in "OpenHRP3/etc" folder.<br>
+Then, right-click on model "floor" and select "change into environment model";<br>
+so that floor can be specified as an environmental model.
+</p>
+
+<p>
+Now we specify the initial posture of the robot.<br> 
+For that, follow the steps shown in Fig.1 and set the properties of the model as described in Table.1 .
+</p>
+
+<p>
+<center>
+<img src="../image/GrxUI_EditProperty.png"><br>
+Fig.1 : Property editing steps
+</center>
+</p>
+
+<p align="center">
+Table.1 : Sample robot properties<br>
+<table align="center" border="1">
+<tr><td>CHEST.angle</td><td>0.0</td></tr>
+<tr><td>LARM_ELBOW.angle</td><td>-1.5708</td></tr>
+<tr><td>LARM_SHOULDER_P.angle</td><td>0.174533</td></tr>
+<tr><td>LARM_SHOULDER_R.angle</td><td>-0.003490</td></tr>
+<tr><td>LARM_SHOULDER_Y.angle</td><td>0.0</td></tr>
+<tr><td>LARM_WRIST_P.angle</td><td>0.0</td></tr>
+<tr><td>LARM_WRIST_R.angle</td><td>0.0</td></tr>
+<tr><td>LARM_WRIST_Y.angle</td><td>0.0</td></tr>
+<tr><td>LLEG_ANKLE_P.angle</td><td>-0.0424675</td></tr>
+<tr><td>LLEG_ANKLE_R.angle</td><td>0.0</td></tr>
+<tr><td>LLEG_HIP_P.angle</td><td>-0.0360373</td></tr>
+<tr><td>LLEG_HIP_R.angle</td><td>0.0</td></tr>
+<tr><td>LLEG_HIP_Y.angle</td><td>0.0</td></tr>
+<tr><td>LLEG_KNEE.angle</td><td>0.0785047</td></tr>
+<tr><td>RARM_ELBOW.angle</td><td>-1.5708</td></tr>
+<tr><td>RARM_SHOULDER_P.angle</td><td>0.174533</td></tr>
+<tr><td>RARM_SHOULDER_R.angle</td><td>-0.003490</td></tr>
+<tr><td>RARM_SHOULDER_Y.angle</td><td>0.0</td></tr>
+<tr><td>RARM_WRIST_P.angle</td><td>0.0</td></tr>
+<tr><td>RARM_WRIST_R.angle</td><td>0.0</td></tr>
+<tr><td>RARM_WRIST_Y.angle</td><td>0.0</td></tr>
+<tr><td>RLEG_ANKLE_P.angle</td><td>-0.0424675</td></tr>
+<tr><td>RLEG_ANKLE_R.angle</td><td>0.0</td></tr>
+<tr><td>RLEG_HIP_P.angle</td><td>-0.0360373</td></tr>
+<tr><td>RLEG_HIP_R.angle</td><td>0.0</td></tr>
+<tr><td>RLEG_HIP_Y.angle</td><td>0.0</td></tr>
+<tr><td>RLEG_KNEE.angle</td><td>0.0785047</td></tr>
+<tr><td>WAIST.rotation</td><td>0.0 1.0 0.0 0.0</td></tr>
+<tr><td>WAIST.translation</td><td>0.0 0.0 0.713</td></tr>
+<tr><td>WAIST_P.angle</td><td>0.0</td></tr>
+<tr><td>WAIST_R.angle</td><td>0.0</td></tr>
+</table>
+
+
+<h3> WorldState </h3>
+
+<p>
+Here we create "WorldState" and configure the parameters.<br>
+Right-click "WorldState" in the "Item View" panel, and select "create".
+</p>
+
+<p align="center">
+<img src="../image/GrxUI_CreateWorldState.png"><br>
+Fig.2 : WorldState
+</p>
+
+<p>
+Now select "OpenHRP" tab, then "simulation" tab. Set each parameters as described in Table.2 .
+</p>
+
+<p align="center">
+Table.2 : Simulation Parameters<br>
+<table align="center" border="1">
+<tr><td>Total Times[s]</td><td>13.4</td></tr>
+<tr><td>Integration Step[s]</td><td>0.0020</td></tr>
+<tr><td>Logging Step[s]</td><td>0.0020</td></tr>
+<tr><td>Integration Method</td><td>RUNGE_KUTTA</td></tr>
+<tr><td>Gravity[ms<sup>-2</sup>]</td><td>9.8</td></tr>
+</table>
+</p>
+
+<p align="center">
+<img src="../image/GrxUI_SimulationParameters.png"><br>
+Fig.3 : Simulation Parameters
+</p>
+
+
+<h3> Collision Pair </h3>
+
+<p>
+Here we are going to specify the collision check between floor and robot; (We call them "Collision pair").<br>
+First, select "collision" tab in the "OpenHRP" tab.
+</p>
+
+<p align="center">
+<img src="../image/GrxUI_CollisionPairAdd.png"><br>
+Fig.4 : Collision tab
+</p>
+
+<p>
+Now Click "Add" button. Select "sample" as Object1, and "floor" as Object2, and then click "OK" 
+button.
+</p>
+
+<p align="center">
+<img src="../image/GrxUI_InsertCollisionPair.png"><br>
+Fig.5 : Addding Collision Pair
+</p>
+
+
+<h3> Controller</h3>
+
+<p>
+Now we configure the controller.<br>
+Select "controller" tab in the "OpenHRP" tab.
+</p>
+
+<p>
+Specify controller parameters as described in Table.3 .<br>
+If "SamplePDController" is not available at there to select, please enter by your self.<br>
+</p>
+
+<p>
+Note:<br>
+The parameter values in Table.3 are given as an example and those are specific for this particular 
+controller (SamplePD). When you create and use you own controller, you are always free to change 
+these values and use suitable values for the parameters.
+</p>
+
+<p align="center">
+Table.3 : Controller Parameters<br>
+<table align="center" border="1">
+<tr><td>Controller</td><td>SamplePDController</td></tr>
+<tr><td>Control Time[s]</td><td>0.002</td></tr>
+<tr><td>Working Dir.</td><td>$(OPENHRPHOME)/Controller/rtc/SamplePD</td></tr>
+<tr><td>Setup Command</td><td>SamplePD$(BIN_SFX)</td></tr>
+</table>
+</p>
+
+<p align="center">
+<img src="../image/GrxUI_Controller.png"><br>
+Fig.6 : Controller tab
+</p>
+
+<h3 id="startsimulation"> Simulation</h3>
+
+<p>
+Now we are going to start simulation process by executing the created controller-component.
+</p>
+
+<p>
+For that, just click on "Start simulation" button in GrxUI, as shown in Fig.7 .
+</p>
+
+<p align="center">
+<img src="../image/GrxUI_StartSimulation.jpg"><br>
+Fig.7 : Start simulation
+</p>
+
+
+<h3>Saving Project File</h3>
+
+<p>
+you can save the created project file, by selecting "File" &rarr; "Save Project" from menubar.
+</p>
+<br>

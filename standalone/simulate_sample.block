@@ -1,0 +1,92 @@
+title = サンプルシミュレーション
+base  = ..
+
+<h2>GrxUIの起動</h2>
+
+<p>
+OpenHRP3のGUIであるGrxUIを起動スクリプトを用いて起動します。
+起動スクリプトは、OpenHRP3を展開したディレクトリの、
+<ul>
+ <li>bin/unix/GrxUI.sh (Linuxの場合)</li>
+ <li>bin/dos/GrxUI.bat (Windowsの場合)</li>
+</ul>
+になります。
+</p>
+
+<p>
+Windowsの場合、上記のファイルをエクスプローラよりダブルクリックすることにより
+起動するのが簡単です。
+</p>
+
+<p>
+Linuxの場合も、Windowsと同様にファイルブラウザからダブルクリックしてもよいですし、
+コマンドラインから、
+<pre>
+cd OpenHRP3のディレクトリ
+cd bin/unix
+./GrxUI.sh
+</pre>
+としてもよいでしょう。
+</p>
+
+
+<h2 >シミュレーションの実行  </h2>
+<h3 > プロジェクトを開く </h3>
+<p>
+"File" - "Load Project"より、プロジェクトを開きます。
+</p>
+<p align="center">
+<img src="../image/GrxUI_LoadProject.jpg"><br>
+図1: Load Project
+</p>
+<p>
+以下のようなファイル選択ダイアログが表れますので、
+適当なファイルを読み込んでみましょう。
+（なお、標準で入っているサンプルプロジェクトはバージョンによって
+以下とは異なる可能性があります。）
+</p>
+<p align="center">
+<img src="../image/GrxUI_LoadProject2.jpg"><br>
+図2: Open Project File
+</p>
+<h3> シミュレーション </h3>
+<p>
+プロジェクトを読み込んだら、
+"start simulation"ボタンでシミュレーションを開始します。
+</p>
+<p align="center">
+<img src="../image/GrxUI_StartSimulation.jpg"><br>
+図3: start simulation
+</p>
+<p>
+GrxUIウィンドウの左下でシミュレーション対象のモデルが動作するアニメーションが
+表示されたでしょうか？
+</p>
+
+<p>
+最新版では、
+以下のようなシミュレーションサンプルがありますので、試してみてください.
+以下に示す動作が実現していれば、インストールはうまくいったと考えてよいでしょう。
+<ul>
+ <li>FallingBoxes.xml
+  <ul>
+   <li>複数の箱が同時に床に落ちるシミュレーション</li>
+  </ul>
+ </li>
+ <li>SamplePD.xml
+  <ul>
+   <li>サンプルロボットの歩行シミュレーション。</li>
+  </ul>
+ </li>
+ <li>SampleLF.xml
+  <ul>
+   <li>サンプルロボットが箱を持ち上げるシミュレーション。</li>
+  </ul>
+ </li>
+ <li>SampleSV.xml
+  <ul>
+   <li>車輪型機構が床の上で車輪を使って移動するシミュレーション。</li>
+  </ul>
+ </li>
+</ul>
+

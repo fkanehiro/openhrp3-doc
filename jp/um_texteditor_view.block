@@ -1,0 +1,31 @@
+title = Text Editor View
+base  = ..
+
+<h2>Text Editor View概要</h2>
+<p>
+Text Editorを構成する各種要素について説明します。<br>
+</p>
+<p align=center>
+<img src="../img_new/um_031.png"><br>
+Text Editor View
+</p>
+<ul>
+<ol>
+<li>Save　ボタン<br>
+ファイルを保存します。
+</li>
+<li>Save as ボタン<br>
+名前を付けて、ファイルを保存します。
+</li>
+<li>Editor　エリア<br>
+ファイルを編集できます。
+</li>
+<li>行番号表示<br>
+現在のカーソル位置を表示します。
+</li>
+</ol>
+</ul>
+
+
+
+

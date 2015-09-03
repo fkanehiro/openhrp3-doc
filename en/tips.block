@@ -1,0 +1,24 @@
+title = OpenHRP3 Tips
+base  = ..
+
+<h3>Japanese environment on Linux and GrxUI</h3>
+
+<p>
+Java-based or X-based input system failure causes slow behavior of user interface using GrxUI on the japanese environment on Linux.
+In this case, the behavior can be improved by changing locale to English.
+<P>
+Checking current locale on Linux is as below.
+<div><pre>
+$ set | grep LANG
+</pre></div>
+On the japanese environment, for example, the result is shown as below.
+<div><pre>
+LANG=ja_JP.eucJP
+</pre></div>
+
+When inputting like this, locale is set to English.
+<div><pre>
+$ export LANG=C
+</pre></div>
+
+</p>

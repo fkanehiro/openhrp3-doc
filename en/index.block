@@ -1,0 +1,75 @@
+title = OpenHRP3 Official Site
+base  = ..
+
+<p><b><big>Welcome to OpenHRP3 Official Site</big></b></p>
+
+<p>
+This site provides information about the robot software platform "OpenHRP3".
+</p>
+
+<h1>NEWS</h1>
+
+<h3> 25-12-2012</h3>
+<p>
+OpenHRP Ver.3.1.4 is released and available to download from our 
+<a href="./download.html">"Downloads"</a> page.<br>
+Please refer <a href="./release_note_ver_3_1_4.html">Release Note Ver.3.1.4</a> 
+to view the updates and changes in detail.<br>
+</p>
+
+<h3> 03-07-2012</h3>
+<p>
+OpenHRP Ver.3.1.3 is released and available to download from our 
+<a href="./download.html">"Downloads"</a> page.<br>
+Please refer <a href="./release_note_ver_3_1_3.html">Release Note Ver.3.1.3</a> 
+to view the updates and changes in detail.<br>
+</p>
+
+<h3>20-02-2012</h3>
+<p>
+OpenHRP Ver.3.1.2 is released and available to download from our 
+<a href="./download.html">"Downloads"</a> page.<br>
+Please refer <a href="./release_note_ver_3_1_2.html">Release Note Ver.3.1.2</a> 
+to view the updates and changes in detail.<br>
+</p>
+
+<h3>09-05-2011</h3>
+<p>
+OpenHRP Ver.3.1.1 is released and available to download from our 
+<a href="./download.html">"Downloads"</a> page.<br>
+Please refer <a href="./release_note_ver_3_1_1.html">Release Note Ver.3.1.1</a> 
+to view the updates and changes in detail.<br>
+Also, OpenHRP Ver.3.0.8 is released too. Fixed the issue of displaying a slide joint.<br />
+</p>
+
+<h3>21-09-2010</h3>
+<p>
+OpenHRP Ver.3.1.0-Release is released and available to download from our 
+<a href="./download.html">"Downloads"</a> page.
+</p>
+<p> 
+This version of OpenHRP-3.1 series, supports Ubuntu10.04 LTS. 
+Moreover in this version we improved GUI and resolved some miscellaneous problems in OpenHRP.<br>
+Please refer <a href="./release_note_ver_3_1_0_release.html">Release Note Ver.3.1.0-Release</a> 
+to view the updates and changes in detail. 
+</p>
+
+<h4>23-06-2010</h4>
+<p>
+<a href="../3.0.7/en/index.html">OpenHRP Ver.3.0.7</a> is released and available to download from our <a href="./download.html">"Downloads"</a> page.<br>
+Ver.3.0.7 is a bug-fixed version of Ver.3.0.6.
+</p>
+<p> 
+This version of OpenHRP-3.0 series, supports OpenRTM-aist-1.0.0-Release. 
+<a href="./release_note_ver_3_0_7.html">Release Note Ver.3.0.7</a> 
+to view the updates and changes in detail. 
+</p>
+
+<h4>22-06-2010</h4>
+<p> 
+This version of OpenHRP-3.0 series, supports OpenRTM-aist-1.0.0-Release. 
+<a href="./release_note_ver_3_0_6.html">Release Note Ver.3.0.6</a> 
+to view the updates and changes in detail. 
+</p>
+
+<div style="text-align:right"><a href="./old_announce.html">Previous News</a></div>

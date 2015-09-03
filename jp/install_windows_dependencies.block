@@ -1,0 +1,132 @@
+title = Windowsにおける依存ソフトウェアのインストール
+base  = ..
+
+<p>
+「WindowsにおけるOpenHRPのインストール」のページでも示した依存ソフトウェアを個別にインストールする場合を説明します。
+</p>
+
+<h2>依存ソフトウェア</h2>
+下記のソフトウェアの入手法とインストール方法を説明します。
+<ul>
+ <li><a href="#openrtm">OpenRTM-aist Ver.1.0.0-RELEASE</a></li>
+ <li><a href="#openrtm">omniORB Ver.4.1.4</a></li>
+ <li><a href="#python">python Ver.2.4.4</a></li>
+ <li><a href="#pyyaml">PyYAML Ver.3.05</a></li>
+ <li><a href="#jython">Jython Ver.2.2.1</a></li>
+ <li><a href="#tvmet">tvmet Ver.1.7.2</a></li>
+ <li><a href="#clapack">CLAPACK Ver.3.1.1</a></li>
+ <li><a href="#boost">Boost Ver.1.35.0</a></li>
+</ul>
+
+<h3 id="openrtm" >OpenRTM環境の構築</h3>
+
+<p>
+OpenRTM-aist の最新版をインストールします。
+（現在配布中のOpenHRP最新版では、OpenRTM-aist のバージョン 1.0 系列の 1.0.0 以降が必要となります。)
+</p>
+
+<p>
+<a href="http://www.openrtm.org/OpenRTM-aist/html/index.html" target="_blank">OpenRTM-aistのページ</a>より、OpenRTM-aist-1.0.0 C++版をダウンロードしてください。
+</p>
+
+<p>
+ダウンロードしたファイルをダブルクリックするとインストーラが起動するので、
+インストーラの案内に従ってインストールを行ってください。<br>インストール時に omniORB も同時にインストールできます。
+</p>
+
+<p>
+<span style="color: red">※ OpenHRP Ver.3.1.0-Release, Ver.3.1.0&beta;4 では、OpenRTM-aist 0.4以前のバージョンは公式サポートしておりません。</span>
+</p>
+
+
+<h3 id="python"> Python </h3>
+
+<p>
+<a href="http://www.python.org/ftp/python/2.4.4/python-2.4.4.msi" rel="_blank">http://www.python.org</a>より、Pythonのインストーラをダウンロードします。
+ダウンロードしたファイルをダブルクリックするとインストーラが起動しますので、
+案内に従ってインストールを行います。
+</p>
+
+<h3 id="pyyaml"> PyYAML </h3>
+
+<p>
+<a href="http://pyyaml.org/download/pyyaml/PyYAML-3.05.win32-py2.4.exe" rel="_blank">http://pyyaml.org</a>より、PyYAMLのインストーラをダウンロードします。
+ダウンロードしたファイルをダブルクリックするとインストーラが起動しますので、
+案内に従ってインストールを行います。
+</p>
+
+<h3 id="jython"> Jython </h3>
+
+<p>
+<a href="http://www.jython.org/" target="_blank">http://www.jython.org</a>の"Download"より、
+Jythonのファイルをダウンロードします。
+ダウンロードしたファイルをダブルクリックするとインストーラが起動しますので、
+案内に従ってインストールを行います。
+</p>
+
+<h3>ライブラリのインストール</h3>
+
+
+<h4 id="tvmet">tvmet</h4>
+
+<p>ベクトル・行列計算ライブラリであるtvmetをインストールします。</p>
+
+
+
+<p>本家の配布サイト(<a href="http://tvmet.sourceforge.net/" target="_blank">
+http://tvmet.sourceforge.net</a>)よりソースを取得してインストールしても結構ですが、
+当サイトの<a href="./download.html#download_others">「ダウンロード」</a>ページにWindows用のインストーラも用意しています。それを
+使用する場合は、tvmet-xxx-win.msi のファイルをダウンロードし、ダブルクリックして
+インストーラを起動してください。その後案内に従ってインストールを行ってください. 
+インストーラの設定項目は特に変更しなくてもOKです。
+</p>
+
+<p>
+一方、本家よりダウンロードしたソースを使う場合は、
+ソース中の設定ファイル "config.h" をWindowsに合わせたものにする必要があります。
+tvmetを展開したディレクトリ以下の、include\tvmet\config\config-vc71.h というファイルを、
+include\tvmet\config.h としてコピーしてください。
+</p>
+
+
+
+<h4 id="clapack">CLAPACK</h4>
+
+<p>もうひとつのベクトル・行列計算ライブラリであるLapackをインストールします。<p>
+
+<p>
+Lapackには様々な派生版がありますが、OpenHRP3のWindows版ではCLAPACKを使うのが無難です。
+これのインストーラ を用意しましたので、
+当サイトの<a href="./download.html#download_others">「ダウンロード」</a>ページより
+CLAPACK-xxx.msi とあるファイルをダウンロードしてお使いください。
+ファイルをダブルクリックするとインストーラが起動しますので、案内に従ってインストールを行ってください. 
+インストーラの設定項目は特に変更しなくてもOKです。
+</p>
+
+
+<h4 id="boost"> Boost </h4>
+
+<p>C++のライブラリ集であるBoost(<a href="http://www.boost.org/" target="_blank">
+http://www.boost.org</a>)をインストールします。</p>
+
+<p>
+Visual C++ 2008用のコンパイル済みライブラリをまとめたインストーラを用意しましたので、
+当サイトの<a href="./download.html#download_others">「ダウンロード」</a>ページ
+よりBoost-xxx_VC9.msiのファイルをダウンロードしてダブルクリックし、
+インストーラの案内に従ってインストールを行ってください。
+インストーラの設定項目は特に変更しなくてもOKです。
+</p>
+
+<p>
+Visual C++ の各種バージョンで利用可能なコンパイル済みライブラリのインストーラは
+<a href="http://www.boost-consulting.com/" target="_blank">http://www.boost-consulting.com</a>からも配布されており、
+これを使ってインストールしてもOKです。この場合、インストール時に出てくる "Variants" 
+の指定で、"Multithread", "Multithread Debug" の２つはチェックするようにしてください。
+</p>
+<h2>インストール作業が不要になったソフトウェア</h2>
+この項目はOpenHRP Ver.3.0.1以前のユーザーに向けた情報です。
+<h3>Java 3D,JMF</h3>
+<p>
+Java3D 1.5系バージョンでは深度バッファの取得に不具合がありましたのでJava3D 1.4.1の使用に変更しました。
+さらに導入作業を簡便にするためOpenHRP Ver.3.0.2よりJava3D 1.4.1、JMF-2.1.1eを配布パッケージに含めることにしました。<br>
+</p>

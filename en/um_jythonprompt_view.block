@@ -1,0 +1,28 @@
+title = JythonPrompt View
+base  = ..
+
+<h2>JythonPrompt View</h2>
+<p>
+Here we explain the various elements that compose JythonPrompt View.
+</p>
+<p align=center>
+<img src="../img_new/um_003.png">
+</p>
+
+<ul>
+<ol>
+<li>
+<p>execute script file button<br>
+Can be clicked and execute the script, if active Python Script item is available.
+</p>
+</li>
+<li>
+<p>Prompt<br>
+Prompt of JythonPromt.
+</p>
+</li>
+<li>
+<p>Execution results displaying area.<br>
+</p>
+</li>
+

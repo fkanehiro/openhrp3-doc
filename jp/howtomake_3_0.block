@@ -1,0 +1,282 @@
+title = MakeコマンドによるOpenHRPのコンパイル(Ver.3.0.8)
+base  = ..
+
+
+
+<p>
+本ページでは、ソースパッケージより展開したOpenHRPのソースを
+makeコマンドを用いてコマンドラインからコンパイルする手順を説明します.
+</p>
+
+<p>
+makeコマンドによるコンパイルは、Linuxにおいては基本的なコンパイル方法となります。
+</p>
+
+<p>
+Windowsに関しては、通常、Visual C++ の統合開発環境上でコンパイルを行います。
+これについては、<a href="./install_windows_3_0.html">「Windowsにおけるインストール」</a>
+をご覧ください。
+バージョン3.0.0-RC3まではWindowsに関してもDOS窓からのコマンドラインコンパイルを行っていましたが、
+現在ではこの方法はサポートしていません。
+</p>
+
+
+
+<h2>ソースパッケージの展開</h2>
+
+<p>
+まず、ダウンロードしたソースパッケージ "OpenHRP-xxx.zip"を、
+unzipコマンドなどのZIPファイル解凍ツールを使って適当なディレクトリに展開します.
+(xxxは3.0.0-RC4といったバージョンを示す文字列が入ります。
+ ダウンロードしたファイルのものと置き換えて読んでください。)
+</p>
+
+<p>
+展開先は、Linuxにおいては、ホームディレクトリ以下の適当なディレクトリに展開するのが一般的です.
+</p>
+
+
+
+<h2 id="make_vars">Make.vars について</h2>
+
+<p>
+Makeコマンドによるコンパイルでは、
+コンパイルの設定を "Make.vars" というファイルで行います.
+</p>
+
+<p>
+このファイルは、基本的に
+<pre>
+DYNAMICS_ENGINE = aist
+OB_DIR =
+JDK_DIR = $(HOME)/usr/jdk1.5.0_07
+BOOST_INC_DIR =
+BOOST_LIB_DIR =
+BOOST_LIB_SFX = -mt
+TVMET_INC_DIR = $(HOME)/usr/tvmet-1.7.1/include
+NS_HOST = localhost
+NS_PORT = 2809
+</pre>
+といったかたちで、設定項目と設定内容を記述したものになっています。
+</p>
+
+<p>
+このファイルはMakefileに取り込んで使うものなので、文法はMakefileと同じです.
+例えば、$(環境変数) とすることで、環境変数の値を取り込むこともできます.
+また、# 以下の文字列はコメントとなります。
+</p>
+
+<p>
+設定内容は、主にコンパイルの際に必要なプログラムやライブラリの位置を示したものとなっています。
+基本的には、対象とするプログラムやライブラリがOSやコンパイルツールにおいて
+デフォルトで利用可能な設定となっていれば、
+Make.vars で設定する必要はありません。
+自前でインストールしたプログラムやライブラリなどがOSやコンパイルツールのパスに取り込まれていない場合に、
+Make.vars で設定することになります。
+</p>
+
+<p>
+このような設定は configure と呼ばれる自動設定スクリプトで行うことが多いのですが、
+OpenHRP3.0系では今のところそのようなスクリプトは用意しておりません。
+OpenHRP3.1.0 &beta;版にてCMakeの導入を行ないましたので、今後はバージョン3.1系にて対応していく予定です.
+</p>
+
+
+<h2>Make.vars の作成</h2>
+
+<p>
+Make.vars を作成するにあたっては、その雛形として利用できるファイルを用意していますので、
+これを利用してください.
+</p>
+
+<p>
+OpenHRPソースのトップディレクトリに、
+OS/ディストリビューションごとに以下の雛形ファイルがあります。
+</p>
+
+<ul>
+ <li>Ubuntu Linux で、<a href="./install_ubuntu_3_0.html">「Ubuntu Linux におけるインストール」</a>に従う場合
+  <ul>
+   <li>Make.vars.ubuntu.8.04 (Ubuntu 8.04用)</li>
+   <li>Make.vars.ubuntu.8.10 (Ubuntu 8.10用)</li>
+  </ul>
+ </li>
+ <li>その他一般向けの雛形
+  <ul>
+   <li>Make.vars.template</li>
+  </ul>
+ </li>
+</ul>
+
+<p>
+これらのファイルの中から対応するものを、
+ソースのトップディレクトリに "Make.vars" としてコピーしてください。
+</p>
+
+
+<h2 id="make.vars">Make.vars の設定内容</h2>
+
+<p>
+雛形よりコピーしたMake.varsについて、必要に応じて修正を行います.
+</p>
+
+<p>
+以下ではMake.varsの主要な設定項目を説明します。
+</p>
+<p>
+ただし、ここで紹介していない設定項目もあり、
+バージョンアップに伴って設定内容が変わることもあり得ますので、
+雛形ファイルに記述されたコメントもあわせて参考にするようにしてください。
+</p>
+
+<p>
+<table border="1">
+ <tr><th colspan="2">実行方法に関する設定項目</th></tr>
+ <tr>
+  <th>DYNAMICS_ENGINE</th>
+  <td>使用する動力学サーバの選択。ut (東大版), aist (産総研版) のいずれかを指定する。（※）
+  </td>
+ </tr>
+ <tr id="NS_HOST">
+  <th>NS_HOST</th>
+  <td>ミドルウェア(CORBA,OpenRTM)のネームサーバのホスト。通常は localhost でよい。（※）</td>
+ </tr>
+ <tr id="NS_PORT">
+  <th>NS_PORT</th>
+  <td>ミドルウェア(CORBA,OpenRTM)のネームサーバのポート番号。通常は初期値でよい。（※）</td>
+ </tr>
+
+ <tr><th colspan="2">プログラミング言語環境に関する設定項目</th></tr>
+ <tr>
+  <th>JDK_DIR</th>
+  <td>JDKのインストール先ディレクトリ。java, javac といったJDKのコマンドにパスが通っていない場合に指定する。（※）</td>
+ </tr>
+ <tr>
+  <th>JYTHON_DIR</th>
+  <td>Jythonのインストール先ディレクトリ。(jython.jarがあるディレクトリ。) （※）</td>
+ </tr>
+
+ <tr><th colspan="2">コンパイル方法に関する設定項目</th>
+ <tr>
+  <th>DEBUG_VER</th>
+  <td>デバッグ・オプションの切り替え。以下から選択してください，
+    <ul>
+      0：　(最適化あり、デバッグ情報なし)<br>
+      1：　(最適化あり、デバッグ情報あり)<br>
+      2：　(最適化なし、デバッグ情報あり)
+    </ul>
+  </td>
+ </tr>
+ <tr>
+  <th>CXX_CPU_FLAGS</th>
+  <td>特定のCPUに対する最適化のためのコンパイルオプションを指定する。SSEなどを使いたい場合、ここで設定するとよい。
+ </tr>
+
+ <tr><th colspan="2">ライブラリに関する設定項目</th>
+ <tr>
+  <th>J3DHOME</th>
+  <td>Java3Dのインストール先ディレクトリ。空白の場合は同名の環境変数に${OPENHRPHOME}/client/gui/Java3D/1.4.1/unix を代入します。（※）</td>
+ </tr>
+ <tr>
+  <th>JMFHOME</th>
+  <td>JMFのインストール先ディレクトリ。空白の場合は同名の環境変数に ${OPENHRPHOME}/client/gui/JMF2.1.1e/Unix を代入します。（※）</td>
+ </tr>
+ <tr>
+  <th>OB_DIR</th>
+  <td>omniORBのインストール先ディレクトリ。</td>
+ </tr>
+ <tr>
+  <th>BOOST_INC_DIR</th>
+  <td>boostライブラリのヘッダファイルのための追加パス</td>
+ </tr>
+ <tr>
+  <th>BOOST_LIB_DIR</th>
+  <td>boostライブラリのライブラリファイルのための追加パス</td>
+ </tr>
+ <tr>
+  <th>BOOST_LIB_SFX</th>
+  <td>boostライブラリのライブラリファイルのサフィックス(拡張子を除く)。
+     boostのライブラリファイルは様々なバージョンを様々なサフィックスで区別しており、
+     このサフィックスが環境によって違う場合があるので、ここで指定する。
+     基本的にはマルチスレッドのリリース版に対応するものを指定すればよい。
+  </td>
+ </tr>
+ <tr>
+  <th>TVMET_DIR</th>
+  <td>tvmetライブラリのインストール先ディレクトリ</td>
+ </tr>
+ <tr>
+  <th>OPENRTM_DIR</th>
+  <td>OpenRTM-aist のインストール先ディレクトリ</td>
+ </tr>
+
+ <tr>
+  <th>LAPACK_VARIANT</th>
+  <td>LAPACKライブラリの種類を指定する。LAPACK（Fortranオリジナル版）,
+      CLAPACK(C言語変換版), ATLAS 等から選択する。</td>
+ </tr>
+ <tr>
+  <th>LAPACK_INC_DIR</th>
+  <td>LAPACKのヘッダファイルのための追加パス</td>
+ </tr>
+ <tr>
+  <th>LAPACK_LIB_DIR</th>
+  <td>LAPACKのライブラリファイルのための追加パス</td>
+ </tr>
+ <tr>
+  <th>LAPACK_VARIANT_LIB_DIR</th>
+  <td>ライブラリファイルが複数のディレクトリにまたがる場合に、LAPACK_LIB_DIRに追加して指定する。</td>
+ </tr>
+ <tr>
+  <th>CLAPACK_SUFFIX</th>
+  <td>CLAPACKにおいてライブラリファイルにつく "_LINUX" などのサフィックスがあれば指定する。</td>
+ </tr>
+ <tr>
+  <th>M_ARCHITECTURE</th>
+  <td>特定のアーキテクチャに対するライブラリパス設定、コンパイルオプションの指定などに使用。今はi386のみに対応。予約変数。</td>
+ </tr>
+</table>
+</p>
+
+<p>
+（※）： 運用時の変更はbin/unix/config.shで行ないます。
+</p>
+
+<p>
+パスに関する以下の項目については、システムの実行パス、インクルードパス、ライブラリパスに含まれる
+ディレクトリ(Linuxにおける /usr, /usr/local 以下などや、自前でパスを設定したディレクトリ）
+へインストールされている場合は、空白とします。
+<ul>
+ <li>OB_DIR
+ <li>BOOST_INC_DIR, BOOST_LIB_DIR
+ <li>TVMET_DIR
+ <li>OPENRTM_DIR
+ <li>LAPACK_INC_DIR, LAPACK_LIB_DIR, LAPACK_VARIANT_LIB_DIR
+</ul>
+</p>
+
+
+<p>
+また、スペースなどの空白文字を含むパスはコマンドラインツールが対応出来ない場合があるので、
+インストール先はそのようなパスを避けるようにしてください。
+</p>
+
+
+<h2>Makeコマンドの実行</h2>
+
+<p>
+OpenHRPソースのトップディレクトリで make コマンドを実行し、コンパイルを行います。
+</p>
+
+<p>
+コンパイルエラーがでた場合は、エラーメッセージを参考に、
+必要なプログラムやライブラリが正しくインストールされているか、
+Make.vars の設定は正しいかといったことを確認してみてください。
+</p>
+
+<p>
+なお、現在のMakefileは依存関係の指定が一部甘い部分があり、
+設定をしなおして再コンパイルする際には、
+一度 "make clean" を実行して、Makeを最初からやり直す方がよい場合もあります。
+</p>
+

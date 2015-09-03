@@ -1,0 +1,132 @@
+title = Softwares Install by Environment Configurator<br>(For Windows)
+base  = ..
+
+<p>
+As described in <a href="./install_windows.html">"OpenHRP3 Installation guide for Windows"</a> page,
+some of the supprted softwares are supposed to install using an automatic installer called "Environment 
+Configurator". In this page we explain how to install those supprted softwares manually.
+</p>
+
+<h2>Supported Softwares</h2>
+<p>
+We describe how to obtain and install, following supported softwares.
+<ul>
+ <li><a href="#openrtm">OpenRTM-aist Ver.1.0.0-RC1</a></li>
+ <li><a href="#openrtm">omniORB Ver.4.1.2</a></li>
+ <li><a href="#openrtm">python Ver.2.4.4</a></li>
+ <li><a href="#openrtm">PyYAML Ver.3.05</a></li>
+ <li><a href="#jython">Jython Ver.2.2.1</a></li>
+ <li><a href="#tvmet">tvmet Ver.1.7.2</a></li>
+ <li><a href="#clapack">CLAPACK Ver.3.1.1</a></li>
+ <li><a href="#boost">Boost Ver.1.35.0</a></li>
+</ul>
+</p>
+
+<h3 id="openrtm" >Setup OpenRTM environment</h3>
+
+<p>
+Here we install latest version of "OpenRTM-aist". (The latest released version of OpenHRP, needs 
+1.0.0-RC1 version of OpenRTM-aist.)
+</p>
+<p>
+Visit <a href="http://www.is.aist.go.jp/rt/OpenRTM-aist/" target="_blank">OpenRTM-aist Official Website</a>
+->"Downloads"->"Current Version (C++)"->"OpenRTM-aist-1.0.0-RC1"->" Pre-built Package for Windows" section. Find the set of packages built for 
+"Visual Studio 2008" and then download the following Windows installers.
+</p>
+
+<ul>
+  <li>OpenRTM-asit (English)</li>
+  <li>OmniORB</li>
+  <li>python</li>
+  <li>PyYAML</li>
+</ul>
+
+<p>
+Double-click and run the installation process of each downloaded package, according to the 
+guidence of installer. You can proceed with default installer settings, without making any changes.
+</p>
+
+
+<h3 id="jython"> Jython </h3>
+
+<p>
+Please download Jython installer from "Download" page at <a href="http://www.jython.org/" target="_blank">http://www.jython.org/</a>.
+Once you double-click the downloaded file, the installer will be launched.
+Please install as you are guided by the installer. You don`t have to change the installer settings, 
+just porceed with defaults.
+</p>
+
+
+<h3>Library Installations</h3>
+
+<h4 id="tvmet">tvmet</h4>
+
+<p>
+Here we install tvmet, which is a library for vector and matrix calculation.
+</p>
+
+<p>
+You can install tvmet either using the original source package available at 
+<a href="http://tvmet.sourceforge.net/" target="_blank">http://tvmet.sourceforge.net/</a> 
+or using the easy installer we prepared for windows, which is available at 
+"<a href="download.html#download_others">Downloads</a>" page in this site. 
+</p>
+
+<p>
+In case of easy installer, download the file named "tvmet-xxx-win.msi", then double click 
+to start installation. Proceed with the guidence given by installer. You can proceed with default 
+installer settings, without making any changes.
+</p>
+
+<p>
+If you wish to use the original source package, it is necessary to re-configure the 
+configuration file in source package, to be compatible with windows platform. 
+Dowanload the source package, and then extract to the path where you want tvmet to be 
+installed.Go to the extracted folder and locate the file 'include\tvmet\config\config-vc71.h'. 
+Then Copy it to the path 'include\tvmet\' and rename as "config.h".
+</p>
+
+
+<h4 id="clapack">CLAPACK</h4>
+
+<p>
+There is another vector and matrix calculation library called "Lapack".
+</p>
+
+<p>
+Lapack has number of derivated versions, and due to reliability and safety reasons, 
+we use "CLAPACK" derivation for OpenHRP3s' windows version. An easy installer named 
+"CLAPACK-xxx-.msi" is available at "<a href="download.html#download_others">Downloads</a>" 
+page in this site. Download it and double click to start install. You can proceed with 
+default installer settings, without making any changes.
+</p>
+
+
+<h4 id="boost"> Boost </h4>
+
+<p>
+Here we are going to install a collection of C++ libraries called, "Boost" distributed by 
+<a href="http://www.boost.org/" target="_blank">http://www.boost.org/</a>.
+</p>
+
+<p>
+We have prepared an easy installer, which installs pre-compiled binary libraries of Boost, 
+that are comptible with Visual C++ 2008. Download the file "Boost-xxx_VC9.msi" available at 
+"<a href="download.html#download_others">Downloads</a>" page. Double click to start installation 
+and follow the instructions. You can proceed with default installer settings, without making 
+any changes.</p>
+
+<p>
+However, there is an installer distributed by 
+<a href="http://www.boost-consulting.com/" target="_blank">http://www.boost-consulting.com/</a> 
+that allows you to select the Visual C++ compiler and library types. Then it installs the 
+compatible libraries for your Visual C++ version. 
+</p>
+
+<p>
+In case of using this installer, you will lead to a step called "Select Default Variants" 
+during the installation process. Select the particular Visual C++ version you are using, 
+in Compiler block. Select "Multithread" and "Multithread Debug" in Varients block.
+</p>
+<br>
+

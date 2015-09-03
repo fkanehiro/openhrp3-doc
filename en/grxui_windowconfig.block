@@ -1,0 +1,54 @@
+title = Edit Screen Structure
+base  = ..
+
+<p>
+You can divide the screen and move the tab groups by simple drag & drop on the tab part.
+</p>
+
+<h3> Division1 </h3>
+  <p>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/windowconfig1.png"><br>
+  Fig.1: Dividing Panel 1
+  </p>
+
+<h3> Dicision2 </h3>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/windowconfig2.png"><br>
+  Fig.2: Dividing Panel 2
+  </p>
+
+<h3> Division Ratio Adjustment </h3>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/windowconfig3.png"><br>
+  Fig.3: Adjusting Partition Ratio
+  </p>
+
+<h3> Movement of Tag Group </h3>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/windowconfig4.png"><br>
+  Fig.4: Moving to other Tab Group 
+  </p>
+
+<h3> Maximization </h3>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/windowconfig5.png"><br>
+  Fig.5: Maximizing a Tab Group
+  </p>
+
+<h3> Change into a Window View </h3>
+  <p>
+  <p align="center">
+  <img src="../image/grxui/windowconfig6.png"><br>
+  Fig.6: Change a Tab Panel into a Window
+  </p>
+
+<h3> Save the Screen Structure </h3>
+  <p>
+  </p>
+

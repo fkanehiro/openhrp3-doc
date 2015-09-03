@@ -1,0 +1,17 @@
+title = Release Note Ver.3.0.1
+base  = ..
+
+<h2>Release Note Ver.3.0.1</h2>
+
+<p>
+Basic changes in Ver.3.0.1:
+
+<ul>
+  <li>The issue with matrix calculation library, in Ver.3.0.0 was resolved.</li>
+  <li>OpenHRP3 is no more supported with Visual C++ 2005. Please use Visual C++ 2008 from now on.</li>
+  <li>Added Make.vars and install script for Ubuntu 8.04 .</li>
+  <li>Added arm-type sample robot "PA10".(Model data was provided by "MITSUBISHI HEAVY INDUSTRIES, LTD")</li>
+  <li>The license was changed to EPL along with the start of general distributing.</li>
+</ul>
+<div align="right">18-06-2008</div>
+</p>

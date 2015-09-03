@@ -1,0 +1,30 @@
+title = Range Sensor View
+base  = ..
+
+<h2>Range Sensor View概要</h2>
+<p>
+Range Sensor Viewを構成する各種要素について説明します。
+<br>
+Range Sensor Viewは初期状態では表示されません。<br>
+"ウインドウ"→"ビューの表示"→"その他"を開き、"GrxUI"の"Range Sensor View"を選択し、"OK"ボタンをクリックすると表示されます。
+
+
+</p>
+<p align=center>
+<img src="../img_new/um_018.png">
+</p>
+
+<ul>
+<ol>
+<li>Model名<br>
+リストボックスからModel名を選択します。
+</li>
+<li>Sensor名<br>
+リストボックスからSensor名を選択します。
+</li>
+<li>描画エリア<br>
+Logが作成されるとRenge Sensorの出力が描画されます。
+</li>
+</ol>
+</ul>
+

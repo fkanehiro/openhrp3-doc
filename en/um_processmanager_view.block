@@ -1,0 +1,28 @@
+title = Process Manager View
+base  = ..
+
+<h2>Process Manager View</h2>
+<p>
+Here we explain various elements that compose Process Manager View.
+</p>
+<p align=center>
+<img src="../img_new/um_006.png"><br>
+Initial state
+</p>
+
+<p align=center>
+<img src="../img_new/um_021.png"><br>
+When right-clicked in display area
+</p>
+
+<ul>
+<li><p>Display area<br>
+Status messages of each process is displayed.
+If you right-click on the display area a menu as shown above is displayed. There you can select the 
+processes to be displayed and clear messages.
+</p></li>
+</ul>
+
+
+
+

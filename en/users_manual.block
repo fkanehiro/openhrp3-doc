@@ -1,0 +1,96 @@
+title = User's Manual
+base  = ..
+
+<h2>Overview of simulation</h2>
+<p>
+Here we explain about the various elements that forms OpenHRP.
+</p>
+<ul>
+  <li><a href="./abstract.html">Overview of simulation</a></li
+</ul>
+
+
+<h2>How to use GrxUI user interface</h2>
+<p>
+The following document is about a brief overview of OpenHRP user interface so called 
+"GrxUI" and explains how to use it.
+</p>
+<ul>
+  <li><a href="./overview.html">User interface</a></li>
+</ul>
+
+
+<h2>Guidance for creating a model</h2>
+<p>
+This section describes about how to create a model that uses for simulation.
+First, we show the procedure of creating a model and then explain what type of models 
+actually being used, by taking a sample robot as example.
+</p>
+<ul>
+  <li><a href="./create_model.html">Overview of VRML model</a></li>
+  <li><a href="./sample_model.html">Sample Humanoid Robot</a></li>
+  <li><a href="./howtoeditmodel.html">Creating models using GrxUI</a></li>
+</ul>
+
+<h2>Guidance for creating a project</h2>
+<p>
+This section describes about how to create a project.
+</p>
+<ul>
+ <li><a href="./create_project.html">Creating simulation project</a></li>
+</ul>
+
+<h2>Guidance for building a controller</h2>
+<p>
+In OpenHRP, a control program that outputs instruction value to the robot by reading the 
+sensor value from the robot, is called "Controller". Following sections describe how to 
+build a controller.
+</p>
+
+<h3>Sample Controller</h3>
+<p>
+Here we describe about a sample controller called "SamplePD", that makes a sample robot 
+walk according to the pattern-file.
+</p>
+<ul>
+  <li><a href="./controller_pd.html">Building a controller</a></li>
+  <li><a href="./create_bridge.html">Creating a configuration file of a controller</a></li>
+</ul>
+
+<h3>Controller-Bridge</h3>
+<p>
+In this section we discuss about controller-bridge, that helps to use the controller you built, 
+on the simulator.
+</p>
+<ul>
+  <li><a href="./controller_bridge.html">How to use controller-bridge</a></li>
+</ul>
+
+<h3>Making periodically execute RT component synchronized with simulation time</h3>
+<p>
+To properly simulate a periodically executing RT component that uses real-time OSs' functinality 
+such as as in ART-Linux, the RT component has to be executed periodically based on the clock in 
+simulation world. Here we describe how to make such an RT component.
+</p>
+<ul>
+  <li><a href="./howtomakertc.html">Making periodically execute RT component synchronized with simulation time</a></li>
+</ul>
+
+
+<h2>Practical samples</h2>
+
+<p>
+Here we introduce a practical sample, that reveals cooperate work of OpenHRP and RTC.
+</p>
+
+<ul>
+  <li><a href="./view_simulation.html">How to use view-simulation</a></li>
+  <li><a href="./joystick_sample.html">Joystick connection sample</a></li>
+  <li><a href="./PD_HG_simulation.html">High-gain mode and torque-control mode coorperated simulation</a></li>
+  <li><a href="./notDynamicsSample.html">The simulation which does not perform dynamics calculation </a></li>
+  <li><a href="./range_sensor.html">Distance sensor simulation using RangeSensor node</a></li>
+  <li><a href="./pathplanner.html">Move operation design tutorial </a></li>
+  <li><a href="./BBoxModel.html">How to form the shape data of a model into a bounding box </a></li>
+  <li><a href="./springJoint.html">The method of spring damper modeling of a joint</a></li>
+  <li><a href="./ExtraJoint.html">The simulation using a virtual joint</a></li>
+</ul>

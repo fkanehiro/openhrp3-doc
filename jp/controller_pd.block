@@ -1,0 +1,315 @@
+title = コントローラ作成ガイド(歩行パターン)
+base  = ..
+
+<h2> 概要 </h2>
+<p>
+ここでは、歩行パターンファイルに基づいてPD制御でロボットを歩行させるコントローラをOpenRTMコンポーネントとして作成する方法を説明します。
+</p>
+
+<h2> ファイルの作成 </h2>
+<p>
+まず、作業フォルダーとして新しいフォルダーを作成します。(例えば "mySamplePD" としましょう。)<br>
+その中に下記のとおり３つのファイルを用意します。
+</p>
+mySamplePD/etc/ 内
+<ul>
+<li>歩行パターンファイル</li>
+  <ul>
+	<li>angle.dat	(コントローラの関節角度データ)</li>
+	<li>vel.dat  	(コントローラの関節角速度データ)</li>
+  </ul>
+<li>ゲインファイル</li>
+  <ul>
+	<li>PDgain.dat	(コントローラのゲイン)</li>
+  </ul>
+</ul>
+<p>
+<b>※</b>　テスト用のファイルが "OpenHRP3/sample/controller/SamplePD/etc/" フォルダー内に
+置いてありますので、それらの３つのファイルを "mySamplePD/etc/" 内にコピーして使ってもらって
+も構いません。<br>
+なお、&beta;4から対応したバイナリパッケージによるインストールでは、
+<ul>
+ <li>Ubuntu環境の場合：/usr/share/</li>
+ <li>Windows環境の場合：OpenHRPSDK/share/</li>
+</ul>
+以下のOpenHRP-3.1/sample/controller/SamplePD/etcをご使用ください。<br>
+ファイル内容はいずれの場合も同じです。<br>
+</p><br>
+
+
+<h3> 歩行パターンファイル </h3>
+<p>
+歩行パターンファイル(angle.dat,vel.dat)のフォーマットについて説明します。
+</p>
+<pre>
+時刻  &lt;JointID=0 の関節のデータ&gt;  &lt;JointID=1 の関節のデータ&gt;  …  &lt;JointID=nの関節のデータ&gt;
+</pre>
+<p>
+一行が１フレームに相当し、デリミッタはtabです。時刻は開始時刻からの相対時間、関節のデータはangle.datの場合角度、vel.datの場合角速度に相当します。例えばサンプルの場合、14秒間6701フレームの29個の関節データが表現されています。<br>
+</p>
+<h3> ゲインファイル </h3>
+PD制御のゲインを記録します。そのフォーマットはJointID行にPゲイン、Dゲインの任意個をスペースでわけて書くこととし、具体的には以下のとおりとします。
+<pre>
+Pゲイン Dゲイン (<= JointID = 0)
+Pゲイン Dゲイン (<= JointID = 1)
+...
+Pゲイン Dゲイン (<= JointID = n)
+</pre>
+
+<h3> スケルトン作成 </h3>
+<p>
+コンポーネントのスケルトンを作成します。angleという名前のInPort、torqueという名前のOutPortを備えたSamplePDコンポーネントです。
+RTC　Builderを使用する方法とrtc-templateを使用する方法があります。
+</p>
+<h4> RTC BUilderを使用する </h4>
+<p>
+RTC Builderを起動します。RTC Builderに関する詳しい説明は、OpenRTM マニュアルの 
+<a href="http://www.openrtm.org/openrtm/ja/content/rtcbuilder-110" target="_blank">RTCBuilder-1.1.0とは</a>
+で確認してください。<br>
+基本プロファイル入力ページを開いて図１のように設定します。
+</p>
+<p align="center">
+<img src="../img_new/RtcBuilderBasic.png"><br>
+図1 : RTC Builder Basic
+</p>
+<p>
+アクティビティページを開いて図２のように設定します。
+</p>
+<p align="center">
+<img src="../img_new/RtcBuilderActivity.png"><br>
+図2 : RTC Builder Activity
+</p>
+<p>
+データポートページを開いて図３のように設定します。
+</p>
+<p align="center">
+<img src="../img_new/RtcBuilderDataPort.png"><br>
+図3 : RTC Builder DataPort
+</p>
+<p>
+言語・環境ページを開いて図４のように設定します。<br>
+Linuxの場合は、Use old buid environment.にチェックを入れてください。
+</p>
+<p align="center">
+<img src="../img_new/RtcBuilderLanguage.png"><br>
+図4 : RTC Builder Language and environment
+</p>
+<p>
+基本プロファイル入力ページに戻って、コード生成ボタンを押すと、コンポーネントのスケルトンが作成されます。
+</p>
+
+<h2> プログラミング </h2>
+<h3> SamplePD.h </h3>
+<p>
+生成されたソースSamplePD.hを編集します。
+</p>
+<p>
+コントローラが使用する種々のメンバを追加します。
+</p>
+<pre>
+private: 
+  int dummy; 
+  std::ifstream angle, vel; // 関節角度, 関節角速度
+  double *Pgain; // Pゲインの配列
+  double *Dgain; // Dゲインの配列
+  std::vector&lt;double&gt; qold; // ひとつ前の関節角度を保持
+</pre>
+
+<h3> SamplePD.cpp </h3>
+<p>
+最初にヘッダファイルのインクルードとマクロの定義を行います。
+</p>
+<pre>
+#include &lt;iostream&gt;
+
+#define DOF (29) // 自由度
+#define TIMESTEP 0.002 // シミュレーションのステップ
+
+// 各種ファイル群
+#define ANGLE_FILE "etc/angle.dat"
+#define VEL_FILE   "etc/vel.dat"
+#define GAIN_FILE  "etc/PDgain.dat"
+
+namespace {
+  const bool CONTROLLER_BRIDGE_DEBUG = false;
+}
+</pre>
+<p>
+SamplePD.hで宣言したメソッドを実装します。
+</p>
+<p>
+SamplePD::SamplePDでコンストラクタを追加します。
+</p>
+<pre>
+SamplePD::SamplePD(RTC::Manager* manager)
+  : RTC::DataFlowComponentBase(manager),
+    // &lt;rtc-template block="initializer"&gt;
+    m_angleIn("angle", m_angle),
+    m_torqueOut("torque", m_torque),
+    
+    // &lt;/rtc-template&gt;
+    dummy(0),
+    qold(DOF)
+{
+</pre>
+<p>
+SamplePD::onInitialize()で歩行パターンファイルを開き、ゲインファイルからPDゲイン値を変数に取り込みます。
+</p>
+<pre>
+RTC::ReturnCode_t SamplePD::onInitialize()
+{
+  // Registration: InPort/OutPort/Service
+  // &lt;rtc-template block="registration"&gt;
+  // Set InPort buffers
+  addInPort("angle", m_angleIn);
+
+  // Set OutPort buffer
+  addOutPort("torque", m_torqueOut);
+
+  // Set service provider to Ports
+
+  // Set service consumers to Ports
+
+  // Set CORBA Service Ports
+
+  // &lt;/rtc-template&gt;
+
+  // &lt;rtc-template block="bind_config"&gt;
+  // Bind variables and configuration variable
+
+  Pgain = new double[DOF];
+  Dgain = new double[DOF];
+
+  // 関節角度ファイルを開く
+  angle.open(ANGLE_FILE);
+  if (!angle.is_open()){
+    std::cerr &lt;&lt; ANGLE_FILE &lt;&lt; " not found" &lt;&lt; std::endl;
+  }
+
+  // 関節角速度ファイルを開く
+  vel.open(VEL_FILE);
+  if (!vel.is_open()){
+    std::cerr &lt;&lt; VEL_FILE &lt;&lt; " not found" &lt;&lt; std::endl;
+  }
+
+  // ゲインファイルを開き配列に代入
+  std::ifstream gain;
+  gain.open(GAIN_FILE);
+  if (gain.is_open()){
+    for (int i=0; i&lt;DOF; i++){
+      gain &gt;&gt; Pgain[i];
+      gain &gt;&gt; Dgain[i];
+    }
+    gain.close();
+  }else{
+    std::cerr &lt;&lt; GAIN_FILE &lt;&lt; " not found" &lt;&lt; std::endl;
+  }
+
+  // トルク, 関節角度ポートの長さをロボットの自由度分確保
+  m_torque.data.length(DOF);
+  m_angle.data.length(DOF);
+
+  // &lt;/rtc-template&gt;
+  return RTC::RTC_OK;
+}
+</pre>
+<p>
+SamplePD::~SamplePDでファイルのクローズと配列の開放を行います。
+</p>
+<pre>
+  if (angle.is_open()) angle.close();
+  if (vel.is_open()) vel.close();
+  delete [] Pgain;
+  delete [] Dgain;
+</pre>
+<p>
+RTC::ReturnCode_t SamplePD::onActivatedでは初期化処理を行います。
+</p>
+<pre>
+RTC::ReturnCode_t SamplePD::onActivated(RTC::UniqueId ec_id)
+{
+  std::cout &lt;&lt; "on Activated" &lt;&lt; std::endl;
+  angle.seekg(0);
+  vel.seekg(0);
+
+  // 関節角度InPortの値をアップデート
+  if(m_angleIn.isNew()){
+    m_angleIn.read();
+  }
+
+  // １フレーム前の値を保持する
+  for(int i=0; i &lt; DOF; ++i){
+    qold[i] = m_angle.data[i];
+  }
+
+  return RTC::RTC_OK;
+}
+</pre>
+<p>
+RTC::ReturnCode_t SamplePD::onExecuteメソッドを編集します。このメソッドがシミュレーションのステップごとに呼ばれ、指令を更新します。
+</p>
+<pre>
+RTC::ReturnCode_t SamplePD::onExecute(RTC::UniqueId ec_id)
+{
+  if( CONTROLLER_BRIDGE_DEBUG )
+  {
+    std::cout &lt;&lt; "onExecute" &lt;&lt; std::endl;
+  }
+
+  // 関節角度InPortの値をアップデート
+  if(m_angleIn.isNew()){
+    m_angleIn.read();
+  }
+
+  double q_ref, dq_ref;
+  angle &gt;&gt; q_ref; vel &gt;&gt; dq_ref;// skip time
+  
+  
+  // 各関節のtorque値を決定
+  for (int i=0; i&lt;DOF; i++){
+    angle &gt;&gt; q_ref;
+    vel &gt;&gt; dq_ref;
+    double q = m_angle.data[i];
+    double dq = (q - qold[i]) / TIMESTEP;
+    qold[i] = q;
+    
+    m_torque.data[i] = -(q - q_ref) * Pgain[i] - (dq - dq_ref) * Dgain[i];
+  }
+  
+  //トルクを出力
+  m_torqueOut.write();
+  
+  return RTC::RTC_OK;
+}
+</pre>
+
+<h2> コンパイル </h2>
+<h3> Linuxの場合 </h3>
+<p>
+Makefileが自動的に生成されます。そのMakefileを使用してコンパイルします。
+</p>
+<pre>
+make -f Makefile.SamplePD
+</pre>
+
+<h3> Windowsの場合 </h3>
+<p>
+CMake用のCMakeList.txtが自動的に生成されます。<br>
+Doxygenをインストールしていない場合は、CMakeList.txtをエディタで開いて、次の行をコメントアウトしてください。
+<pre>
+# check doxygen installed
+#find_package(Doxygen)
+#if(DOXYGEN_FOUND STREQUAL "NO")
+#　　message(FATAL_ERROR "Doxygen not found.")
+#endif()
+</pre>
+
+<p>
+CMakeのGUIを起動して、必要な内容を設定し、VC++のバージョンを選択してソリューションファイルを生成してください。<br>
+作成されたソリューションファイル(*.sln)を開き、ビルドを実行してください。
+詳しくは、OpenRTM マニュアルの 
+<a href="http://www.openrtm.org/openrtm/ja/content/コンパイル方法-windows、cmake-利用" target="_blank">コンパイル方法 (Windows、CMake 利用 )</a>
+をご覧ください。<br>
+</p>
+
+

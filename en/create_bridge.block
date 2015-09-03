@@ -1,0 +1,200 @@
+title = Creating a configuration file of a controller
+base  = ..
+
+<h2> Overview </h2>
+<p>
+Operation of a controller requires the rtc.conf file which describes a setup of RT component, and the script (batch) file which described a setup of connection between a controller bridge and RT component. 
+A controller bridge is the process of passing input and output between a robot and each OpenRTM component. It also creates RT component for a robot's input and output. 
+Here, the creation method of two files is explained.
+</p>
+
+<h2> How to create using GUI  </h2>
+<p>
+Please choose Sample from the list of robots by Controller View, and push a "Edit" button. </p>
+<p align="center">
+<img src="../img_new/GrxUI_Controller.png"><br>
+Fig.1 : Controller View
+</p>
+
+<p>
+Please set up the name and the interval of operation of Controller and push a "new File" button.<br>
+When you have already created the file, please push a "select File" button, choose a file and push a "open file" button. 
+You can edit a file. </p>
+<p align="center">
+<img src="../img_new/GrxUI_Controller_newFile.png"><br>
+Fig.2 : Controller View
+</p>
+
+<p>
+The dialog for a file setup opens. The name of the controller is already displayed. Because, it must be in agreement with the name set up by Controller View. <br>
+Other default values are displayed. 
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel.png"><br>
+Fig.3 : Controller Bridge Dialog
+</p>
+
+<p>
+You set up a robot's input-output port to control.<br>
+Please right-click a table and choose "add". When you delete, please choose and right-click the line of a table and choose "delete". <br>
+Please choose each cell, and as shown in a figure, set up.
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel_port.png"><br>
+Fig.4 : Controller Bridge Dialog
+</p>
+
+<p>
+If you choose the cell of id, the dialog for id edit will open. Since a robot's link names and sensor names are displayed, please put in a check. <br>
+Selection of a "All joints" button will choose all links with Joint ID. Moreover, the order of input and output becomes the turn that the check button is located in a line. 
+You can replace the turn of a button by drag-and-drop operation. <br>
+Please set up not contradictory to a setup of property. Please refer to <a href="./controller_bridge.html">"How to use Controller-Bridge"</a> for the details of a setup.
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel_id.png"><br>
+Fig.5 : Controller Bridge ID Dialog
+</p>
+
+<p>
+Please set up Module Name and Controller RTC Name and push a "check" button. <br>
+Please check that the error message is not displayed. </p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel_check.png"><br>
+Fig.6 : Controller Bridge Dialog
+</p>
+
+<p>
+When you save a setup of connection at another file, please put a check into "Use the configuration file", put in a file name, and push a "check" button. 
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel_conf.png"><br>
+Fig.7 : Controller Bridge Dialog
+</p>
+
+<p>
+Please push a "Save as" button, choose a file and save the contents. Please save as SamplePD.sh (.bat) to a mySamplePD directory in the example of this document. 
+Please push a "Close" button and close Dialog.
+</p>
+
+<h2> How to create using a text editor </h2>
+<p>
+Since two configuration files are text format, you can edit using the editor.<br>
+When you set up the details of rtc.conf not corresponding by GUI, or when you include a setup of an environment variable in a script, please use an editor. 
+</p>
+
+<h3 id="rtc_conf"> rtc.conf </h3>
+<p>
+<i>"rtc.conf"</i> file should be placed in the current directory when you start this particular ControllerBridge.<br>
+Please place on a mySamplePD directory in the example of this document. <br>
+<br>
+Please specify the following configurations in <i>"rtc.conf"</i>. 
+</p>
+<p>
+Specify the location(ip address) of the nameserver, according to your environment.
+</p>
+<pre>
+corba.nameservers: localhost:2809
+</pre>
+<p>
+Specify the settings regarding with log files.
+</p>
+<ul>
+  <li>To disable creating log files;
+    <ul>
+    <pre>logger.enable:NO</pre>
+    </ul>
+  </li>
+  <li>To enable creating log files;
+    <ul>
+    <pre>logger.enable:YES</pre>
+    </ul>
+  </li>
+  <p>
+  Specify the log file's name format and saving location(path). You can also specify the direct path as shown
+  below. 
+  </p>
+  <ul><pre>logger.file_name: D:\\Temp\\rtc%p.log</pre></ul>
+  <p>
+   Set the log level.
+  </p>
+  <ul>
+    <pre>logger.log_level: TRACE</pre>
+  </ul>
+</ul>
+<p>
+Specify the module file name and the component name.
+</p>
+<pre>
+manager.modules.preload: SamplePD
+manager.components.precreate: SamplePD
+</pre>
+<p>
+Normally you don't have to change the following contents.
+</p>
+<pre>
+naming.formats: %n.rtc
+manager.modules.load_path: .
+exec_cxt.periodic.rate: 1000000
+manager.modules.abs_path_allowed: yes
+exec_cxt.periodic.type: SynchExtTriggerEC
+</pre>
+<p>
+Refer OpenRTM 
+<a href="http://www.is.aist.go.jp/rt/OpenRTM-aist/html-en/Documents2FConfiguration.html" target="_blank">Configuaration</a>
+ manual, for detailed explanation about RT-components' configuration options.
+</p>
+<p>
+Note:<br>
+A sample conf file is available at <i>"OpenHRP3/sample/controller/SamplePD/rtc.conf"</i>.
+ You may copy that, edit and use by yourself.
+Meanwhile if you are using binary packages distributed with Beta4 release, please be remined to use 
+the sample file placed in <i>"OpenHRP3/sample/controller/SamplePD/rtc.conf"</i>, according to the appropriate 
+environment as shown below.
+<ul>
+ <li>On Ubuntu : /usr/share/</li>
+ <li>On Windows : OpenHRPSDK/share/</li>
+</ul>
+File content is same for both environment.</p>
+</p><br>
+
+<h3> Controller-bridge Settings </h3>
+<p>
+The purpose of separating the implementation of each RT-component is to improve the maintainability and the portability upon development process. 
+Here we describe, how to start controller-bridge and its connection settings with the component.<br>
+Please use SamplePD.sh (.bat) which placed in OpenHRP3/sample/controller/SamplePD, copying it to mySamplePD.
+</p>
+<h4>SamplePD.sh</h4>
+<pre>
+#!/bin/sh
+
+openhrp-controller-bridge \
+--server-name SamplePDController \
+--out-port angle:JOINT_VALUE \
+--in-port torque:JOINT_TORQUE \
+--connection angle:angle \
+--connection torque:torque
+</pre>
+<p>
+server-name：Name of OpenHRP controller.<br>
+(Ex: the component is registered in the nameserver as <i>"SamplePDController"</i>, in the above notation.)
+</p>
+<p>
+out-port：Specifies output port name and output property, seperated by colon.<br>
+(Ex: Output port <i>"angle"</i> outputs <i>"JOINT_VALUE"</i> property.)
+</p>
+<p>
+in-port：Specifies input port name and input property, seperated by colon.<br>
+(Ex: Input port <i>"torque"</i> inputs <i>"JOINT_TORQUE"</i> property.)
+</p>
+<p>
+connection：Used to specify the connection between ports.<br>
+Specifies model's i/o port name and controller's i/o port name, seperated by colon.<br>
+(Ex: Connects robot-model's port <i>"angle"</i> with controller's port <i>"angle"</i>. Same way it 
+conncets, robot-model's port <i>"torque"</i> with controller's port <i>"torque"</i>, as noted next 
+in line.)
+</p>
+
+<p>
+Please refer to <a href="./controller_bridge.html">"How to use Controller-Bridge"</a> for details of a starting option 
+</p>
+

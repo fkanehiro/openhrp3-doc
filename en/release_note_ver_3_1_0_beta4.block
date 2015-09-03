@@ -1,0 +1,61 @@
+title = Release Note Ver.3.1.0(&beta;4)
+base  = ..
+
+<h2>Release Note Ver.3.1.0(&beta;4)</h2>
+<p>
+Basic changes and updates from version 3.1.0(&beta;3) to 3.1.0(&beta;4):
+
+<ul>
+  <li>According with the version upgrade of OpenRTM, 
+   we now support OpenRTM-aist-1.0.0-Release.</li>
+
+  <li>OpenHRP3 now officially supports Ubuntu 9.1.</li>
+
+  <li>The problem of extending the simulation time is now resolved.</li>
+
+  <li>Fixed the issue of previous project name remaining in new projects.</li>
+
+  <li>Fixed the issue of not reflecting Collision setings.</li>
+
+  <li>Fixed the assertion occurrence of GrxUIonEclipse, at its start up.</li>
+
+  <li>Plane that defined in crossSection field was not orthogonal, respect to 
+   the line that defined in spine field. This problem is resolved.</li>
+
+  <li>Resolved miscellaneous problems of ModelLoader.</li>
+
+  <li>Resolved miscellaneous problems of ServerManagerView.</li>
+
+  <li>Visualized Bounding-box tree.</li>
+
+  <li>Enabled interference check using with Bounding-box.</li>
+
+  <li>Property input system is improved to be editable as user's preference.</li>
+
+  <li>GrxUIonEclipse now supports Eclipse3.4.2(Ganymede).</li>
+
+  <li>Published Eclipse3.4.2 and Eclipse3.2 packages that include all the 
+   plugins that are necessary for GrxUIonEclipse.</li>
+
+  <li>GrxUIonEclipse plugin now supports language switching between 
+   Japanese and English.</li>
+
+  <li>Published binary package installer for Windows.</li>
+
+  <li>Published Debian binary package for Linux.</li>
+
+  <li>Developed Joystick component as an Eclipse plugin.</li>
+
+  <li>pkg-config is now supported.</li>
+
+  <li>Switching between High-gain mode and Torque-control mode can now be done 
+   by Property-View window.</li>
+
+  <li>Each tab in OpenHRP-View are changed to views.</li>
+
+  <li>To correspond only to RGB form of no compression,
+   the format of the recording image changed. </li>
+</ul>
+
+<div align="right">16-03-2010</div>
+</p>

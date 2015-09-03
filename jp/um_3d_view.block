@@ -1,0 +1,161 @@
+title = 3D View
+base  = ..
+
+<h2>3D View概要</h2>
+<p>
+3D Viewを構成する各種要素について説明します。
+</p>
+<p align=center>
+<img src="../img_new/um_014.png">
+</p>
+
+<ul>
+<ol>
+<li>go home of eye pos. ボタン<br>
+クリックすることで 3DViewの視点をホームポジションに戻します。<br>
+右クリックするとメニューが表示され、現在の視点をホームポジションに設定したり、デフォルトの設定に戻したりすることができます。<br>
+ホームポジションはプロジェクトファイルに保存されます。<br>
+</li>
+<li>Type選択<br>
+3D ViewのTypeを下記から選択できます。
+<ul>
+<li>Room</li>
+<li>Walk</li>
+<li>Front</li>
+<li>Back</li>
+<li>Left</li>
+<li>Right</li>
+<li>Top</li>
+<li>Bottom</li>
+</ul>
+</li>
+<li>Rotation Mode ボタン<br>
+クリックすることでRotation Modeに切り替えます。<br>
+3DViewをドラッグして回転させて視点を移動します。
+</li>
+<li>Zoom Mode ボタン<br>
+クリックすることでZoom Modeに切り替えます。<br>
+3DViewをドラッグしてズームして視点を移動します。
+</li>
+<li>Pan Mode ボタン<br>
+クリックすることでPan Modeに切り替えます。<br>
+3DViewをドラッグして水平垂直移動して視点を移動します。
+</li>
+<li>Polygon/Wire Frame ボタン<br>
+クリックすることで Polygon ⇔ Wire Frame 表示を切り替えます。
+</li>
+<li>show/hide z=0 plane ボタン<br>
+クリックすることで show z=0 plane ⇔ hide z=0 plane 表示を切り替えます。<br>
+Z軸が0の位置へのメッシュの表示の制御です。
+</li>
+<li>show/hide Collision ボタン<br>
+クリックすることで show Collision ⇔ hide Collision 表示を切り替えます。<br>
+干渉チェック法線の表示の制御です。
+</li>
+<li>hide/show Distance ボタン<br>
+クリックすることで hide Distance ⇔ show Distance 表示を切り替えます。<br>
+干渉チェックペアの最短距離の表示の制御です。
+</li>
+<li>nocheck/check Intersection ボタン<br>
+クリックすることで nocheck Intersection ⇔ check Intersection 表示を切り替えます。<br>
+干渉チェックペアの干渉確認の表示の制御です。
+</li>
+<li>hide/show Center of Mass ボタン<br>
+クリックすることで hide Center of Mass ⇔ show Center of Mass 表示を切り替えます。<br>
+重心位置の表示の制御です。
+</li>
+<li>hide/show Center of Mass on floor ボタン<br>
+クリックすることで hide Center of Mass on floor ⇔ show Center of Mass on floor 表示を切り替えます。<br>
+重心位置の環境モデルへの投影表示の制御です。
+</li>
+<li>set Background Color ボタン<br>
+クリックすることで "色の設定"ダイアログボックスが表示され Background Colorを変更できます。<br>
+</li>
+<li>Capture ボタン<br>
+クリックすることで3DViewの静止画をPNG形式で保存することができます。<br>
+</li>
+<li>record ボタン<br>
+クリックすることで3DViewの動画をMOV形式で保存することができます。拡張子は明示的に付けてください。<br>
+後述のMovie Playerを使わない場合、QuickTime Playerで再生できます。
+<p align=center>
+<img src="../img_new/um_028.png">
+</p>
+"OK"をクリックすると、続いてVideo Formatの選択画面となります。<br>
+<p align=center>
+<img src="../img_new/um_029.png">
+</p>
+"OK"をクリックすると、Logの最初に戻って録画が始まります。再度"record"ボタンをクリックするか、Logの最後まで再生すると録画が止まります。
+</li>
+<li>movie player ボタン<br>
+クリックすることでMovie Playerを起動します。<br>
+<p align=center>
+<img src="../img_new/um_030.png">
+</p>
+</li>
+<li>hide/show Vision Sensor ボタン<br>
+クリックすることで hide Vision Sensor ⇔ show Vision Sensor 表示を切り替えます。<br>
+Vision Sensorがある場合、表示の制御をします。
+</li>
+<li>Modelのバウンディングボックス表示ボタン<br>
+詳細は<a href="./BBoxModel.html">モデルの形状データをバウンディングボックス化する機能の使い方</a>をご覧ください。
+</li>
+
+<li>restore model properties ボタン<br>
+クリックすることで Modelへの変更を元に戻します。<br>
+</li>
+<li>Object Transelation ボタン<br>
+クリックすることで ３D画面を編集（並行移動）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+モデルをクリックすると、選択されたモデルが緑のボックスで表示され、マウスのドラッグで並行移動できます。
+</li>
+<li>Object Rotation ボタン<br>
+クリックすることで ３D画面を編集（回転）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+モデルをクリックすると、選択されたモデルが緑のボックスで表示され、マウスのドラッグで回転できます。
+</li>
+<li>Joint Rotation ボタン<br>
+クリックすることで ３D画面を編集（関節の回転）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+リンクをクリックすると、選択されたリンクが赤のボックスで表示され、マウスのドラッグで回転できます。
+</li>
+<li>Set Fitting Source ボタン<br>
+クリックすることで ３D画面を編集（接触先の選択）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+接触させたいリンクをクリックすると、赤い矢印が表示されます。
+</li>
+<li>Set Fitting Destination ボタン<br>
+クリックすることで ３D画面を編集（接触させる物体の選択）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+接触させたい場所をクリックすると、青い矢印が表示されます。
+</li>
+<li>Fit ボタン<br>
+クリックすることで(23)で設定したモデルと(24)で設定したモデルを接触させます。<br>
+</li>
+<li>Set From Joint ボタン<br>
+クリックすることで ３D画面を編集（逆運動学基準リンクの選択）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+基準となるリンクをクリックすると、赤いボックスが表示されます。
+</li>
+<li>IK Rotation ボタン<br>
+クリックすることで ３D画面を編集（逆運動学　回転）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+リンクをクリックすると、選択されたリンクが赤のボックスで表示され、マウスのドラッグで回転できます。
+</li>
+<li>IK Translation ボタン<br>
+クリックすることで ３D画面を編集（逆運動学　並行）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+リンクをクリックすると、選択されたリンクが赤のボックスで表示され、マウスのドラッグで並行移動できます。
+</li>
+<li>３D画面の状態を表示します。
+ビューモードと編集モードがあります。
+</li>
+<li>(31)と合わせて、３D画面のクリッピング距離を設定します。<br>
+クリッピング距離とは、物体が描画される視点からの最短距離と、最長距離のことです。<br>
+この範囲外の物体は描画されません。特に大きな物体や小さな物体を表示する場合は必要に応じて変更してください。
+</li>
+</ol>
+</ul>
+
+
+
+

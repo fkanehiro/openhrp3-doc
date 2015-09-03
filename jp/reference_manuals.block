@@ -1,0 +1,32 @@
+title = OpenHRP3 リファレンスマニュアル
+base  = ..
+
+<p>
+Doxygenを用いてソースファイルより生成したリファレンスマニュアルです。
+</p>
+
+<ul>
+ <p><li>
+    <a href="./reference/idl/html/index.html">基本コンポーネントIDL</a><br>
+    基本となるCORBAコンポーネントについて、IDLの仕様をまとめたマニュアルです。
+ </li></p>
+ <p><li>
+    <a href="./reference/lib/html/index.html">モデル計算ライブラリ</a><br>
+    C++で記述されたモデル計算ライブラリについて、クラスや関数の仕様をまとめたマニュアルです。
+ </li></p>
+ <p><li>
+    <a href="./reference/ut/html/index.html">東京大学版力学計算エンジンリファレンス</a><br>
+    東京大学版 DynamicsSimulator で使用されている力学計算エンジンのリファレンスです。
+ </li></p>
+</ul>
+
+<p>
+本ページに掲載されているリファレンスマニュアルは
+最新のソースからは古い内容となっている可能性があります。
+最新ソースのマニュアルが必要な場合は、
+Doxygenを用いてソースツリーから生成することをお薦めします。
+</p>
+
+<p>
+Doxygenの設定ファイルはOpenHRP3ディレクトリの doc/reference 以下にあります。
+</p>

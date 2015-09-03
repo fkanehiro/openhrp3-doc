@@ -1,0 +1,165 @@
+title = 移動動作設計チュートリアル
+base  = ..
+
+<h2>概要</h2>
+
+移動動作設計ツールはロボットの2次元平面上での移動経路計画機能を提供するツールでバージョン3.1.0.beta3からOpenHRPに組み込まれています．移動動作設計ツールはGrxUIのビューの一つであるPathPlanningビューと単体のRTコンポーネントとしても利用可能な移動動作設計コンポーネントからなります。まずは動画で大まかな手順を確認して下さい．<p>
+
+<div align=center>
+<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="640" height="480">
+<param name="movie" value="../../movie/PathPlanner.swf" />
+<param name="quality" value="high" />
+<param name="bgcolor" value="black" />
+<embed src="../../movie/PathPlanner.swf" quality="high" bgcolor="black" width="640" height="480" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+</object>
+</div>
+
+<h2>環境設定</h2>
+
+<h3>Eclipse起動とパースペクティブの表示</h3>
+
+通常通りEclipseを起動し、GrxUIパースペクティブを表示します。
+GrxUIパースペクティブが表示されていない場合、「パースペクティブを開く(下図内[a])→「その他」をクリックし一覧から選択します。<p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage01.png" alt="パースペクティブの選択" align=center>
+</div>
+
+<h3>必要なビューの確認</h3>
+
+<a href=um_3d_view.html>3DView</a>、Path Planning、<a href=um_logger_view.html>Logger View</a>、<a href=um_property_view.html>Property View</a>、<a href=um_item_view.html>Item View</a>など必要なビューが表示されていない場合、メニューバーの「ウィンドウ」→「ビューの表示」→「その他」をクリックし、追加します。<p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage02.png" alt="必要なビューの追加">
+</div>
+
+<h2>シーンの構築</h2>
+
+ロボットや障害物が記述されたモデルファイルをロードし、移動動作を設計するためのシーンを構築します。
+
+<h3>既存のプロジェクトをロードする場合</h3>
+
+メニューバーから「GrxUI」→「プロジェクトのロード」を選択します。
+ロードするプロジェクトファイルを選択します。
+
+<h3>新規にシーンを構築する場合</h3>
+
+<a href=um_item_view.html>Item View<a>から"Model"を右クリックし「load」を選択します。
+ファイル選択ダイアログが開くので、ロードするファイルを選択してください。<p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage04.png" alt="モデルのロード">
+</div>
+
+<h3>World State アイテムの作成</h3>
+
+<a href=um_item_view.html>Item View</a>にてWorld Stateを右クリックし「create」を選択し、作成します。
+
+<h3>コリジョンペアの作成</h3>
+
+<a href=um_openhrp_view.html>OpenHRPビュー</a>内collisionタブから、ロボットと障害物間のコリジョンペアを作成します。
+
+<h3>使用するアルゴリズム用のパラメータセットを作成する</h3>
+
+<a href=um_item_view.html>Item View</a>から"PPArgolithm"を右クリックし「create」を選択します。
+プロジェクトを保存する際、アルゴリズム用パラメータも同時に保存されます。<p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage06.png" alt="パラメータセットの作成">
+</div>
+
+<h2>経路計画エンジンとの接続</h2>
+
+openhrp-path-plannerを実行します。実行するディレクトリには適切なネームサーバの位置を記述したrtc.confを用意して下さい．次にパースペクティブを一旦RT System Editorに変更して新たにステムエディタを開き、PathコンポーネントとPathConsumerコンポーネントをドラッグして配置してください。</font>サービスポートとコンシューマポートを接続して下さい。<p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage03.png" alt="RT System Editorでの接続">
+</div>
+
+<h2>経路計画計算の実行</h2>
+
+PathPlannerビュー（下図）を使って各種条件設定を行い、計算を実行します。<p>
+
+<div align=center>
+<img src="../img_new/pathplanner/pathplannerview.png" alt="Path Planningビュー">
+</div>
+
+<h3>モデルと移動アルゴリズムの選択</h3>
+
+　移動動作設計の対象とするモデルと、そのモデルが持つ移動アルゴリズムを選択します。<br>
+　移動動作設計コンポーネントと接続されていないと、移動アルゴリズム等いくつかの設定項目が表示されませんので、表示されていない場合はRT System Editorを用いて接続を確認してください。
+
+<h3>始点・終点</h3>
+
+　経路探索の始点・終点を設定します。
+　ロボットを希望の始点または終点まで移動させ、始点または終点設定ボタンを押します。<br>
+　入力エリアへ数値を直接入力することもできます。<br>
+　SETボタンでその位置にロボットが移動します。<br>
+
+<h3>干渉チェック時のトレランス</h3>
+
+　干渉チェック時のトレランスを設定します．干渉チェックを行う2つの物体の間の距離がこの値よりも小さい時，干渉が発生しているものと見なされます．これによって障害物との間に常に一定以上の距離を保つことができます．
+
+<h3>経路計画アルゴリズム、パラメータ選択ボックス</h3>
+
+　経路計画に使用するアルゴリズムとパラメータを選択します。<br>
+  アルゴリズム選択ボックスから、希望のアルゴリズムを選択してください。現在のところ、RRTとPRMが登録されています。アルゴリズムが表示されていない場合、移動動作設計コンポーネントとの接続を確認して下さい．
+  また、アルゴリズムに適用するプロパティを、Algorithm Properties選択ボックスから選択してください。Algorithm PropertiesのUpdateボタンを押すと、現在選択しているアルゴリズム用のプロパティを移動動作設計コンポーネントから取得してPPAlgorithmアイテムに設定します。<br>
+プロパティの値は、<a href=um_property_view.html>Property View</a>から変更できます。
+<br>
+
+<div align=center>
+<img src="../img_new/pathplanner/properties.png" alt="Property Viewでの値の変更">
+</div>
+
+PRM、RRTの双方ともに共通するプロパティは以下のとおりです。</p>
+<ul>
+<li> 乱数最大点  ・・・ ランダムに打つ点の範囲の最小 (min-x, min-y)</li>
+<li> 乱数最小点  ・・・ ランダムに打つ点の範囲の最大 (max-x, max-y)</li>
+<li> 距離の重み  ・・・ 距離を算出する際の重み(weight-x, weight-y, weight-theta) </li>
+<li> 補間距離    ・・・ 干渉チェックを行う際に隣接する2点間の距離がこの値以下になるように補間されます(interpolation-distance)．小さな値を設定すると2点間を細かく分割して干渉チェックを行うために干渉の発生を見落としづらくなりますが，計算時間がかかります．逆に大きな値を設定すると，干渉の発生を見落とす場合があります．</li>
+</ul>
+
+<p>デフォルトで乱数は(-2,-2) ~ (2,2)の範囲に設定され、補間距離は0.1、距離の重みは全て1です。</p>
+
+<p>PRMアルゴリズムは以下のプロパティを持ちます。</p>
+<ul>
+<li> 近傍距離    ・・・ エッジを結ぶ近傍の距離 (max-dist)．ランダムに打った2点間の距離がこの値以下の場合，干渉を検査して干渉がなければ2点を結ぶエッジをロードマップに追加します．</li>
+<li> 点数        ・・・ ランダムに点を打つ数 (max-points)</li>
+</ul>
+
+<p>デフォルト値では、近傍距離が1.0、最大点数が100個となっています。</p>
+<p>RRTアルゴリズムは以下のプロパティを持ちます。</p>
+
+<ul>
+<li> 近傍距離    ・・・ RRTの追加されるノードの距離 (eps)</li>
+<li> 最大試行回数・・・ 探索を打ち切る回数 (max-trials)</li>
+</ul>
+
+<p>デフォルト値では、近傍距離が0.1、最大試行回数が10000回となっています。</p>
+
+<h3>経路計画</h3>
+
+計算開始ボタンを押し、経路計画を開始してください。計算インジケータが動き、ダイアログが表示されます。計算を途中で中断するにはダイアログのボタンを押して下さい。
+
+<h3>経路及びロードマップの表示</h3>
+
+計算が終了すると、経路表示ボタンが選択可能になり、経路の表示・非表示を切り替えることができるようになります。<p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage13.png" alt="オフ状態の経路表示ボタン"><br>
+<img src="../img_new/pathplanner/MImage13_2.png" alt="経路表示をオフにした状態"><br>
+</div>
+
+また、Logger View上のボタンおよびスライダーを動かすことで、経路上を移動させることができます。<p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage14_3.png" alt="Logger Viewによる経路上の移動"><br>
+<img src="../img_new/pathplanner/MImage14_2.png" alt="Logger Viewによる経路上の移動"><br>
+<img src="../img_new/pathplanner/MImage14.png" alt="Logger Viewによる経路上の移動"><br>
+<img src="../img_new/pathplanner/MImage14_4.png" alt="Logger Viewによる経路上の移動"><br>
+</div>
+
+<h3>経路の最適化</h3>
+
+計画された経路を最適化するには、経路最適化アルゴリズムを選択し、Optimizeボタンを押して下さい。経路を可視にしている場合、表示が最適化されたものに更新されます。

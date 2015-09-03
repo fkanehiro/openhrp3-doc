@@ -1,0 +1,47 @@
+title = Release Note Ver.3.0.4
+base  = ..
+
+<h2>Release Note Ver.3.0.4</h2>
+<p>
+Basic changes in Ver.3.0.4:
+
+<ul>
+  <li>
+   The problem that the recorded movie's replay speed was not matched with 
+   the GrxUI's replay speed, was resolved. 
+  </li>
+  <li>
+   The division by zero error that occured in 
+   OpenHRP::DynamicsSimulator::stepSimulation, was corrected. 
+  </li>
+  <li>
+   The exception that occures when the simulation executed on 
+   OnlineViewer more than 20000 frames (about 20sec), was corrected.
+  </li>
+  <li>
+   When saving a movie snapshot that does not have an extension, caused to 
+   freeze GrxUI, if a period is included in the saving path. This issue is 
+   resolved in this release.
+  </li>
+  <li>
+   The issue that MatrixSolver's inverse function returns transposed inverse 
+   matrix, was fixed.
+  </li>
+  <li>
+   Added install script and Make.vars for Ubuntu-8.10. Hence Ver.3.0.4 is 
+   now supported for Ubuntu-8.10. [Linux edition]
+  </li>
+  <li>
+   "Joystick connection sample" documentation was rewritten to the method 
+   of using RTM GUI tools RTSystemEditor and RTCBuilder. 
+  </li>
+  <li>
+   The comment on ABS_TRANSFORM of DynamicsSimulator.idl was matched to row 
+   major.
+  </li>
+  <li>
+   Updated English documentations.
+  </li>
+</ul>
+<div align="right">06-04-2009</div>
+</p>

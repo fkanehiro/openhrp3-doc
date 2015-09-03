@@ -1,0 +1,43 @@
+title = GrxUI メニュー
+base  = ..
+
+<h2>GrxUI メニュー概要</h2>
+<p>
+GrxUI メニューを構成する各種要素について説明します。
+</p>
+<p align=center>
+<img src="../img_new/um_019.png"><br>
+シミュレーション開始前のメニュー
+</p>
+
+<p align=center>
+<img src="../img_new/um_020.png"><br>
+シミュレーション実行中のメニュー
+
+</p>
+<ul>
+<ol>
+<li>New Project<br>
+クリックすることで、新規にプロジェクトを作成します。既存のアイテムはすべて削除されます。
+</li>
+<li>Load Project<br>
+クリックすることで、既存のプロジェクトを呼び出すことができます。既存のアイテムはすべて削除されます。
+</li>
+<li>Restore Project<br>
+クリックすることで、プロジェクトをRestoreできます。
+</li>
+<li>Save Project As<br>
+クリックすることで、プロジェクトを別名保存します。
+</li>
+<li>Start Simulation<br>
+クリックすることで、シミュレーションを開始します。
+</li>
+<li>Stop Simulation<br>
+クリックすることで、シミュレーションを中止します。
+</li>
+</ol>
+</ul>
+
+
+
+

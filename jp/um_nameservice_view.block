@@ -1,0 +1,43 @@
+title = NameService Monitor View
+base  = ..
+
+<h2>NameService Monitor View概要</h2>
+<p>
+NameService Monitor Viewを構成する各種要素について説明します。
+</p>
+<p align=center>
+<img src="../img_new/um_004.png">
+</p>
+
+<ul>
+<ol>
+<li>update ボタン<br>
+クリックすることで、状態を更新します。
+</li>
+<li>Host<br>
+NameServiceのホスト名を入力します。<br>
+初期状態では<a href="./um_servermanager_view.html">Server Manager View</a>のName Service グループのホスト名の初期値が入ります。デフォルト値は"localhost"となります。
+</li>
+<li>Port<br>
+NameServiceのポート番号を入力します。<br>
+初期状態では<a href="./um_servermanager_view.html">Server Manager View</a>のName Service グループのポート番号の初期値が入ります。デフォルト値は"2809"となります。
+</li>
+<li>表示エリア<br>
+( 状態 ) 識別名<br>
+の書式でNameServiceに登録されたCORBAオブジェクトを列挙します。<br>
+状態は以下のうちのひとつを表示します。
+  <ul>
+  Active:識別名でバインディングが有効な状態<br>
+  not Active:識別名でバインディングが無効な状態<br>
+  </ul>
+</li>
+<li>NS_URL<br>
+NameServiceへの問い合わせURLの文字列が表示されます。
+</li>
+</ul>
+<br>
+ちなみに初期状態でupdateボタンをクリックした場合のViewは下図の様になります。
+
+<p align=center>
+<img src="../img_new/um_005.png">
+</p>

@@ -1,0 +1,131 @@
+title = MacOS X(10.5)におけるOpenHRP3のインストール(Ver.3.0.8)
+base  = ..
+
+<p>
+MacOS Xの場合、本ページの手順に従うことにより、
+OpenHRP3をインストールすることができます。
+現在のところ、MacOS X のバージョン10.5においてこの方法を用いることができます。
+なお、インストールの際にはターミナルからのコマンドライン入力を使用しますが、ターミナルは
+Finderの「Macintosh HD」-「アプリケーション」-「ユーティリティ」-「ターミナル」などから起動できます。
+ソフトウェアのインストールには、Mac OSのパッケージマネージャーである
+<a href="http://www.macports.org" target="_blank">macports</a>を使います。
+</p>
+
+<h2>MacOS 開発環境のインストール</h2>
+
+Mac OSの開発環境xcodeをインストールしていない場合は、まずこれをインストールします。
+
+<h2>MacOS X版OpenRTMのインストール</h2>
+  <p>
+<a href="http://staff.aist.go.jp/yosuke.matsusaka/openrtm.html" target="_blank">産総研松坂さんのページ</a>を参考にして、MacOS X版のOpenRTMをインストールします。現時点ではOpenRTMはOmniORB Ver.4.0.xで稼働し、MacPortsのサイトにあるのはVer.4.1ですが、松阪さんのパッケージに
+Ver.4.0.xも含まれています。
+  </p>
+
+<h2>openrtm-macportsパッケージのインストール</h2>
+<a href="../download/openhrp-macports.tar.gz">こちら</a>から
+openhrp-macportsのパッケージをダウンロードします。
+以下のようにして適当なディレクトリにopenhrp-macportsのパッケージを展開します。
+<p>
+<pre>
+$ cd (展開したいディレクトリ)
+$ tar zxvf （ダウンロードしたディレクトリ）/openhrp-macports.tar.gz
+</pre>
+
+macportsの設定ファイル（/opt/local/etc/macports/sources.conf）をテキストエディタで開き、最後の以下の行を追加します。
+<pre>
+file:///(先ほど展開したディレクトリ)/openhrp-macports
+</pre>
+</p>
+
+<h2>Java Media Framework (JMF)</h2>
+
+<p>
+JMFはMacPortsに準備されていないので、
+<a href="http://java.sun.com/products/java-media/jmf/" target="_blank">http://java.sun.com/products/java-media/jmf/</a>
+の"Downloads"より、JMFのjava版をダウンロードします。
+Linux/Windows/Solaris等のどのプラットフォームのページでも良いので開き、all java版をダウンロードします。
+portコマンドを使ってインストールするため、ダウンロードしたファイルを以下の場所に移動しておきます。
+</p>
+
+<p>
+<pre>
+$ sudo mkdir /opt/local/var/macports/distfiles/JMF
+$ sudo mv (ダウンロード先)/jmf-2_1_1e-alljava.zip /opt/local/var/macports/distfiles/JMF/
+</pre>
+</p>
+
+<h2>boost, jython, CLAPACK, tvmet, JMFのインストール</h2>
+
+<p>
+portコマンドを使ってOpenHRP3のインストールに必要なboost, jython, CLAPACK, tvmet, JMFをインストールします。
+<pre>
+$ sudo port -v install boost jython CLAPACK tvmet JMF
+</pre>
+</p>
+
+<h2>OpenHRP3 ソースパッケージの展開</h2>
+
+<p>
+ダウンロードしたOpenHRP-xxx.zipのソースパッケージを展開します.
+(xxxは3.0.0-RC4といったバージョンを示す文字列が入ります。
+ ダウンロードしたファイルのものと置き換えて読んでください。)
+
+</p>
+
+<p>
+OpenHRP3ソースの展開先はどこでも構いませんが、ここではホームディレクトリの
+OpenHRPディレクトリ以下に展開する例を示します。
+ターミナルを起動して、以下のコマンドを入力してください.
+</p>
+
+<p>
+<pre>
+$ cd 
+$ mkdir OpenHRP
+$ cd OpenHRP
+$ unzip (ソースパッケージダウンロード先)/OpenHRP-xxx.zip 
+</pre>
+
+以上の操作でホームディレクトリのOpenHRPディレクトリ以下に、
+OpenHRP3のソースが展開されたOpenHRP-xxxというディレクトリができます。
+
+<h2>コンパイルの準備</h2>
+
+<p>
+OpenHRP3では、コンパイルのための設定を
+ソースディレクトリ中の "Make.vars" というファイルで行います。
+このファイルの設定に関する詳しい説明は
+<a href="./howtomake.html">「MakeコマンドによるOpenHRPのコンパイル」</a>のページにありますが、
+ここでは本ページのインストール手順に合わせてあらかじめ設定されたファイルを用いることとします。
+</p>
+
+<p>
+まず、OpenHRP3のソースディレクトリへ移動します。
+</p>
+<pre>
+$ cd ~/OpenHRP/OpenHRP-xxx
+</pre>
+<p>
+ここで、以下のコピー操作により、設定ファイル"Make.vars"を作成します。
+<pre>
+$ cp Make.vars.macosx Make.vars
+</pre>
+</p>
+
+<h2>OpenHRP3 のコンパイル</h2>
+
+OpenHRP3 のソースディレクトリより、make コマンドを実行します。
+
+<pre>
+$ make
+</pre>
+
+<p>
+本ページの手順により、必要なソフトウェアのインストールとMake.varsの設定が正しく行われていれば、
+OpenHRP3 の実行ファイル・スクリプトが生成されます。
+</p>
+
+<p>
+コンパイルが終了したら、<a href="./simulate_sample_3_0.html">サンプルシミュレーションの実行</a>
+を行って、正常にコンパイルできていることを確認してください.
+</p>

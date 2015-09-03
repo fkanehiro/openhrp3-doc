@@ -1,0 +1,35 @@
+title = Overview of GrxUI
+base  = ..
+
+<p>
+The manual described how to use graphical user interface GrxUI is as follow.
+</p>
+
+<ul>
+ <p><li>
+    <a href="grxui_framework.html">Overview</a><br>
+    The basic structure of GrxUI is explained.
+ </li></p>
+
+ <p><li>
+    <a href="grxui_tutorial.html">Simulation Tutorial</a><br>
+    The procedure to run simulation using GrxUI is explained.
+ </li></p>
+
+<!--
+ <p><li>
+    <a href="grxui_jython.html">How to use Jython Script</a><br>
+    How to run and expand GrxUI using Jython Script is explained.
+ </li></p>
+-->
+
+ <p><li>
+    <a href="grxui_windowconfig.html">Modification of the screen structure</a><br>
+    How to modify the screen structure is explained.
+ </p></li>
+
+ <p><li>
+    <a href="grxui_reference.html">GrxUI Reference</a><br>
+    Reference of how to use various Views
+ </li></p>
+</ul>

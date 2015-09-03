@@ -1,0 +1,392 @@
+title = WindowsにおけるOpenHRPのインストール
+base  = ..
+
+
+<h2 id="env_set">環境構築</h2>
+
+<p>
+まず、以下の手順で
+<a href="./required_programs.html" target="_blank">OpenHRPのコンパイル/実行に必要なソフトウェア</a>
+をインストールしていきます。
+</p>
+
+<p>
+いずれのソフトウェアも、バージョン等が合うものをすでにインストールされている場合は、それをお使いいただければ結構です。
+それぞれのインストール先も、お好みに合わせて変えてもかまいません。
+ただし、インストール先がインストーラのデフォルトでない場合には、
+下記で説明する<a href="#compile_property">コンパイル時のプロパティ</a>を
+インストール先に合わせて設定しなければならないことにご注意ください。
+</p>
+
+
+<h3><a name="vc9install">Visual C++ コンパイラのインストール</a></h3>
+
+<p>
+現在 Windows 用の C++ コンパイラの内 Visual C++ 2008 と Visual C++ 2005 に対応しています。
+ただし今後は2008への移行を進めていきますので、通常は2008を使用するようにしてください。
+</p>
+
+マイクロソフトより無償配布されている Express Edition も使用可能です.
+Express Edition をご使用の場合、下記のリンクからダウンロードしてインストーラの案内に従って
+インストールしてください。インストーラの設定項目は特に変更しなくてもOKです。</p>
+<ul>
+ <li><a href="http://www.microsoft.com/japan/msdn/vstudio/2008/product/express/" target="_blank">
+Visual C++ 2008 Express Edition 日本語版</a></li>
+</ul>
+
+<p>
+<b>(Visual C++ 2005 Express Editionの場合の注意)</b>
+</p>
+
+<p>
+Visual C++ 2005(Express Edition) には、WindowsAPI を使用したプログラムを開発するための
+"Windows Platform SDK" なるものが含まれていません.
+OpenHRPではこのPlatform SDK も必要となるため、Express Edition を使う際には、
+Visual C++ のインストール後に、Platform SDK も別途インストールしておく必要があります。
+この件に関する詳しい説明が <a href="http://www.is.aist.go.jp/rt/OpenRTM-aist/">OpenRTM-aist</a> のマニュアルにありますので、下記のリンクから参考してください。
+なお、Visual C++ 2008 については、Express Edition も含めて標準でPlatoform SDKが含まれていますので、
+この作業は必要ありません。</p>
+<ul>
+ <li>参考</li>
+ <ul>
+  <li><a href="http://www.is.aist.go.jp/rt/OpenRTM-aist/html/E3839EE3838BE383A5E382A2E383AB2FE382A4E383B3E382B9E38388E383BCE383ABWindows.html#h4_content_140_9" target="_blank">対応コンパイラ</a></li>
+  <li><a href="http://www.is.aist.go.jp/rt/OpenRTM-aist/html/E3839EE3838BE383A5E382A2E383AB2FE382A4E383B3E382B9E38388E383BCE383ABWindows.html#h3_content_140_10" target="_blank">インストールする際の注意点</a></li>
+ </ul>
+</ul>
+<br>
+
+
+<h3>Java環境の構築</h3>
+
+<p>
+ここでは、
+<ol>
+	<li>Java実行・開発環境 "JDK"</li>
+	<li>Java 3D ライブラリ</li>
+	<li>JMF (Java Media Framework) ライブラリ</li>
+</ol>
+のそれぞれををインストールします。
+</p>
+
+<p>
+（注）Java3DとJMFはJDKに依存していますので、そららのインストールは
+JDKをインストールした後に行うようにしてください。
+JDKを最新版に入れ直した場合なども、再度Java3D,JMFをインストールするようにしてください。
+</p>
+
+<h4>JDK のインストール</h4>
+
+<p>
+<a href="http://java.sun.com" target="_blank">http://java.sun.com/</a>のJava SE のダウンロードページより、
+JDKのWindows版をダウンロードしてください。
+JDKのバージョンは今のところ JDK5, JDK6 系列で動作を確認しています。
+</p>
+
+<p>
+ダウンロードしたファイルを実行すると、JDKのインストーラが起動しますので、
+インストーラの案内に従ってインストールしてください。
+インストーラの設定項目は特に変更しなくてもOKです。
+</p>
+
+<h4>Java 3Dのインストール</h4>
+
+<p>
+<a href="https://java3d.dev.java.net" target="_blank">https://java3d.dev.java.net/</a>の
+"Downloads"より、Windows版のインストーラ付きバージョン(exeファイルの方)をダウンロードします。
+このファイルを実行し、インストーラの案内に従ってインストールしてください。
+インストーラの設定項目は特に変更しなくてもOKです。
+</p>
+
+<h4>JMFのインストール</h4>
+
+<p>
+<a href="http://java.sun.com/javase/technologies/desktop/media/jmf/" target="_blank">http://java.sun.com/javase/technologies/desktop/media/jmf/</a>
+の"Downloads"より、JMFのWindows版をダウンロードします。
+このファイルを実行し、インストーラの案内に従ってインストールしてください。
+インストーラの設定項目は特に変更しなくてもOKです。
+</p>
+
+<h3>OpenRTM環境の構築</h3>
+
+<p>
+OpenRTM-aist の最新版をインストールします。
+（現在配布中のOpenHRP最新版では、OpenRTM-aist のバージョン 0.4 系列の 0.4.2 以降が必要となります。)
+</p>
+
+<p>
+<a href="http://www.is.aist.go.jp/rt/OpenRTM-aist/" target="_blank">OpenRTM-aistのページ</a>より、
+<b>「ダウンロード」</b> -> <b>「最新版」</b> -> <b>「C++」</b> -> <b>「OpenRTM-aist-0.4.2-RELEASE」</b> ->
+<b>「ビルド済みパッケージ(Windows)」</b>とたどって、<font color="red">お使いの C++ コンパイラに対する</font>ファイルのうち、
+<ul>
+ <li>OpenRTM-aist（日本語版または英語版）</li>
+ <li>ACE</li>
+ <li>omniORB</li>
+ <li>python</li> 
+</ul>
+のファイル（拡張子が ".msi" のもの）一式をダウンロードしてください。
+</p>
+
+<p>
+それぞれダウンロードしたファイルをダブルクリックするとインストーラが起動するので、
+インストーラの案内に従ってインストールを行ってください。
+インストーラの設定項目は特に変更しなくてもOKです。
+</p>
+
+
+<h3> Jython </h3>
+
+<p>
+<a href="http://www.jython.org/" target="_blank">http://www.jython.org/</a>の"Download"より、
+Jythonのファイルをダウンロードします。
+ダウンロードしたファイルをダブルクリックするとインストーラが起動しますので、
+案内に従ってインストールを行います.
+インストーラの設定項目は特に変更しなくてもOKです。
+</p>
+
+<h3>ライブラリのインストール</h3>
+
+
+<h4>tvmet</h4>
+
+<p>ベクトル・行列計算ライブラリであるtvmetをインストールします。</p>
+
+<p>
+<a href="http://tvmet.sourceforge.net/" target="_blank">本家の配布サイト(http://tvmet.sourceforge.net/)</a>
+よりソースを取得してインストールしても結構ですが、
+Windows用のインストーラも用意しましたので、
+当サイトの<a href="https://www.is.aist.go.jp/humanoid/OpenHRP/limited_jp/download.html">限定配布ページ</a>
+よりダウンロードしてお使いいただけます。
+tvmet-xxx-win.msi のファイルをダウンロードし、ダブルクリックしてインストーラを起動してください。
+その後案内に従ってインストールを行ってください. 
+インストーラの設定項目は特に変更しなくてもOKです。
+</p>
+
+<p>
+一方、本家よりダウンロードしたソースを使う場合は、
+ソース中の設定ファイル "config.h" をWindowsに合わせたものにする必要があります。
+tvmetを展開したディレクトリ以下の、include\tvmet\config\config-vc71.h というファイルを、
+include\tvmet\config.h としてコピーしてください。
+</p>
+
+
+
+<h4>CLAPACK</h4>
+
+<p>もうひとつのベクトル・行列計算ライブラリであるLapackをインストールします。<p>
+
+<p>
+Lapackには様々な派生版がありますが、OpenHRP3のWindows版ではCLAPACKを使うのが無難です。
+これのインストーラ を用意しましたので、
+当サイトの<a href="https://www.is.aist.go.jp/humanoid/OpenHRP/limited_jp/download.html">限定配布ページ</a>
+より CLAPACK-xxx.msi とあるファイルをダウンロードしてお使いください。
+ファイルをダブルクリックするとインストーラが起動しますので、案内に従ってインストールを行ってください. 
+インストーラの設定項目は特に変更しなくてもOKです。
+</p>
+
+
+<h4> Boost </h4>
+
+<p>C++のライブラリ集であるBoost(<a href="http://www.boost.org/">http://www.boost.org</a>)
+をインストールします。</p>
+
+<p>
+Visual C++ 2008用のコンパイル済みライブラリをまとめたインストーラを用意しましたので、
+当サイトの<a href="https://www.is.aist.go.jp/humanoid/OpenHRP/limited_jp/download.html">限定配布ページ</a>
+よりBoost-xxx_VC9.msiのファイルをダウンロードしてダブルクリックし、
+インストーラの案内に従ってインストールを行ってください。
+インストーラの設定項目は特に変更しなくてもOKです。
+</p>
+
+<p>
+Visual C++ の各種バージョンで利用可能なコンパイル済みライブラリのインストーラは
+<a href="http://www.boost-consulting.com/">http://www.boost-consulting.com/</a>からも配布されており、
+これを使ってインストールしてもOKです。
+この場合、インストール時に出てくる "Variants" の指定で、"Multithread", "Multithread Debug" の２つは
+チェックするようにしてください。
+</p>
+
+
+
+<h2>OpenHRPパッケージの展開 </h2>
+
+<p>
+<a href="https://www.is.aist.go.jp/humanoid/OpenHRP/limited_jp/download.html">限定配布ページ</a>からOpenHRPの
+ソースアーカイブをダウンロードし、適当なディレクトリに解凍してください。
+</p>
+<br>
+
+
+<h2>Visual C++ によるコンパイル</h2>
+
+<h3>プロジェクトファイルのオープン</h3>
+
+<p>
+OpenHRPを展開したディレクトリ（OpenHRPのホームディレクトリ）に移動して、
+OpenHRP.slnを開きます。
+</p>
+
+<p align="center">
+<img src="../image/install/vc++2008_start.png"><br>
+起動先
+</p><br>
+
+<p>すると、以下のように Visula Studio 上で OpenHRP のプロジェクトを開きます。</p>
+
+<p align="center">
+<img src="../image/install/vc++2008_property_manager.png"><br>
+プロパティマネージャ
+</p>
+
+<a name="compile_property">
+<h3>コンパイル用プロパティ設定</h3>
+</a>
+
+<p>
+まず、図のように、
+<ol>
+<li>プロパティマネージャーを選択し、</li>
+<li>＋記号をクリックしてツリーを展開し、OpenHRPをダブルクリック</li>
+</ol>
+します。すると、以下のプロパティページが表示されます。
+</p>
+
+<p align="center">
+<img src="../image/install/vc++2008_property_page.png"><br>
+プロパティページ
+</p>
+
+<p>
+ここで以下のようにしてインストールしたライブラリ等の参照先を設定します。
+<ol>
+<li value="3">ユーザマクロを選択します。</li>
+<li>マクロの値を、インストールしたソフトウェアのバージョンやインストール先に合わせて設定します。
+そのために以下の各設定項目についての説明を参考にしてください。
+</p>	
+
+<p>
+<table border="1">
+ <tr><th colspan="2">実行方法に関する設定項目</th></tr>
+ <tr>
+  <th>DYNAMICS_ENGINE</th>
+  <td>使用する動力学サーバの選択。ut (東大版), aist (産総研版) のいずれかを指定する。
+  なお、今後動力学サーバの切り替えは実行時にGUI上から行えるようにしたく思っています.  </td>
+ </tr>
+ <tr>
+  <th>NS_HOST</th>
+  <td>ミドルウェア(CORBA,OpenRTM)のネームサーバのホスト。通常は localhost でよい。</td>
+ </tr>
+ <tr>
+  <th>NS_PORT</th>
+  <td>ミドルウェア(CORBA,OpenRTM)のネームサーバのポート番号。通常は初期値でよい。</td>
+ </tr>
+
+ <tr><th colspan="2">プログラミング言語環境に関する設定項目</th></tr>
+ <tr>
+  <th>JDK_DIR</th>
+  <td>JDKのインストール先ディレクトリ。</td>
+ </tr>
+ <tr>
+  <th>JYTHON_DIR</th>
+  <td>Jythonのインストール先ディレクトリ。(jython.jarがあるディレクトリ。)</td>
+ </tr>
+
+<tr><th colspan="2">ライブラリに関する設定項目</th>
+ <tr>
+  <th>OB_DIR</th>
+  <td>omniORBのインストール先ディレクトリ。</td>
+ </tr>
+ <tr>
+ <tr>
+  <th>OMNIORB4_LIBVER</th>
+  <td>omniDynamic ライブラリファイルのバージョン番号<br>
+  		Ex：omniORB-4.1.2 → 412
+  </td>
+ </tr>
+ <tr>
+  <th>OMNI_TRDVER</th>
+  <td>omnithread ライブラリファイルのバージョン番号<br>
+  		omniORB-4.0.7 → 32<br>
+  		omniORB-4.1.2 → 33
+  </td>
+ </tr>
+ <tr>
+  <th>BOOST_INC_DIR</th>
+  <td>boostライブラリのインクルードパス。</td>
+ </tr>
+ <tr>
+  <th>BOOST_LIB_DIR</th>
+  <td>boostライブラリのライブラリファイルパス。</td>
+ </tr>
+ <tr>
+  <th>TVMET_DIR</th>
+  <td>tvmetライブラリのインストール先ディレクトリ</td>
+ </tr>
+ <tr>
+  <th>CLAPACK_DIR</th>
+  <td>CLAPACKのインストール先ディレクトリ</td>
+ </tr> 
+<tr>
+  <th>OPENRTM_DIR</th>
+  <td>OpenRTM-aist のインストール先ディレクトリ</td>
+ </tr>
+<tr>
+  <th>OPENRTM_LIBVER</th>
+  <td>OpenRTM-aist ライブラリファイルのバージョン番号<br>
+		Ex：OpenRTM-aist-0.4.2 -> 042</td>
+ </tr>
+ <tr><th colspan="2">作業先に関する設定項目</th></tr>
+ <tr>
+  <th>INSTALL_DIR</th>
+  <td>OpenHRPのヘッダーファイルやライブラリのコピー先を指定します。
+   OpenHRPのホームディレクトリでよければ、$(SolutionDir)のままにしておきます。</td>
+ </tr>
+</table>
+</p>
+
+<p>　<p>
+
+</li>
+<li>ＯＫボタンを押して設定を保存します。</li>
+</ol><br>
+
+<p>
+なお、上記のプロパティの設定は、OpenHRPソースフォルダトップにある "OpenHRP.vsprops" というXMLファイルに
+記述されていますので、Visual C++ のIDEを起動する前にこのファイルを直接編集してもOKです。
+</p>
+
+<h3>ビルドの実行</h3>
+
+<p>
+プロパティを正しく設定できたら、以下のようにしてビルド（コンパイル）できます。
+</p>
+<p align="center">
+<img src="../image/install/vc++2008_build.png"><br>
+ビルド
+</p>
+
+<ol>
+ <li>ソリューションエクスプローラを選択します。</li>
+ <li>Releaseを選択します。</li>
+ <li>ビルドメニューからソリューションのビルドを選択します。</li>
+ <li>ビルドが開始され結果が表示されます。</li>
+</ol>
+
+<p>
+最後に、========== ビルド:  29 正常終了、0 失敗、1 更新、0 スキップ ==========
+などと表示されます。失敗が０ならば成功です。
+</p>
+
+<p>
+正常にコンパイルできなかった場合、<a href="./install_windows.html#env_set">環境構築</a>が正しくできているかを確認してください。
+</p>
+
+
+<p>
+ビルドに成功したら、<a href="./simulate_sample.html">サンプルシミュレーションの実行</a>
+を行って、正常にビルドできていることを確認してください.
+</p>
+
+<p>
+また、INSTALL_DIRで指定したディレクトリにはOpenHRPのライブラリが出来ています。
+今後OpenHRPを利用したプログラムを作成・実行するときのために、パスを通しておくとよいでしょう。
+</p>

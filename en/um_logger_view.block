@@ -1,0 +1,78 @@
+title = Logger View
+base  = ..
+
+<h2>Logger View</h2>
+<p>
+Here we explain the various elements that compose Logger View.
+</p>
+<p align=center>
+<img src="../img_new/um_010.png">
+</p>
+
+<ul>
+<ol>
+<li>fast-rwd button<br>
+When clicked, rewind playback speed is doubled. (Max: -64x)<br>
+If clicked while forward playback, the speed changes to -2x.
+</li>
+<li>slow-rwd button<br>
+When clicked, rewind palyback speed drops by half. (Max: -1/64x)<br>
+If clicked while paused, rewind playbak starts with -1/8x speed.
+And if clicked while forward playback, the speed changes to -1x.
+</li>
+<li>pause button<br>
+When clicked, Logger View playback is paused for temporarily.
+</li>
+<li>play button<br>
+When clicked, Logger View forward playback starts with 1x speed.
+</li>
+<li>slow-fwd button<br>
+When clicked, forward playback speed drops by half. (Max: 1/64x)<br>
+If clicked while paused, forward playbak starts with 1/8x speed.
+And if clicked while rewind playback, the speed changes to 1x.
+</li>
+<li>fast-fwd button<br>
+When clicked, forward playback speed is doubled. (Max: 64x)<br>
+If clicked while rewind playback, the speed changes to 2x.
+</li>
+<li>Status<br>
+Displays as "Live" while simulation execution, "Pause" while paused status and 
+"Play x<i>(speed ratio)</i>" while replaying.
+</li>
+<li>Frame-by-Frame rewind Playback button<br>
+When clicked, A front frame is displayed. <br>
+It can return a frame every by continuing pushing.
+</li>
+<li>Frame-by-Frame Playback button<br>
+When clicked, The following frame is displayed.<br>
+It can advance a frame every by continuing pushing. 
+</li>
+<li>Simulation time<br>
+Displays as "NO DATA" before simulation starts.<br>
+And when replaying, it displays the elapsed time from start.
+</li>
+<li>Simulation time prograss bar<br>
+Moving the slider you can jump to any position of the simulation prograss time.
+</li>
+<li>Frame rate<br>
+Frame rate displays by integer value between 1-50.<br>
+Initial value is 10.
+</li>
+<li>Frame rate changing slider<br>
+Moving the slider and you can change the frame rate from 1 to 50.
+</li>
+</ol>
+<br>
+<ul>
+<li>(1) to (6) and (10) will not be activated until simulation start and log is generated.</li>
+<li>Do not operate (1) to (6) and (10) while simulation in prograss.</li>
+<li>
+  Increasing frame rate on a low graphic performing environment, may cause not to replay as 
+  the time prograss.
+</li>
+</ul>
+</ul>
+
+
+
+

@@ -1,0 +1,53 @@
+site OpenHRP3
+  server www.is.aist.go.jp
+  protocol ftp
+  username humanoid
+  password humanoid
+  remote ~/public_html/OpenHRP
+  local ~/website/OpenHRP3
+  url http://www.is.aist.go.jp/humanoid/OpenHRP
+  nodelete
+  permissions all
+  symlinks follow
+  exclude /download
+  exclude /limited_jp
+  exclude /etc
+  exclude /tmp
+  exclude /.htaccess
+  exclude *.rb
+  exclude *.block
+  exclude .svn
+
+
+site OpenHRP3Limited
+  server www.is.aist.go.jp
+  protocol ftp
+  username humanoid
+  password humanoid
+  remote ~/secure_html/OpenHRP
+  local ~/website/OpenHRP3
+  url https://www.is.aist.go.jp/humanoid/OpenHRP
+  nodelete
+  permissions all
+  symlinks follow
+  exclude /jp
+  exclude /movie
+  exclude /etc
+  exclude /tmp
+  exclude *.rb
+  exclude *.block
+  exclude .svn
+
+site OpenHRP3Password
+  server www.is.aist.go.jp
+  protocol ftp
+  username humanoid
+  password humanoid
+  remote ~/password
+  local ~/website/password
+  url https://www.is.aist.go.jp/humanoid/OpenHRP
+  nodelete
+  permissions all
+  symlinks follow
+  exclude *~
+  exclude "#*#"

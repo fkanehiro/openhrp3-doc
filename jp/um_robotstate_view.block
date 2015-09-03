@@ -1,0 +1,29 @@
+title = Robot State View
+base  = ..
+
+<h2>Robot State View概要</h2>
+<p>
+Robot State Viewを構成する各種要素について説明します。
+</p>
+<p align=center>
+<img src="../img_new/um_013.png">
+</p>
+
+<ul>
+<ol>
+<li>ロボット名<br>
+Itemに複数のロボットがある場合、リストボックスから選択できます。
+</li>
+<li>ジョイント情報一覧<br>
+ロボットのジョイント情報の一覧です。
+</li>
+<li>センサ情報一覧<br>
+センサ情報の一覧です。
+</li>
+</ol>
+</ul>
+図は、サンプルプロジェクト"SamplePD.xml"をロードした時の例を示しています。
+
+
+
+

@@ -1,0 +1,32 @@
+title = Text Editor View
+base  = ..
+
+<h2>Text Editor View</h2>
+<p>
+Here we explain the various elements that compose Text Editor View.
+<br>
+</p>
+<p align=center>
+<img src="../img_new/um_031.png"><br>
+Text Editor View
+</p>
+<ul>
+<ol>
+<li>Save button<br>
+A file is saved. 
+</li>
+<li>Save as button<br>
+A file changes a name and is saved. 
+</li>
+<li>Editor area<br>
+A file is edited.
+</li>
+<li>The display of a row number<br>
+The present cursor position is displayed.
+</li>
+</ol>
+</ul>
+
+
+
+

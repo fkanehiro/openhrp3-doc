@@ -1,0 +1,303 @@
+title = Required Software to Compile/Run OpenHRP
+base  = ..
+
+<h2>Overview</h2>
+
+<p>
+Following list of softwares are required to compile and run OpenHRP.
+These are not included in the OpenHRP main package, so you have to 
+install them separately and make sure to be available in your system.
+</p>
+
+<ul>
+   <li>Middlewares
+    <ul>
+     <li>OpenRTM</li>
+     <li>omniORB</li>
+    </ul>
+   </li>
+
+   <li>Java
+    <ul>
+     <li>Java Development Kit (JDK)</li>
+     <li>Java3D</li>
+    </ul>
+   </li>
+
+   <li>C++ Development Tools
+    <ul>
+     <li>CMake</li>
+     <li>Linux:   GCC, Make etc</li>
+     <li>Windows: Visual C++</li>
+    </ul>
+
+   <li>C++ Libraries
+    <ul>
+     <li>Boost</li>
+     <li>Lapack</li>
+     <li>Eigen</li>
+     <li>Collada dom</li>
+    </ul>
+   </li>
+
+   <li>Python
+    <ul>
+     <li>Jython</li>
+    </ul>
+   </li>
+
+   <li>Eclipse
+    <ul>
+     <li>Eclipse</li>
+     <li>Java3d-eclipse plugin</li>
+    </ul>
+</ul>
+
+<p>
+You may install each software according to their distributor's description, 
+or using the package system equipped with your OS.
+</p>
+
+<p>
+In the next section, we describe an overview, distribution site and suuported versions
+ for each software.
+</p>
+ 
+<h2>Java</h2>
+
+<p>
+In OpenHRP, some of components such as GrxUI, are written in Java. 
+So you have to configure the Java environment to compile and run those components.
+<p>
+
+<h3>Java Development Kit (JDK)</h3>
+
+This is the environment for Java developement and execution.
+
+<ul>
+ <li>Distribution Site : <a href="http://java.sun.com" target="_blank">http://java.sun.com/</a></li>
+ <li>You can download it from the "Java SE" download page.</li>
+ <li>Supported versions : JDK6</li>
+</ul>
+
+<h2>Middlewares</h2>
+
+<p>
+OpenHRP is designed as distributed component system. Therefore you need
+middlewares which forms the basement to run these components.
+</p>
+
+<h3>OpenRTM-aist</h3>
+
+<p>
+OpenRTM-aist is a distributed component middleware designed for building robot systems.
+OpenHRP uses C++ edition of OpenRTM-aist, which is an implementation of AISTs' 
+OpenRTM project team.
+</p>
+
+<ul>
+ <li>Distribution Site : <a href="http://www.openrtm.org/openrtm/" target="_blank">http://www.openrtm.org/openrtm/</a></li>
+ <li>Dependant version : 1.0.0-RELEASE</li>
+ <li>Dependant version : 1.1.0-RELEASE</li>
+</ul>
+<p>
+<span style="color: red">* OpenRTM-aist 0.4 or earlier is not supporting in OpenHRP Ver.3.1.0 &beta;4 or later.</span>
+</p>
+
+<h3>omniORB</h3>
+
+<p>
+CORBA is another middleware used in OpenHRP. Here you need to have omniORB, 
+which is an implementation of CORBA.
+</p><p>
+Howerever, omniORB is also used by OpenRTM-aist, so once you install OpenRTM-aist 
+successfully,omniORB should also be available as well.
+</p>
+<ul>
+ <li>Distribution Site : <a href="http://omniorb.sourceforge.net/" target="_blank">http://omniorb.sourceforge.net</a></li>
+ <li>Supported versions : 4.0.x and 4.1.x series</li>
+ <li>4.0.x : supports 4.0.7 or later</li>
+ <li>4.1.x : recommended series</li>
+</ul>
+<br>
+
+
+<h2>C++ Development Tools</h2>
+
+<p>
+Since some components of OpenHRP are written in C++ language, you need to have
+a C++ development tool, to compile OpenHRP source package.
+Additionally, when you do your own simulations, you can develope your own controller 
+components in C++.
+</p>
+
+<h3>for Linux</h3>
+
+For Linux platforms, following compliers have been checked and confirmed for compiling
+ OpenHRP.
+
+<ul>
+ <li>GCC 3.3</li>
+ <li>GCC 4.1, 4.2</li>
+</ul>
+
+<p>
+Apart from compilers, please make sure whether the command line development tools such as 
+"make" are available in your system.
+</p>
+
+<h3>for Windows</h3>
+
+<p>
+In Windows, we use Visual C++ compiler and we support Visual C++ 2010, Visual C++ 2008 at present.
+You can use either the commercial edition or the Express Edition which is distributed 
+for free.
+</p>
+<p>
+Note:<br>
+Please note that OpenHRP versions later than 3.0.0, will not be supported with Visual 
+C++ 2005. Please use Visual C++ 2010 from now on.
+</p>
+<br>
+
+<h2>C++ Libraries</h2>
+
+<h3>Boost Library</h3>
+
+<p>
+This is a collection of C++ libraries.
+It provides rich features to compensate insufficent parts of standard library.
+</p>
+
+<ul>
+ <li>Distribution Site : <a href="http://www.boost.org/" target="_blank">http://www.boost.org/</a>
+ <li>Supported versions : 1.40 or later
+</ul>
+
+
+<h3>LAPACK</h3>
+
+<p>
+LAPACK is a well known library in linear algebra, that used for relatively large matrix
+ and vector calculations.
+</p>
+
+<p>
+LAPACK has number of implementations.
+In OpenHRP, we support the following implementations.
+<ol>
+
+ <li>Original version of LAPACK written in Fortran
+  <ul>
+   <li>Distribution Site : <a href="http://www.netlib.org/lapack" target="_blank">http://www.netlib.org/lapack/</a></li>
+   <li>Recommended version : 3.1 or later.</li>
+  </ul>
+ </li>
+
+ <li>LAPACK converted to C language (CLAPACK)
+  <ul>
+   <li>Distribution Site : <a href="http://www.netlib.org/clapack/index.html" target="_blank">http://www.netlib.org/clapack/</a>)</li>
+  </ul>
+ </li>
+
+ <li>Atlas</li>
+</ol>
+
+<p>
+(1.) Original version of LAPACK can be installed in many Linux distributions using the 
+package system.However, the dynamics server published by Tokyo University does not 
+support with this original version of LAPACK at present.If you are willing to use that 
+server, please use (2.) or (3.) as LAPACK implementation.
+</p>
+
+<p>
+(2.) CLAPACK is written in C language, so it is easier to deal with than the original 
+version(1.). Many Linux distributions provides only the original version of LAPACK 
+with the package system. So when it comes to CLAPACK, we have to compile it by ourselves 
+starting from the source package. For Windows platform, binary package of CLAPACK is 
+also distributed. All you have to do is simply extract to the desired location. So it is 
+more easier to install than the original version. Thus, if you work on Windows, or if you 
+want to run the dynamics server produced by Tokyo University, choose CLAPACK.
+</p>
+
+<p>
+(3.) Atlas seems to be an advanced implementation written in C language.
+Both dynamics servers (Tokyo University product and AIST product) are supported by Atlas.
+Some Linux distributions such as Ubuntu, provides Atlas through its package system.
+</p>
+
+<h3>Eigen</h3>
+<p>Eigen is C++ library for matrices, vectors.</p>
+<ul>
+ <li>Distribution Site : <a href="http://eigen.tuxfamily.org/index.php" target="_blank">http://eigen.tuxfamily.org/index.php</a></li>
+ <li>Supported versions : 3.0</li>
+</ul>
+
+<h3>Collada DOM</h3>
+<ul>
+ <li>Distribution Site : <a href="http://collada.org/" target="_blank">http://collada.org/</a></li>
+ <li>Supported versions : 2.3 </li>
+</ul>
+
+<h2>Python</h2>
+
+<h3>Jython</h3>
+
+<p>
+Jython is the implementation of Python language, written in Java.
+It can be used to write simulation script and extend GUI.
+</p>
+
+<ul>
+ <li>Distribution Site : <a href="http://www.jython.org/" target="_blank">http://www.jython.org/</a>
+ <li>Supported versions : 2.2.1</li>
+</ul>
+<br>
+
+<h2>Eclipse</h2>
+
+<h3>Eclipse </h3>
+
+<p>
+Eclipse is a sophisticated open-source Integrated-Development-Environment (IDE) for programming. 
+</p>
+
+<ul>
+ <li>Distribution Site : <a href="http://www.eclipse.org/" target="_blank">http://www.eclipse.org/</a>
+ <li>Supported versions : 3.4.2 or later</li>
+</ul>
+
+<h3>RTCSystemEditor RTCBuilde</h3>
+<p>
+These are plug-in for Eclipse which creates and operates a RTC component.
+</p>
+<ul>
+ <li>RTCSystemEditor, RtcBuilder download page: <a href="http://www.openrtm.org/openrtm/en/content/tools" target="_blank">OpenRTM-asit download page</a></li>
+</ul>
+
+<h3>Java3D-eclipse plugin</h3>
+
+<p>
+This is Java3D plugin for Eclipse. It enables Java3D graphics embeded programs to run on 
+Eclipse environment.
+</p>
+
+<ul>
+ <li>Distribution Site : <a href="http://sourceforge.net/project/showfiles.php?group_id=186307" target="_blank">Java3D-eclipse plugin</a>
+ <li>Checked and confirmed for ver 20090302.</li>
+  <li>
+    Install
+    <ul>
+       <li>
+        For Eclipse 3.4<br>
+        Please choose "help "->"update software" from a menu. "Update software and add-on" dialog opens. <br>
+        Please choose a "software which can be used" tab window and push an "addition of site" button. "Addition of site" dialog opens.<br>
+        Please push an "archive" button and choose downloaded "java3declipse-20090302.zip". <br>
+        Since a list tree with a check box is added to a "software which can be used" tab window, please check and push an "installation" button. <br>
+        An "installation" dialog opens. Please push a "next" button. <br>
+        Please choose "agree", and push a "next" button. <br>
+        Please restart Eclipse. <br>
+      </li>
+    </ul>
+  </li>
+</ul>

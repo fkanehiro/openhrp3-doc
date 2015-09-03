@@ -1,0 +1,14 @@
+title = パッケージダウンロード先の追加
+base  = ..
+
+
+<h2>パッケージダウンロード先の追加</h2>
+  <p>
+  メニューからシステム＞システム管理＞ソフトウェアソース(English: System＞Administration＞Software Sources)を選択し、”サードパーティのソフトウェアタブ"に以下を追加して下さい。
+  </p>
+  <blockquote>
+    deb http://javadesktop.org/lg3d/debian stable contrib
+  </blockquote>
+  <br>
+  <img src="../img_new/install/fig001.png"><br>
+  <br>

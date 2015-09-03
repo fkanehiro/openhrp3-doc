@@ -1,0 +1,99 @@
+title = Starting and initial setting of GrxUI
+base  = ..
+
+<h2>Table of contents</h2>
+<ul type="1">
+ <li><a href="#eclipse_init">Initial setting of Eclipse</a></li>
+  <ul type="disc">
+   <li><a href="#ubuntu">For Ubuntu </a></li>
+   <ul type="disc">
+    <li><a href="#eclipse_ini">Eclipse.ini settings </a></li>
+    <li><a href="#ubuntu910">Starting Eclipse on Ubuntu9.10 or later</a></li>
+    <li><a href="#ubuntu900">Starting Eclipse before Ubuntu9.10 </a></li>
+   </ul>
+   <li><a href="#windows">For Windows </a></li>
+   <ul type="disc">
+    <li><a href="#eclipse_ini">Eclipse.ini settings </a></li>
+    <li><a href="#start_eclipse">Starting Eclipse </a></li>
+   </ul>
+  </ul>
+ <li><a href="#grxui_config">Starting GrxUI</a></li>
+</ul>
+
+<h2 id="eclipse_init">1. Initial setting of Eclipse</h2>
+<h3 id="ubuntu">For Ubuntu </h3>
+<h4 id="eclipse_ini">Eclipse.ini settings </h4>
+<p>
+In this section we discuss how to manage the heap memory according to the environmental 
+conditions, when saving logs. Please find the Eclipse.ini file placed in Eclipse installed folder.
+Open it in editor and add the -vm option explicitly, as shown below. 
+<br>
+Edited example:
+<pre>
+-vmargs
+-Xms128m
+-Xmx1024m
+</pre>
+-Xms and -Xmx is used to specify the minimum and maximum amount of megabytes that can be used for 
+heap memory. In this way, memory can be used effectively from Eclipse startup.<br>
+</p>
+
+<h4 id="ubuntu910">Starting Eclipse on Ubuntu9.10 or later </h4>
+<p>
+When you start Eclipse 3.4SR2 on Ubuntu9.10 or later, You need to execute by a script. <br>
+Please move to the directory which installed eclipse and execute the following commands. 
+<pre>$ ./eclipse.sh </pre>
+<p>After installing a new plugin, start the Eclipse using following command.
+<pre>$ ./eclipse.sh -clean</pre>
+Please <a href="#grxui_config">set up GrxUI</a> after starting.
+
+<h3 id="windows">For Windows </h3>
+<h4 id="eclipse_ini">Eclipse.ini settings</h4>
+<p>
+Please find the Eclipse.ini file placed in Eclipse installed folder.<br>
+<p align="center">
+<img src="../img_new/install/init_win1.png"><br>
+</p>
+Open it in editor and add the -vm option explicitly, as shown below. 
+-Xms and -Xmx is used to specify the minimum and maximum amount of megabytes that can be used for 
+heap memory. In this way, memory can be used effectively from Eclipse startup.<br>
+<br>
+Edited example:
+<pre>
+-vmargs
+-Xms128m
+-Xmx1024m
+</pre>
+</p>
+<h4 id="start_eclipse">Starting Eclipse</h4>
+<p>
+After installing a new plugin, start the Eclipse using following command.
+<pre>$ eclipse -clean</pre>
+Or please create shortcut and specify "-clean" option there. <br>
+he procedure in the case of using shortcut is as follows. 
+<ul type="1">
+<li>Please right-click eclipse.exe and choose "create shortcut".</li>
+<li>Please right-click the created shortcut and choose "property". </li>
+<li>Please add "-clean" to the end of a "link". </li>
+<li>Please double-click shortcut. </li>
+</ul>
+<p align="center">
+<img src="../img_new/install/init_win2.png"><br>
+</p>
+</p>
+
+<h3 id="grxui_config">2. Starting GrxUI</h3>
+<p>
+Start Eclipse and select "Window"-"preferences" from menu, preferences dialog opens.
+Click "GRXUI" in the tree on the left-hand side of a dialog, and set up the displayed contents. <br>
+<p align="center">
+<img src="../img_new/install/init_eclipse_grxui.png"><br>
+</p>
+Although the server directory is set up by the default, please check whether it is correct. <br>
+When you correct a setup after GrxUI starting, please be sure to reboot GrxUI. <br>
+Moreover, since it is saved for every work space, when work space is changed, please set up this setup again. <br>
+<br>
+Next, GrxUI is started. <br>
+Please select "Window"-"Open Perspective"-"Other" from menubar.<br>
+Select "GrxUI" perspective and it will be launched.
+<br><br>

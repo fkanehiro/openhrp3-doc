@@ -1,0 +1,65 @@
+title = Controller View
+base  = ..
+
+<h2>Controller View</h2>
+<p>
+Here we explain the various elements that compose Controller View.
+</p>
+<p align=center>
+<img src="../img_new/um_016.png"><br>
+Controller View
+</p>
+
+<ul>
+<ol>
+<li>Robot Name<br>
+List of robot names.
+</li>
+<li>Controller<br>
+List of controllers; display in CORBA ID.
+</li>
+<li>Control Time[s]<br>
+List of control cycles.
+</li>
+<li>Working Dir.<br>
+List of working directories.
+</li>
+<li>Setup Command<br>
+List of setup commands.
+</li>
+<li>Detach button<br>
+Deletes selected line when clicked.
+</li>
+<li>Edit button<br>
+Edits selected line when clicked.
+</li>
+<p align=center>
+<img src="../img_new/um_016_1.png"><br>
+Controller View 2
+</p>
+<li>Controller<br>
+Chooses a controller among CORBA ID list box.
+</li>
+<li>Control Time[s]<br>
+Sets control cycles by the second.
+</li>
+<li>Working Dir.<br>
+Sets working directory. Environment variable is usable in form of $(variables name).
+</li>
+<li>new file<br>
+A new file is opened.</li>
+<li>select file<br>
+The existing file is chosen. 
+</li>
+<li>open file<br>
+The existing file is opened.  
+</li>
+<li>OK button<br>
+The edited contents are updated and it ends. 
+</li>
+<li>Cancel button<br>
+The edited contents are canceled and it ends.
+</li>
+</li>
+</ol>
+</ul>

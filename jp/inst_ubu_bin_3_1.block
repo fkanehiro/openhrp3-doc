@@ -1,0 +1,140 @@
+title = Ubuntu パッケージインストール
+base  = ..
+
+<h2>目次</h2>
+<ul type="disc">
+ <li><a href="#check_env">インストール前確認</a></li>
+ <li><a href="#bin">バイナリパッケージからインストール</a></li> 
+  <ul>
+   <li><a href="#file_structure">ファイル構成</a></li>
+  </ul>
+  <ol type="1">
+   <li><a href="#bin_apt-get">apt-getの使用</a></li>
+    <ul>
+     <li><a href="#chk_java">Javaサードパーティの確認</a></li>
+    </ul>
+   <li><a href="#bin_install_grxui">Eclipse、および、GrxUIプラグインのインストール</a></li>
+  </ol>
+</ul>
+
+<h2 id="check_env">1. インストール前確認</h2>
+<p><span style="color: red">
+※　バイナリのOpenHRPは SSE 拡張命令を有効にしてコンパイルしております。PentiumⅢ、Athlon XPより前のCPUでは動作いたしません。
+</span></p>
+<p>
+OpenHRP は3Dグラフィックを利用するアプリケーションなので、インストールを
+始める前に、お使いのパソコンで3Dグラフィックスを正常に動作できるかを確認する必要があります。
+端末を開いて次のコマンドを実行してください。
+なお、端末ウィンドウは
+Ubuntuメニューの"アプリケーション"-"アクセサリ"-"端末"などから起動できます。
+</p>
+
+<pre>$ glxinfo | grep rendering</pre>
+<p> </p>
+
+<ul>
+  <li><p>
+  結果が "direct rendering: Yes"　であれば、<br>
+  　お使いのパソコンが3Dグラフィックをサポートしますので、次のステップへ進んでください。</p>
+  </li>
+  <li><p>
+  結果が "direct rendering: No"　となった場合、<br>
+  　3Dアクセレレーション機能をサポートするグラフィックドライバを導入する必要があります。</p>
+
+  <p>⇒　<a href="./g3d_support.html">グラフィックドライバの導入手法</a></p>
+
+  <p>（注）</p>
+  <ul>
+    <li><p>
+    グラフィックボードによって、上記の手法が適用できない場合もあります。
+    この場合でも、基本的には OpenHRP が動作します。ただし、3Dアクセレレーション機能が有効でないため、
+    OpenHRPの3D表示が遅くなり、効率よく動作しない可能性がありますので、ご了承ください。  </p>
+    </li>
+    <li><p>
+    グラフィックボードに関しては、Linuxにおける3Dアクセラレーション機能の対応度の点で、nVidiaのチップ
+    を積んだものがお勧めです。</p>
+    </li>
+    <li><p>
+    VMware等の仮想マシン上ではグラフィックドライバの導入は必要ございませんが、仮想マシンの持つグラフィックドライバにより動作しない可能性がございます。</p>
+    </li>
+  </ul>
+  </li>
+</ul>
+<br>
+
+<h2 id="bin">バイナリパッケージからインストール</h2>
+<p>
+OpenHRP3.1.0&beta;4からapt-getによるバイナリパッケージの配布に対応いたしました。<br>
+</p>
+
+<h3 id="file_structure">ファイル構成</h3>
+インストールディレクトリは以下の構成となります。<br>
+<pre>
+/usr/
+  +- bin/                  # OpenHRPの実行ファイル ファイル名の先頭はopenhrpで修飾
+  +- include/              # OpenHRPライブラリのヘッダ
+  +- lib/                  # OpenHRPライブラリ
+      +- pkgconfig/
+          +- openhrp3.1.pc # pkg-configの定義ファイル
+  +- share/
+      +- OpenHRP-3.1/
+          +- idl/          # IDLファイル
+          +- sample/       # サンプル群、サンプルの定義ファイル、リソース、実行ファイル
+          +- java/         # OpenHRP提供のGrxUIが依存するjarファイル
+          +- plugins/      # OpenHRP提供のEclipseプラグイン
+      +- doc/              # ドキュメント群
+          +- OpenHRP-3.1/  # ライセンス、ヒストリなど
+             +- idl/       # IDLのdoxygen 英語
+             +- idl_jp/    # IDLのdoxygen 日本語
+             +- lib/       # ライブラリのdoxygen 英語
+             +- lib_jp/    # ライブラリのdoxygen 日本語
+             +- ut/        # 東大版DynamicsSimulatorのdoxygen 英語
+</pre>
+</p>
+
+<p>
+また、OpenRTM-1.1.0に依存しダウングレードはできません。<br>
+以下の手順に沿って導入してください。
+</p>
+
+<h3 id="bin_apt-get">apt-getの使用</h3>
+<p>
+次のコマンドを実行してopenhrパケージをインストールします。
+<pre>
+sudo add-apt-repository ppa:hrg/stable
+sudo add-apt-repository ppa:openrave/release
+sudo apt-get update
+sudo apt-get install openhrp
+</pre>
+
+特に問題がなければ適宜Yesや承諾を選択してインストールを終えてください。<br>
+<br>
+
+<h4 id="chk_java">Javaのサードパーティ確認</h4>
+<pre>$ java -version</pre>
+を実行してjavaのサードパーティを確認してください。<br>
+"OpenJDK Runtime Environment "の文言が含まれていればOpenJDKのjreが有効になっています。<br>
+"Java(TM) SE Runtime Enviroment" の文言が含まれていればSunのjreが有効になってます。<br>
+OpenJDK、またはsunが有効になっていることを確認し、<a href="#bin_install_grxui">Eclipse、および、GrxUIプラグインのインストール</a>作業へお進みください。<br>
+そうでない場合、gcjに切り替わっていることがあり、その時は<br>
+<pre>$ sudo update-java-alternatives -s java-6-sun</pre>
+または
+<pre>$ sudo update-java-alternatives -s java-6-openjdk</pre>
+を実行して切り替えてください。<br>
+</p><br>
+
+
+<h3 id="bin_install_grxui">Eclipse、および、GrxUIプラグインのインストール</h3>
+GrxUIはEclipseのプラグインです。現在のバージョンはEclipse3.4に対応しています。<br>
+Eclipseの実行とコンパイルに必須のプラグインをあらかじめ導入した全部入りパッケージを用意しています。<br>
+本サイトの<a href="./download.html">「ダウンロード」</a>ページからEclipse 全部入りパッケージを
+ダウンロードして、解凍してください。<br>
+<pre>
+tar xzvf peclipse342_hrpdependencies_linux_ja_20120220.tar.gz
+</pre>
+/usr/share/OpenHRP-3.1/java/plugins/ ディレクトリ内のすべてのjarファイルをEclipseのpluginsディレクトリへコピーしてください。<br>
+例えば、eclipseディレクトリがカレントディレクトリの場合
+<pre>$ cp /usr/share/OpenHRP-3.1/java/plugins/*.jar plugins/</pre>
+コマンドでコピーできます。<br><br>
+これでインストールは完了です。<a href="./init_grxui.html">GrxUIの起動・初期設定</a>に進み、GrxUIの起動してください。
+<br><br>

@@ -1,0 +1,40 @@
+title = 仮想関節を用いたシミュレーション
+base = ..
+
+<h2>概要</h2>
+
+<p>
+別々のモデルのリンク間に仮想関節を設定すると、指定したリンク間に拘束力を発生させることができます。2つのリンクはボールジョイントで接続されていると考え、指定した並進方向に拘束力を発生させます。<br>
+これを用いると、図１のように鉄棒にロボットをぶら下がらせるようなことができます。<br>
+<p align="center">
+<img src="../img_new/ExtraJoint.png"><br>
+図１ : Extra Joint Sample
+</p>
+ここでは、仮想関節を設定する手順を説明します。<br>
+</p>
+
+<h2>ExtraJointアイテムの作成</h2>
+<p>
+他のシミュレーションと同様にアイテムを設定してプロジェクトを作成します。<br>
+アイテムビューのExtraJointフォルダを右クリックし、メニューから”作成”を選択します。<br>
+作成されたExtraJointアイテムを選択すると、プロパティビューに内容が表示されますので、ここで編集します。<br>
+プロパティの意味は以下の通りです。<br>
+</p>
+
+<div>
+<table border="1">
+<tr><td>name</td><td>仮想関節の名前を指定します。</td></tr>
+<tr><td>link1Name</td><td>ボールジョイントを受けているリンク名を指定します。</td></tr>
+<tr><td>link2Name</td><td>ボールジョイントが付いているリンク名を指定します。</td></tr>
+<tr><td>object1Name</td><td>link1Nameのモデル名を指定します。</td></tr>
+<tr><td>object2Name</td><td>link2Nameのモデル名を指定します。</td></tr>
+<tr><td>link1LocalPos</td><td>link1Nameリンクの拘束位置をそのリンクのローカル座標で指定します。</td></tr>
+<tr><td>link2LocalPos</td><td>link2Nameリンクの拘束位置をそのリンクのローカル座標で指定します。</td></tr>
+<tr><td>jointType</td><td>拘束する軸数を指定します。xyz：互いに直交する3軸　xy：jointAxisで指定した軸に直交する２軸　z：jointAxisで指定した１軸</td></tr>
+<tr><td>jointAxis</td><td>link1Nameリンクのローカル座標で単位ベクトルを指定します。ベクトルの意味は、jointTypeの指定で変わります。</td></tr>
+</table>
+</div>
+
+<h2>サンプルの実行</h2>
+GrxUIを起動し、プロジェクトExtraJoint.xmlをloadします。<br>
+シミュレーションを開始してください。<br>

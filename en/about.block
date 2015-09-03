@@ -1,0 +1,105 @@
+title = About OpenHRP3
+base  = ..
+
+<h2 id="h2_content_1_0">Overview of OpenHRP3<a class="anchor_super" id="dcc7eb69"></a></h2>
+
+<p>
+OpenHRP3 (Open Architecture Human-centered Robotics Platform version 3) is an integrated software 
+platform for robot simulations and software developments. It allows the users to inspect an 
+original robot model and control program by dynamics simulation. In addition, OpenHRP3 provides 
+various software components and calculation libraries that can be used for robotics related 
+software developments.
+</p>
+
+<p>
+OpenHRP3 is developed as a one of the complementary project called "Distributed component type robot 
+simulator", executed by "Cooperation of Next Generation Robots" that belongs to "Government Cooperation 
+of Science and Technology". Dynamics calculation engine is almost developed by 
+<a href="http://www.ynl.t.u-tokyo.ac.jp/index.html" target="blank">
+"Nakamura Lab, Dept. of Mechano Informatics, University of Tokyo"</a> and graphical interface is 
+done by <a href="http://www.generalrobotix.com/en/index.htm" target="blank">
+"General Robotix, Inc"</a>. The other parts are developed as a cooperate work of 
+<a href="http://www.is.aist.go.jp/humanoid/index.html" target="blank">"Humanoid Resarch Group"</a> and 
+<a href="http://unit.aist.go.jp/is/taskint/html-en/index.html" target="blank">"Task-Intelligence Research Group"</a> at 
+<a href="http://unit.aist.go.jp/is/" target="blank">"Intelligent Systems Research Institute"</a>, 
+<a href="http://www.aist.go.jp/index_en.html" target="blank">"National Institute of Advanced Indrustrial Science and Technology(AIST)"</a>.
+</p>
+
+<p>
+And even the "Distributed component type robot simulator" project is over, AIST is continuing 
+the developing process as part of under-developing 
+<a href=http://www.openrtp.jp/ target="_blank">OpenRT Platform</a> that linked with 
+"Intelligent technology development project for Next generation robots". 
+</p>
+
+<p>
+This Version 3 ( so-called OpenHRP3) is considerably improved development compared to the
+the previous distribution of OpenHRP version 2. Moreover, OpenHRP3 distributes as an open-source 
+software.
+</p>
+
+<p align="center">
+<img src="../img_new/GrxUI_screenshot_1.png"><br>
+OpenHRP3 Main Interface
+</p>
+<br>
+
+
+<h2 id="h2_content_1_1">Features of OpenHRP3</a></h2>
+
+<p>
+OpenHRP3 is designed as a distributed object system. It is composed of a client program that 
+manages the servers and a group of server programs that offers various functions. This composition 
+caused to improve the maintainability and the portability in large-scaled simulation system 
+developments.
+</p>
+
+<p>
+OpenHRP3 corresponds with the OpenRTM that is a distributed middleware for robots. At present, 
+controller can be developed as a RT component of OpenRTM. Various sensors to be simulated, are 
+scheduled to make accessible as RT components, in future. 
+</p>
+
+<p>
+The dynamics calculation engine of OpenHRP3 has two editions, the development of the 
+Tokyo University, and the development of AIST. Each has the following features:
+
+<ul>
+
+ <li>Tokyo University edition</li>
+ <ul>
+  <li>
+  This edition applies an original algorithm for a forward dynamics algorithm. In the algorithm, 
+  computational complexity is in proportion to the number of the joints, and simulation of closed 
+  link mechanism is possible, too. In algorithm of similar performance, it is one of the fastest 
+  one all over the world, so it can execute high-speed simulation as to a complicated model.
+  </li>
+  <li>
+  This edition uses rigid body contact model which is more stable numerically and formulates a 
+  condition about reaction force including frictional force as linear complementarily problem (LCP). 
+  And we developed original LCP solver which can get a solution in robust and high speed for a 
+  numerical value error. It can calculate contact force between arbitrary polygon by using an 
+  interference analysis module with.
+  </li>
+ </ul>
+
+<li>AIST edition</li>
+ <ul>
+  <li>
+  This edition applies Featherstone's algorithm and performs a forward dynamics calculation in 
+  computational complexity to be proportional to the number of the joints.
+  </li>
+  <li>
+  For a calculation of contact force, this edition applies algorithm that calculates a solution of a 
+  restraint condition in convergent calculation. So it can make rigid body contact stable in numerical 
+  computation.
+  </li>
+  <li>
+  The design of the dynamics calculation program is conscious of that users use it as a library from 
+  the outside.  We provide a good library of the convenience that users can apply in a controller and 
+  development of a pattern generator.
+  </li>
+ </ul>
+
+</ul>
+</p>

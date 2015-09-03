@@ -1,0 +1,142 @@
+title = プロジェクトの作成(Ver.3.0.7)
+base  = ..
+
+<h2> プロジェクト </h2>
+<p>
+プロジェクトはGrxUIを使用して作成します。まず<a href="grxui_tutorial_3_0.html#2">GrxUIを起動</a>してください。
+</p>
+<h3> モデル </h3>
+<p>
+ロボットの歩行シミュレーションを扱うため、ロボットと床をロードします。<br>
+Item ViewリストにあるModelを右クリックし、Loadを選んでください。<br>
+OpenHRP3/etc フォールダーにあるfloor.wrlとsample.wrlをロードします。<br>
+floorを右クリックし、change into environment modelを選んで、環境モデルとします。
+</p>
+<p>
+次にロボットの初期姿勢をあたえます。モデルsampleのPropertyを図1のように設定します。<br>
+表１では入力値を明示します。
+</p>
+<p>
+<center>
+<img src="../img_new/um_3_0/GrxUI_EditProperty.png"><br>
+図1: Property 編集手順
+</center>
+</p>
+<p align="center">
+表1: Sample robot property<br>
+<table align="center" border="1">
+<tr><td>CHEST.angle</td><td>0.0</td></tr>
+<tr><td>LARM_ELBOW.angle</td><td>-1.5708</td></tr>
+<tr><td>LARM_SHOULDER_P.angle</td><td>0.174533</td></tr>
+<tr><td>LARM_SHOULDER_R.angle</td><td>-0.003490</td></tr>
+<tr><td>LARM_SHOULDER_Y.angle</td><td>0.0</td></tr>
+<tr><td>LARM_WRIST_P.angle</td><td>0.0</td></tr>
+<tr><td>LARM_WRIST_R.angle</td><td>0.0</td></tr>
+<tr><td>LARM_WRIST_Y.angle</td><td>0.0</td></tr>
+<tr><td>LLEG_ANKLE_P.angle</td><td>-0.0424675</td></tr>
+<tr><td>LLEG_ANKLE_R.angle</td><td>0.0</td></tr>
+<tr><td>LLEG_HIP_P.angle</td><td>-0.0360373</td></tr>
+<tr><td>LLEG_HIP_R.angle</td><td>0.0</td></tr>
+<tr><td>LLEG_HIP_Y.angle</td><td>0.0</td></tr>
+<tr><td>LLEG_KNEE.angle</td><td>0.0785047</td></tr>
+<tr><td>RARM_ELBOW.angle</td><td>-1.5708</td></tr>
+<tr><td>RARM_SHOULDER_P.angle</td><td>0.174533</td></tr>
+<tr><td>RARM_SHOULDER_R.angle</td><td>-0.003490</td></tr>
+<tr><td>RARM_SHOULDER_Y.angle</td><td>0.0</td></tr>
+<tr><td>RARM_WRIST_P.angle</td><td>0.0</td></tr>
+<tr><td>RARM_WRIST_R.angle</td><td>0.0</td></tr>
+<tr><td>RARM_WRIST_Y.angle</td><td>0.0</td></tr>
+<tr><td>RLEG_ANKLE_P.angle</td><td>-0.0424675</td></tr>
+<tr><td>RLEG_ANKLE_R.angle</td><td>0.0</td></tr>
+<tr><td>RLEG_HIP_P.angle</td><td>-0.0360373</td></tr>
+<tr><td>RLEG_HIP_R.angle</td><td>0.0</td></tr>
+<tr><td>RLEG_HIP_Y.angle</td><td>0.0</td></tr>
+<tr><td>RLEG_KNEE.angle</td><td>0.0785047</td></tr>
+<tr><td>WAIST.rotation</td><td>0.0 1.0 0.0 0.0</td></tr>
+<tr><td>WAIST.translation</td><td>0.0 0.0 0.713</td></tr>
+<tr><td>WAIST_P.angle</td><td>0.0</td></tr>
+<tr><td>WAIST_R.angle</td><td>0.0</td></tr>
+</table>
+</p>
+
+<h3> WorldState </h3>
+<p>
+ここでは、WorldStateを作成しパラメータを与えます。<br>
+Item ViewリストにあるWorldStateを右クリックし、createを選んでください。
+</p>
+<p align="center">
+<img src="../img_new/um_3_0/GrxUI_CreateWorldState.png"><br>
+図2: WorldState
+</p>
+<p>
+OpenHRPタブのsimulationタブで各項目を以下のとおりに設定してください。
+</p>
+<p align="center">
+表2: Simulation Parameters<br>
+<table align="center" border="1">
+<tr><td>Total Times[s]</td><td>13.4</td></tr>
+<tr><td>Integration Step[s]</td><td>0.0020</td></tr>
+<tr><td>Logging Step[s]</td><td>0.0020</td></tr>
+<tr><td>Integration Method</td><td>RUNGE_KUTTA</td></tr>
+<tr><td>Gravity[ms<sup>-2</sup>]</td><td>9.8</td></tr>
+</table>
+</p>
+<p align="center">
+<img src="../img_new/um_3_0/GrxUI_SimulationParameters.png"><br>
+図3: Simulation Parameters
+</p>
+
+<h3> Collision Pair </h3>
+<p>
+OpenHRPタブの中のcollisionタブを選択し、floor-sample間の干渉チェックが行われるように設定してください。
+</p>
+<p align="center">
+<img src="../img_new/um_3_0/GrxUI_CollisionPairAdd.png"><br>
+図4: collisionタブ
+</p>
+<p>
+Addボタンをクリック、Object1はsampleを選択してOKボタンをクリックしてください。
+</p>
+<p align="center">
+<img src="../img_new/um_3_0/GrxUI_InsertCollisionPair.png"><br>
+図5: Collision Pair追加
+</p>
+<h3> コントローラ </h3>
+<p>
+ここではコントローラの設定を行います。<br>
+OpenHRP タブの controller タブに移動し、表３に示すようにコントローラ・パラメータを設定してください。<br>
+Controller の 選択項目として SamplePDController が現れない場合は手動で記入してください。
+</p>
+
+<p>※　表3 で示している値はあくまでも例であり、自分用のコントローラを作成し使用する場合は
+適当にに変更してお使いください。</p>
+
+<p align="center">
+表3 : Controller Parameters<br>
+<table align="center" border="1">
+<tr><td>Controller</td><td>SamplePDController</td></tr>
+<tr><td>Control Time[s]</td><td>0.002</td></tr>
+<tr><td>Working Dir.</td><td>$(OPENHRPHOME)/Controller/rtc/SamplePD</td></tr>
+<tr><td>Setup Command</td><td>SamplePD$(BIN_SFX)</td></tr>
+</table>
+</p>
+
+<p align="center">
+<img src="../img_new/um_3_0/GrxUI_Controller.png"><br>
+図6 : Controllerタブ
+</p>
+
+<h3 id="startsimulation"> シミュレーション </h3>
+<p>
+シミュレーションを実行してください。"start simulation"ボタンでシミュレーションを開始しします。
+</p>
+<p align="center">
+<img src="../img_new/um_3_0/GrxUI_StartSimulation.jpg"><br>
+図7: シミュレーション開始
+</p>
+
+<h3> プロジェクトファイルの保存 </h3>
+<p>
+生成したプロジェクトを保存するには、メニューから file → Save Project を選択してプロジェクトファイルを保存します。<br>
+</p>
+

@@ -1,0 +1,67 @@
+title=How to create a view simulator client(Ver.3.1)
+base=..
+
+<h2> Overview </h2>
+<p>
+Here we explain how to create a view simulator client using a sample.<br/>
+A sample program is in OpenHRP/sample/example/viewSimulator. <br/>
+Since this sample is created based on the sample program of a scheduler, only the change portion is explained. 
+Please read <a href="./scheduler_3_1.html">How to Create Scheduler(Ver.3.1)</a> about a portion without explanation. <br/>
+</p>
+
+<h3> ViewSimurator </h3>
+<p>
+Retrieve ViewSimurator.
+</p>
+<pre>
+    ViewSimulator_var viewSimulator;
+    viewSimulator = checkCorbaServer &lt;ViewSimulator, ViewSimulator_var&gt; ("ViewSimulator", cxt);
+    
+    if (CORBA::is_nil(viewSimulator)) {
+        std::cerr << "viewSimulator not found" << std::endl;
+        return 1;
+    }
+</pre>
+<p>
+The model of a floor and a robot is registered into ViewSimurator.
+</p>
+<pre>
+    viewSimulator->registerCharacter(floor->name(), floor);
+    viewSimulator->registerCharacter(body->name(), body);
+</pre>
+
+<h3> Update of a view simulator </h3>
+<p>
+Within a simulation loop, a view simulator is updated. 
+In this example, the data of a camera is acquired, it is thinned out and it is displaying on standard output. 
+</p>
+
+<pre>
+    try {
+        dynamicsSimulator -> getWorldState( state );
+        if((int)(time*500)%30==0){
+            viewSimulator->updateScene( state );
+            CameraSequence_var cameras;
+            viewSimulator->getCameraSequence(cameras);
+            for(int k=0; k<cameras->length(); k++){
+                ImageData_var imageData = cameras[k]->getImageData();
+                std::cout << "camera(" << k << ") ";
+                for(int l=0; l<imageData->floatData.length(); l+=100)
+                    std::cout <<imageData->floatData[l] << " " ;
+                std::cout << std::endl;
+            }
+        }
+    } catch (CORBA::SystemException& ex) {
+        return 1;
+    }
+</pre>
+
+<h2> Execution </h2>
+<ol>
+<li>Start GrxUI. </li>
+<li>Execut OpenHRP/sample/controller/SamplePD/SamplePD.sh (.bat) from a command line.</li>
+<li>Execut OpenHRP/sample/example/viewSimulator/viewSimulator.sh (.bat) from a command line.</li>
+</ol>
+<p>
+In the case of Windows, please add (OpenHRP3)/bin to PATH. 
+</p>

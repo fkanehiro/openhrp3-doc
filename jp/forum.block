@@ -1,0 +1,40 @@
+title = OpenHRP3 質問用メーリングリストの案内
+base  = ..
+
+<p>
+<span style="font-weight: bold">
+今までOpenHRP3の情報交換の場として使用してまいりました、OpenHRP3 ユーザーズフォーラムは、諸般の都合により使用を中止いたしました。<br></span>
+ご利用頂いた皆様には、大変ご迷惑をおかけしますが、何卒ご理解のほど、お願い申し上げます。<br>
+<br>
+今後は、掲示板に代わりまして下記メーリングリストを運用いたします。OpenHRP3に関するご意見、ご質問等はこちらでお願いします。<br>
+なお、掲示板に過去に投稿された内容をメーリングリストでご覧頂くことはできませんので、ご了承願います。<br>
+<br>
+<h2>メーリングリスト</h2>
+以下のメーリングリストが利用可能です。<br>
+<br>
+<ul>
+<li><a href="https://choreonoid.org/mailman/listinfo/openhrp3-users">openhrp3-users</a> <a href="http://choreonoid.org/pipermail/openhrp3-users">(アーカイブ)</a></li>
+対象言語は英語となっておりますので、日本語による投稿は行わないでください。<br>
+<br>
+<li><a href="https://choreonoid.org/mailman/listinfo/openhrp3-users-ja">openhrp3-users-ja</a> <a href="http://choreonoid.org/pipermail/openhrp3-users-ja">(アーカイブ)</a></li>
+日本語用のメーリングリストです。<br>
+</ul>
+<br>
+購読・投稿をご希望の方は、それぞれ上記のリンク先から購読申請を行ってください。
+<br>
+<br>
+<span style="font-weight: bold">※: </span>本メーリングリストでは、添付ファイルの容量制限を64kbとしています。制限を超えると会員への配信が保留となり、管理者の承認が必要となります。<br>
+質問や回答の際に必要であれば添付ファイルを用いていただいて結構ですが、サイズについては常識的な範囲内で必要最小限となるようご配慮ください。<br>
+<br>
+
+</p>
+<h3>メーリングリスト参加に当たって</h3>
+<p>
+投稿されたメールは、上記の「アーカイブ」のページにて、参加者でない方からも閲覧可能としています。<br>
+従って、一般に公開したくない情報については、メーリングリストへ投稿しないようご注意ください。<br>
+個人情報についても投稿しないようお願いします。<br>
+<br>
+メーリングリスト参加にあたっては、結城浩氏による以下のページも参考にしていただけると幸いです。<br>
+<li><a href="http://www.hyuki.com/writing/techask.html">技術系メーリングリストで質問するときのパターン・ランゲージ</a></li><br>
+<br>
+</p>

@@ -1,0 +1,31 @@
+title = OpenHRP3 Reference Manual
+base  = ..
+
+<p>
+The Reference Manuals generated from the source file by using Doxygen are listed below.
+</p>
+
+<ul>
+ <p><li>
+    <a href="./reference/idl/html/index.html">The Basic Component IDL</a><br>
+    This is a manual that summarizes IDL specifications about the basic CORBA component.
+ </li></p>
+ <p><li>
+    <a href="./reference/lib/html/index.html">Model Calculation Library</a><br>
+    This is a manual that summarizes classes and functions about the model calculation libraries written in C++. 
+ </li></p>
+ <p><li>
+    <a href="../jp/reference/ut/html/index.html">Dynamics Calculation Engine Reference for the university of Tokyo edition</a><br>
+    This is a reference of the dynamic calculation engine which is used in the University of Tokyo edition DynamicsSimulator.
+    
+ </li></p>
+</ul>
+
+<p>
+The reference manual on this page may not be fully up-to-date compared the most recent sources.
+If you need the reference manual of the most recent sources, we recommend you generate it from the source tree by using Doxygen.
+</p>
+
+<p>
+You can find the configuration file of Doxygen under the OpenHRP3 directory doc/reference.
+</p>

@@ -1,0 +1,23 @@
+title = Release Note Ver.3.0.3
+base  = ..
+
+<h2>Release Note Ver.3.0.3</h2>
+
+<p>
+Basic changes in Ver.3.0.3:
+
+<ul>
+  <li>The issue of Modaless dialog remains displayed at start-up, was fixed.</li>
+  <li>Image output properties (COLOR_IMAGE, GRAYSCALE_IMAGE, DEPTH_IMAGE) are now available to use.</li>
+  <li>The issue of model's behavior becomes odd, when it is given the initial rotation value by editing VRML file.</li>
+  <li>Embeded OpenRTM-aist-0.4.2 installer in to Ubuntu installer script and removed unnecessary packages.[Linux edition]</li>
+  <li>Introduced environment configurator package for Windows.</li>
+  <li>Function of dll export in rtc controller's sample, is modified to refer the macro provided by OpenRTM-aist-0.4.2.</li>
+  <li>Updated English documentations.</li>
+  <li>Updated Troubleshooting page.</li>
+<!--
+  <li>Added access links to the documentations of previous versions(Ver.3.0.1 and Ver3.0.2).</li>
+-->
+</ul>
+<div align="right">28-11-2008</div>
+</p>

@@ -1,0 +1,17 @@
+title = Sample Movies of OpenHRP3
+base  = ..
+
+<ul>
+
+ <li><a href="../movie/simple_vehicle.mpg">Sample Simulation of a moving cart</a></li>
+
+ <li><a href="../movie/liftup.mpg">Humanoid's lift operation example</a></li>
+
+ <li>
+  <a href="../movie/choropunch.mpg">Karate Punch Kick Action</a> and 
+  <a href="../movie/choromet.mpg">Gymnastics Action</a>
+  by <a href="http://www.generalrobotix.com/product/choromet/index.htm" target="_blank">Choromet</a>
+ </li>
+
+</ul>
+

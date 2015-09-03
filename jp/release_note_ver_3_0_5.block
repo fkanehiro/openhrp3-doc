@@ -1,0 +1,32 @@
+title = リリースノートVer.3.0.5
+base  = ..
+
+<h2>リリースノートVer.3.0.5</h2>
+Ver.3.0.5はVer.3.0.4のバグフィクスです。
+<p>
+Ver.3.0.5の主な変更点:
+
+<ul>
+  <li>法線ベクトル表示の不具合を修正いたしました。</li>
+  <li>OnlineViewerによるシミュレーション実行が60000フレーム(通常60sec)より少ない場合において例外が発生しないように変更いたしました。60000フレームを超えた場合は例外が発生いたします。</li>
+</ul>
+<div align="right">2009/04/09</div>
+</p>
+
+<h2>リリースノートVer.3.0.4</h2>
+<p>
+Ver.3.0.4の主な変更点:
+
+<ul>
+  <li>録画がGrxUI上で再生した速度と同期していない不具合を修正しました。</li>
+  <li>OpenHRP::DynamicsSimulator::stepSimulation 中に発生するゼロ除算のバグを修正しました。</li>
+  <li>OnlineViewerによるシミュレーション実行が20000フレーム(通常20sec)より多い場合に例外が発生する不具合を修正しました。</li>
+  <li>動画画像作成の時、拡張子の無いファイルを保存指定する際、パスにピリオドが含まれるとGrxUIが落ちる不具合を修正しました。</li>
+  <li>MatrixSolverにあるinverse関数で転置された逆行列が返る不具合を修正しました。[Linux版]</li>
+  <li>Ubuntu 8.10用のインストールスクリプトとMake.varsを追加しUbuntu 8.10に対応いたしました。[Linux版]</li>
+  <li>ジョイスティック接続サンプルの説明をRTMのGUIツールRTSystemEditorとRTCBuilderを使用した方法に変更いたしましました。</li>
+  <li>DynamicsSimulator.idlのABS_TRANSFORMのコメントをrow majorに合わせました。</li>
+  <li>英語版のマニュアルを更新しました。</li>
+</ul>
+<div align="right">2009/04/06</div>
+</p>

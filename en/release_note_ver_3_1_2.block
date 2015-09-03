@@ -1,0 +1,19 @@
+title = Release Note Ver.3.1.2
+base  = ..
+
+<h2>Release Note Ver.3.1.2</h2>
+<p>
+Basic changes and updates from version 3.1.1 to 3.1.2:
+
+<ul>
+  <li>OpenHRP3 now officially supports Ubuntu 11.04.</li>
+  <li>With the version upgrade of OpenRTM, we supports OpenRTM-aist-1.0.2,OpenRTM-aist-1.1.0.</li> 
+  <li>The fault RengeSensor information is not saved at a model file was corrected.</li> 
+  <li>The fault of the display of RengeSensor was corrected. </li> 
+  <li>The problem of the Extrusion node in ModelLoader was solved. </li>
+  <li>New functions were added to the ViewSimulator server. </li> 
+  <li>The starting point and the terminal point of an animation can be specified now. </li> 
+  <li>resolved some miscellaneous problems in OpenHRP.</li>
+</ul>
+<div align="right">20-02-2012</div>
+</p>

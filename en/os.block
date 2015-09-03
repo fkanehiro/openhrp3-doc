@@ -1,0 +1,43 @@
+title = OpenHRP OS/Distribution Compatibility
+base  = ..
+
+<p>
+Currently, OpenHRP3 is supported on the following OS/Distributions.
+Please be reminded that we can't guarantee the compatibility of OpenHRP on officially 
+unsupported OS/Distributions.
+</p>
+
+<h3>Linux</h3>
+
+<p>
+<ul>
+ <li>Ubuntu Linux
+  <ul>
+   <li>version 12.10 32bit, 64bit</li>
+   <li>version 12.04LTS 32bit, 64bit</li>
+   <li>version 11.10 32bit, 64bit</li>
+   <li>version 11.04 32bit, 64bit</li>
+   <li>version 10.04LTS 32bit, 64bit</li>
+  </ul>
+ </li>
+</ul>
+</p>
+
+
+<h3>Windows</h3>
+
+<p>
+<ul>
+ <li>Windows 7 32bit, 64bit</li>
+ <li>Windows Vista</li>
+ <li>Windows XP (SP2/SP3)</li>
+</ul>
+</p>
+
+<h3>MacOS</h3>
+
+<p>
+<ul>
+  <li>MacOS X 10.6 Snow Leopard 
+</ul>
+</p>

@@ -1,0 +1,20 @@
+title = Guide for Building Controller
+base  = ..
+
+<h2> Controller </h2>
+<p>
+The following explains two controllers, one to enable a robot to walk based on walking pattern by PD control, and another to enable arms to move by that formed pattern in every step.
+</p>
+<p>
+<a href="./controller_pd.html"> Walking Pattern Contorller </a>
+</p>
+<p>
+<a href="./controller_gen.html"> Generated Controller </a>
+</p>
+<h2> Project </h2>
+<p>
+The following explains how to make a project which is necessary to run the simulation using the above described controllers.
+</p>
+<p>
+<a href="./create_project.html">How to make a project</a>
+</p>

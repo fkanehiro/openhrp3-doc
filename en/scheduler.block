@@ -1,0 +1,312 @@
+title=How to Create Scheduler
+base=..
+
+<h2> Overview </h2>
+<p>
+Here we explain loading model to ModelLoader by GryUI in general and the simulation control in DynamicsServer bycreating a scheduler.
+</p>
+<p>
+Below is the list of steps you go through:
+</p>
+<ol>
+<li>Initialize CORBA</li>
+<li>Retrieve NamingService</li>
+<li>Retrieve ModelLoader and then load the model</li>
+<li>Retrieve DynamicsServer and configure simulation</li>
+<li>Retrieve OnlineViewer and load the model</li>
+<li>Retrieve Controller</li>
+<li>Simulation loop</li>
+</ol>
+<a name="corbainit"></a>
+<h2> Initialize CORBA </h2>
+
+<p>
+First, you initialize the CORBA ORB and retrieve the reference to the NamingService.
+</p>
+<pre>
+// Initializing CORBA
+CORBA::ORB_var orb;
+orb = CORBA::ORB_init(argc, argv);
+
+// ROOT POA
+CORBA::Object_var poaObj = orb -> resolve_initial_references("RootPOA");
+PortableServer::POA_var rootPOA = PortableServer::POA::_narrow(poaObj);
+
+// Rtrieve the reference to the POA Manager
+PortableServer::POAManager_var manager = rootPOA -> the_POAManager();
+
+CosNaming::NamingContext_var cxT;
+{
+  CORBA::Object_var	nS = orb->resolve_initial_references("NameService");
+  cxT = CosNaming::NamingContext::_narrow(nS);
+}
+</pre>
+
+<h2> Retrieving ModelLoader</h2>
+<p>
+First, you prepare for the following function to retrieve a group of servers.
+</p>
+<pre>
+template<typename X, typename X_ptr>
+X_ptr checkCorbaServer(std::string n, CosNaming::NamingContext_var &cxt)
+{
+  CosNaming::Name ncName;
+  ncName.length(1);
+  ncName[0].id = CORBA::string_dup(n.c_str());
+  ncName[0].kind = CORBA::string_dup("");
+  X_ptr srv = NULL;
+  try {
+    srv = X::_narrow(cxt->resolve(ncName));
+  } catch(const CosNaming::NamingContext::NotFound &exc) {
+    std::cerr << n << " not found: ";
+    switch(exc.why) {
+    case CosNaming::NamingContext::missing_node:
+      std::cerr << "Missing Node" << std::endl;
+    case CosNaming::NamingContext::not_context:
+      std::cerr << "Not Context" << std::endl;
+      break;
+    case CosNaming::NamingContext::not_object:
+      std::cerr << "Not Object" << std::endl;
+      break;
+    }
+    return (X_ptr)NULL;
+  } catch(CosNaming::NamingContext::CannotProceed &exc) {
+    std::cerr << "Resolve " << n << " CannotProceed" << std::endl;
+  } catch(CosNaming::NamingContext::AlreadyBound &exc) {
+    std::cerr << "Resolve " << n << " InvalidName" << std::endl;
+  }
+  return srv;
+}
+</pre>
+<p>
+After getting the specified type from the NamingService, this is handled various exceptions. Retrieve ModelLoader and DynamicsSimulator using this function.
+</p>
+<pre>
+DynamicsSimulatorFactory_var dynamicsSimulatorFactory;
+dynamicsSimulatorFactory =
+  checkCorbaServer <DynamicsSimulatorFactory,
+  DynamicsSimulatorFactory_var> ("DynamicsSimulatorFactory", cxT);
+
+if (CORBA::is_nil(dynamicsSimulatorFactory)) {
+  std::cerr << "DynamicsSimulatorFactory not found" << std::endl;
+}
+
+DynamicsSimulator_var dynamicsSimulator = dynamicsSimulatorFactory->create();
+</pre>
+<p>
+Here retrieve DynamicsSimulatorFactory, and then invoke DynamicsSimulator using the create method.
+</p>
+<p>
+Next, retrieve ModelLoader.
+</p>
+<pre>
+ModelLoader_var modelLoader =
+  checkCorbaServer <ModelLoader,
+  ModelLoader_var> ("ModelLoader", cxT);
+
+if (CORBA::is_nil(modelLoader)) {
+  std::cerr << "ModelLoader not found" << std::endl;
+}
+</pre>
+<a name="loadmodels"></a>
+<p>
+Load model for the acquired the ModelLoader and the DynamicsSimulator.
+</p>
+<pre>
+CharacterInfo_ptr cInfo = modelLoader->loadURL(ROBOT_URL);
+dynamicsSimulator->registerCharacter("robot", cInfo);
+</pre>
+<p>
+This makes the ModelLoader load the model in the 1st line and registers it as the character "robot"  in the 2nd line. Likewise, it registers the floor.
+</p>
+<pre>
+cInfo = modelLoader->loadURL(FLOOR_URL);
+dynamicsSimulator->registerCharacter("floor", cInfo);
+</pre>
+<h2> DynamicsSimulator </h2>
+<p>
+You initialize the DynamicsSimulator.
+</p>
+<pre>
+dynamicsSimulator->init(0.002, DynamicsSimulator::RUNGE_KUTTA, DynamicsSimulator::ENABLE_SENSOR);
+</pre>
+<p>
+The time of every step of the simulation, the difference method, the activation/deactivation of the sensor are set in the init method. The DynamicsSimulator::EULER that uses the Euler method and the DynamicsSimulator::RUNGE_KUTTA that uses the Runge-Kutta method in the difference method. There are the DynamicsSimulator::ENABLE_SENSOR for activation and the DynamicsSimulator::DISABLE_SENSOR for deactivation in the sensor.
+</p>
+<p>
+Next, set the gravity vector.
+</p>
+<pre>
+DblSequence3 gVector;
+gVector.length(3);
+gVector[0] = gVector[1] = 0;
+gVector[2] = 9.8;
+dynamicsSimulator->setGVector(gVector);
+</pre>
+<p>
+In this case, the gravitational acceleration will be 9.8ms^-2 downward.
+</p>
+<p>
+Also, set the mode for driving a joint.
+</p>
+<pre>
+dynamicsSimulator->setCharacterAllJointModes("robot", DynamicsSimulator::TORQUE_MODE);
+</pre>
+<p>
+All joints of the character "Robot" is set to the torque mode by this code.
+There is also a high gain mode DynamicsSimulator::HIGH_GAIN_MODE other than the above used DynamicsSimulator::TORQUE_MODE in the mode for joints.
+</p>
+<p>
+Next, decide an initial posture of the robot.
+Please set it by using DynamicsSimulator::setCharacterAllLinkData etc because you can use it.
+</p>
+<p>
+Calculate the forward kinematics once to reflect the posture after setting.
+</p>
+<pre>
+dynamicsSimulator->calcWorldForwardKinematics();
+</pre>
+<p>
+Next, register the collision detection pairs. The collision detection pairs registered here will be done. 
+This pairs the robot with the floor.
+</p>
+<pre>
+DblSequence6 sc, dc;
+sc.length(0);
+dc.length(0);
+dynamicsSimulator->registerCollisionCheckPair
+  ("robot",
+   "",
+   "floor",
+   "",
+   0.5,
+   0.5,
+   sc,
+   dc);
+</pre>
+<p>
+
+Finally, invoke the initSimulation method.
+</p>
+<pre>
+dynamicsSimulator->initSimulation();
+</pre>
+<h2> OnlineViewer </h2>
+<p>
+Retrive  OnlineViewer. 
+</p>
+<pre>
+OnlineViewer_var onlineViewer =
+  checkCorbaServer <OnlineViewer,
+  OnlineViewer_var> ("OnlineViewer", cxT);
+
+if (CORBA::is_nil(onlineViewer)) {
+  std::cerr << "OnlineViewer not found" << std::endl;
+}
+</pre>
+<p>
+In addition, the model is loaded by OnlineViewer.
+</p>
+<pre>
+onlineViewer->load("robot", ROBOT_URL);
+onlineViewer->load("floor", FLOOR_URL);
+</pre>
+
+<h2> Controller </h2>
+<p>
+ControllerFactory is acquired by using each Controller name.
+</p>
+<pre>
+ControllerFactory_var controllerFactory;
+controllerFactory =
+  checkCorbaServer <ControllerFactory,
+  ControllerFactory_var> ("PDcontroller", cxT);
+
+if (CORBA::is_nil(controllerFactory)) {
+  std::cerr << "ControllerFactory not found" << std::endl;
+}
+</pre>
+<p>
+In this case, ControllerFactory of Controller named PDcontroller is acquired.
+</p>
+<p>
+Controller is acquired from "Factory". In that case, you specify a controller for each character. 
+
+</p>
+<pre>
+Controller_var controller = controllerFactory->create("robot");
+</pre>
+<p>
+Also, DynamicsSimulator is set in Controller.
+</p>
+<pre>
+controller->setDynamicsSimulator(dynamicsSimulator);
+</pre>
+<p>
+You start it at the end.
+</p>
+<pre>
+controller->start();
+</pre>
+
+<h2> Simulation loop </h2>
+<p>This is a turned loop when an actual simulation is executed. This simulation loop consists of as follow.
+</p>
+
+<ol>
+<li>Update OnlineViewer</li>
+<li>Invoke Controller::input</li>
+<li>Invoke Controller::control</li>
+<li>Invoke DynamicsSimulator::stepSimulation</li>
+<li>Invoke Controller::output</li>
+</ol>
+<p>
+The code is described as follows:
+</p>
+<pre>
+WorldState_var state;
+while (1) {
+  // Retrive WorldState and pass it to OnlineViewer
+  dynamicsSimulator->getWorldState(state);
+  onlineViewer->update(state);
+
+  // Invoke input
+  controller->input();
+
+  // Invoke control
+  controller->control();
+
+  // Invoke stepSimulation and proceed the simulation
+  dynamicsSimulator->stepSimulation();
+
+  // Invoke output
+  controller->output();
+}
+</pre>
+
+<h2> Additional information </h2>
+<p>
+In above simulation loop, a normal vector by the collision is displayed, and a normal vector can be also edited and used for other purposes. 
+This can be realized by editing collisions in WorldState as follows:
+</p>
+<pre>
+dynamicsSimulator->getWorldState(state);
+
+state->collisions.length(1);
+state->collisions[0].pair.charName1 = CORBA::string_dup("robot");
+state->collisions[0].pair.charName2 = CORBA::string_dup("floor");
+state->collisions[0].pair.linkName1 = CORBA::string_dup("RLEG_ANKLE_R");
+state->collisions[0].pair.linkName2 = CORBA::string_dup("WAIST");
+state->collisions[0].points.length(1);
+state->collisions[0].points[0].position[0] = 0.0;
+state->collisions[0].points[0].position[1] = 0.0;
+state->collisions[0].points[0].position[2] = 0.0;
+state->collisions[0].points[0].normal[0] = 0.0;
+state->collisions[0].points[0].normal[0] = 0.0;
+state->collisions[0].points[0].normal[0] = 0.5;
+
+onlineViewer->update(state);
+</pre>
+<p>
+This code is set to draw a normal vector from (0.0,0.0,0.0) to (0.0,0.0,0.5) between the character name "robot" and "floor".
+</p>

@@ -1,0 +1,22 @@
+title = JythonPrompt View
+base  = ..
+
+<h2>JythonPrompt View概要</h2>
+<p>
+JythonPrompt Viewを構成する各種要素について説明します。
+</p>
+<p align=center>
+<img src="../img_new/um_003.png">
+</p>
+
+<ul>
+<ol>
+<li>execute script file ボタン<br>
+有効なPython Script アイテムがある場合、クリックすることで実行できます。
+</li>
+<li>プロンプト<br>
+JythonPromtのプロンプトです。
+</li>
+<li>実行結果表示エリア<br>
+</li>
+

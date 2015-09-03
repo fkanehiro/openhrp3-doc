@@ -1,0 +1,34 @@
+title = Property View
+base  = ..
+
+<h2>Property View</h2>
+<p>
+Here we explain the various elements that compose Property View.
+</p>
+<p align=center>
+<img src="../img_new/um_012.png">
+</p>
+
+<ul>
+<ol>
+<li>Property name<br>
+Dispalys the name of the Item or Node selected in <a href="./um_item_view.html">"Item View"</a>.
+</li>
+<li>Name list<br>
+This area is used to display the list of Variable names.
+</li>
+<li>Value list<br>
+This area is used to display the list of Variable values.(Variable values are editable)
+</li>
+</ol>
+</ul>
+
+Following shows the Property view details, when sample project <i>"SamplePD.xml"</i> is loaded and
+"sample" robot is selected.
+</p>
+<p align=center>
+<img src="../img_new/um_026.png">
+</p>
+
+
+

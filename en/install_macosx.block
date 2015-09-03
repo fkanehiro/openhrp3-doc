@@ -1,0 +1,118 @@
+title = Installation of OpenHRP3(Ver.3.0.8) in MacOS X (10.5)
+base  = ..
+
+<p>
+In MacOS X, OpenHRP3 is installable by following the procedure of this page.
+At present, it corresponds to the version 10.5 of MacOS X. 
+The command line input from a terminal is used in installation. 
+A terminal can be started from "Macintosh HD"-"application"-"utility"- "terminal" of Finder.
+<a href="http://www.macports.org" target="_blank">macports</a> which is a package manager of Mac OS is used for installation of software. 
+</p>
+
+<h2>Installation of development environment </h2>
+
+Please install Mac OS development environment xcode.
+
+<h2>Installation of OpenRTM for MacOS X</h2>
+  <p>
+  Please refer to the following pages. 
+<a href="http://staff.aist.go.jp/yosuke.matsusaka/openrtm.html" target="_blank"></a>
+  </p>
+
+<h2>Install openrtm-macports</h2>
+Please download openhrp-macports package from <a href="../download/openhrp-macports.tar.gz">here</a>.
+Please develop the package of openhrp-macports to a suitable directory as follows. 
+<p>
+<pre>
+$ cd (install directory)
+$ tar zxvf (download directory)/openhrp-macports.tar.gz
+</pre>
+
+Please open the configuration file of macports (/opt/local/etc/macports/sources.conf), add the following lines to the last. 
+<pre>
+file:///(install directory)/openhrp-macports
+</pre>
+</p>
+
+<h2>Java Media Framework (JMF)</h2>
+
+<p>
+Please download JMF for java from "Downloads" of<a href="http://java.sun.com/products/java-media/jmf/" target="_blank">http://java.sun.com/products/java-media/jmf/</a>.
+
+The page of which platform may be sufficient as Linux/Windows/Solaris etc. Please select the all java version. 
+Please move the downloaded file to the following places. 
+</p>
+
+<p>
+<pre>
+$ sudo mkdir /opt/local/var/macports/distfiles/JMF
+$ sudo mv (download directory)/jmf-2_1_1e-alljava.zip /opt/local/var/macports/distfiles/JMF/
+</pre>
+</p>
+
+<h2>Install boost, jython, CLAPACK, tvmet, JMF</h2>
+
+<p>
+Please install boost, jython, CLAPACK, tvmet, JMF using the port command. 
+<pre>
+$ sudo port -v install boost jython CLAPACK tvmet JMF
+</pre>
+</p>
+
+<h2>Extraction of an OpenHRP3 sauce package</h2>
+
+<p>
+Please extract OpenHRP-xxx.zip sauce package. 
+</p>
+
+<p>
+The extraction place of OpenHRP3 sauce is good anywhere. 
+In the following examples, it is extracted below at an OpenHRP directory. 
+Please start a terminal and input the following commands. 
+</p>
+
+<p>
+<pre>
+$ cd 
+$ mkdir OpenHRP
+$ cd OpenHRP
+$ unzip (download directory)/OpenHRP-xxx.zip 
+</pre>
+
+An OpenHRP-xxx directory is built under an OpenHRP directory. 
+
+<h2>Preparation of compile </h2>
+
+<p>
+Please set up compile using the "Make.vars" file in a sauce directory.
+Refer to <a href="./howtomake_3_0.html">Compilation of OpenHRP using Make command</a> for detailed explanation. 
+We use the file set up beforehand. 
+</p>
+
+<p>
+First, please move to the sauce directory of OpenHRP3. 
+</p>
+<pre>
+$ cd ~/OpenHRP/OpenHRP-xxx
+</pre>
+<p>
+In order to create a configuration file, please perform it as follows.
+<pre>
+$ cp Make.vars.macosx Make.vars
+</pre>
+</p>
+
+<h2>Compile of OpenHRP3 </h2>
+
+Please execute the make command in the sauce directory of OpenHRP3. 
+<pre>
+$ make
+</pre>
+
+<p>
+Now, the executable file of OpenHRP3 is generated. 
+</p>
+
+<p>
+Next, let's go <a href="./simulate_sample_3_0.html">a sample simulation</a>.
+</p>

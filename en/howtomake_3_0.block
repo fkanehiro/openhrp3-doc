@@ -1,0 +1,283 @@
+title = Compilation of OpenHRP using Make command
+base  = ..
+
+
+
+<p>
+In this page we describe how to compile the OpenHRP source files extracted from its source 
+package, by using Make command.
+</p>
+
+<p>
+On Linux, using Make command is the common way of compiling.
+</p>
+
+<p>
+As for Windows, we usually use Visual C++ IDE(Integrated Development Environment) for 
+compiling process. Refer <a href="./install_windows_3_0.html">"Installing OpenHRP on Windows"</a>
+for more.Upto OpenHRP-3.0.0-RC3, we used DOS based command-line compilation procedure for 
+windows, but it is not supported anymore.
+</p>
+
+
+<h2>Extracting source package</h2>
+
+<p>
+First, extract the downloaded source package "OpenHRP-xxx.zip", to a directory where ever 
+you want, using what ever a ZIP extraction tool you use. ('xxx' refers to the version 
+of OpenHRP package, such as '3.0.0-RC4'. Please substitute the version of the downloaded 
+file, with 'xxx'.)
+</p>
+
+<p>
+Extracting to an appropriate directory under users home directory, is the common 
+manner on Linux platforms.
+</p>
+
+
+<h2 id="make_vars">About Make.vars </h2>
+
+<p>
+When using Make command, configuration settings to compile OpenHRP are defined in a file 
+named "Make.vars", placed in the source directory.
+</p>
+
+<p>
+In this file, Configuration items and contents are basically defined as following format;
+<pre>
+DYNAMICS_ENGINE = aist
+OB_DIR =
+JDK_DIR = $(HOME)/usr/jdk1.5.0_07
+BOOST_INC_DIR =
+BOOST_LIB_DIR =
+BOOST_LIB_SFX = -mt
+TVMET_INC_DIR = $(HOME)/usr/tvmet-1.7.1/include
+NS_HOST = localhost
+NS_PORT = 2809
+</pre>
+</p>
+
+<p>
+Since this file is included by "Makefile", the syntax of both files are almost same.
+For example, the values of environment variables can be derived by specifying "$(Variable
+_Name)"and the line starting with '#' mark become commented.
+</p>
+
+<p>
+Most of the configuration settings of this file are to indicate the locations of programs or 
+libraries, that required for compiling. Basically, it is not necessary to configure "Make.vars", 
+if the programs and libraries are already available in the OS or compile tool by default.
+You will have to do it only if, the programs and libraries installed by yourselves are not 
+included in the SYSTEM PATH of your OS or compile tool.
+</p>
+
+<p>
+Usually, these settings are done by an automatic-setup-script called "configure". However such 
+a script is not available for OpenHRP at the moment. 
+Since we introduced installing CMake for <a href="../../3.1.0.beta/en/index.html">OpenHRP-3.1.0(&beta;)<a>
+this portion is scheduled to be cover in series 3.1.
+</p>
+
+
+<h2>Creating Make.vars</h2>
+
+<p>
+We have prepared a some Make.vars files(placed on source sirectory) as templates for 
+diffrent OS/Distributions. Please select one of following that applys with your system/version.
+</p>
+
+<ul>
+ <li>On Ubuntu Linux, when you follow <a href="./install_ubuntu_3_0.html">"Installation guide for Ubuntu Linux"</a>
+  <ul>
+   <li>Make.vars.ubuntu.8.04 (For Ubuntu 8.04)</li>
+   <li>Make.vars.ubuntu.8.10 (For Ubuntu 8.10)</li>
+  </ul>
+ </li>
+ <li>On other Linux distributions
+  <ul>
+   <li>Make.vars.template</li>
+  </ul>
+ </li>
+</ul>
+
+<p>
+Copy the selected file to the top directory of the source renaming as "Make.vars".
+</p>
+
+
+<h2 id="make.vars">Configuration contents of Make.vars</h2>
+
+<p>
+Modify the copied Make.vars file as necessary.
+</p>
+
+<p>
+Following table describes the meaning of main configuration items in Make.vars.
+</p>
+
+<p>
+However, there are some configuration items that have not explained here, and even these 
+configuration contents can also be changed in future versions. So not only this table, but 
+it is better to refer the comments along with configuration items described in the template 
+file.
+</p>
+
+<p>
+<table border="1">
+ <tr><th colspan="2">Runtime environment settings</th></tr>
+ <tr>
+  <th>DYNAMICS_ENGINE</th>
+  <td>Describe the Dynamics server you use. Specify either ut (The university of Tokyo edition) 
+  or aist (AIST edition). <sup>(1)</sup>
+  </td>
+ </tr>
+ <tr id="NS_HOST">
+  <th>NS_HOST</th>
+  <td>Name server host of the Middlewares(CORBA,OpenRTM). Default setting is 'localhost'.<sup>(1)</sup></td>
+ </tr>
+ <tr id="NS_PORT">
+  <th>NS_PORT</th>
+  <td>Port number of the Name Server of Middlewares(CORBA,OpenRTM). Default value is preferable.<sup>(1)</sup></td>
+ </tr>
+
+ <tr><th colspan="2">Programing Language Environment Settings</th></tr>
+ <tr>
+  <th>JDK_DIR</th>
+  <td>Path to the JDK installed directory. Specify when this is not included in Ubuntu 
+  system path (which allows 'java' and 'javac' commands in command-line). <sup>(1)</sup></td>
+ </tr>
+ <tr>
+  <th>JYTHON_DIR</th>
+  <td>Path to the Jython installed directory (the directory where 'jython.jar' contains). <sup>(1)</sup></td>
+ </tr>
+
+ <tr><th colspan="2">Compiler Settings</th>
+ <tr>
+  <th>DEBUG_VER</th>
+  <td>Allows to select debug options. Select an appropriate number among followings;
+    <ul>
+      0 : (Optimization available, Debug information not available)<br>
+      1 : (Optimization available, Debug information available)<br> 
+      2 : (Optimization not available, Debug information available)
+    </ul>
+  </td>
+ </tr>
+ <tr>
+  <th>CXX_CPU_FLAGS</th>
+  <td>Specify the compiler options regarding with optimization of a specific CPU. 
+  (Specify here, if you use items like SSE etc.)
+ </tr>
+
+ <tr><th colspan="2">Library Settings</th>
+  <tr>
+  <th>J3DHOME</th>
+  <td>Path to the Java3D installed directory. If it is blank, 
+  <i>"${OPENHRPHOME}/client/gui/Java3D/1.4.1/unix"</i> is substituted. <sup>(1)</sup></td>
+ </tr>
+ <tr>
+  <th>JMFHOME</th>
+  <td>Path to the JMF installed directory. If it is blank, 
+  <i>"${OPENHRPHOME}/client/gui/JMF2.1.1e/Unix"</i> is substituted. <sup>(1)</sup></td>
+ </tr>
+ <tr>
+  <th>OB_DIR</th>
+  <td>Path to the omniORB installed directory.</td>
+ </tr>
+ <tr>
+  <th>BOOST_INC_DIR</th>
+  <td>Directory path to the Boost header files.</td>
+ </tr>
+ <tr>
+  <th>BOOST_LIB_DIR</th>
+  <td>Directory path to the Boost library files.</td>
+ </tr>
+ <tr>
+  <th>BOOST_LIB_SFX</th>
+  <td>Suffixes of the Boost library files (Without extensions).
+     Various suffixes are used to distinguish various versions of Boost library files.
+     And these suffixes can be different depending on the environment. Generally, you 
+     may specify the suffixes corresponding with multi-thread(release) version.
+  </td>
+ </tr>
+ <tr>
+  <th>TVMET_DIR</th>
+  <td>Path to the tvmet installed directory</td>
+ </tr>
+ <tr>
+  <th>OPENRTM_DIR</th>
+  <td>Path to the OpenRTM-aist installed directory</td>
+ </tr>
+
+ <tr>
+  <th>LAPACK_VARIANT</th>
+  <td>Specify the implementation of LAPACK library. Select LAPACK (Fortran original edition),
+      CLAPACK(C language conversion edition) or ATLAS.</td>
+ </tr>
+ <tr>
+  <th>LAPACK_INC_DIR</th>
+  <td>Directory path to the LAPACK header files.</td>
+ </tr>
+ <tr>
+  <th>LAPACK_LIB_DIR</th>
+  <td>Directory path to the LAPACK library files.</td>
+ </tr>
+ <tr>
+  <th>LAPACK_VARIANT_LIB_DIR</th>
+  <td>Allows to specify additional LAPACK_LIB_DIR paths, when the library files have been 
+  placed in different directories.</td>
+ </tr>
+ <tr>
+  <th>CLAPACK_SUFFIX</th>
+  <td>Specify if exists suffixes like "_LINUX" attached with CLAPACK library files.</td>
+ </tr>
+ <tr>
+  <th>M_ARCHITECTURE</th>
+  <td>Used to specify library path or compile options for a specific architecture. Currently it 
+  supports i386 only. (Resevered variable)</td>
+ </tr>
+</table>
+</p>
+
+<p>
+<sup>(1)</sup> : Edit <i>'bin/unix/config.sh'</i> to make changes, while runtime.
+</p>
+
+<p>
+The following items related with directory path, must be kept blank, if the packages are 
+installed in its default paths(In /usr, /usr/local or any pre-defined path by user) such as 
+systems' binary path(/usr/bin), include path(/usr/include), library path (/usr/lib).
+<ul>
+ <li>OB_DIR
+ <li>BOOST_INC_DIR, BOOST_LIB_DIR
+ <li>TVMET_DIR
+ <li>OPENRTM_DIR
+ <li>LAPACK_INC_DIR, LAPACK_LIB_DIR, LAPACK_VARIANT_LIB_DIR
+</ul>
+</p>
+
+
+<p>
+The paths including space characters would not be accessible by coomand-line. So please be
+careful not to include space characters in your package install paths.
+</p>
+
+
+<h2>Make command execution</h2>
+
+<p>
+To start compilation, move to the top directory of OpenHRP source using Terminal, and run 
+'make' command.
+</p>
+
+<p>
+If there are compile errors, refer the error message carefully and check whether the 
+required programs and libraries have been installed properly, or whether the configuration 
+settings of Make.vars are correct.
+</p>
+
+<p>
+Notice that current Makefile contains some parts lacking with precise specification for 
+dependencies. Therefore if you wish to re-configure and compile again, it would be better 
+to run "make clean" once, and bring the system back to the initial condition.
+</p>
+

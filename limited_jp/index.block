@@ -1,0 +1,37 @@
+title = OpenHRP3 限定配布 利用案内
+base  = ..
+
+
+<p>
+ここはOpenHRP3の限定配布ユーザのためのページです。
+左のメニューの「ダウンロード」から、必要なパッケージのダウンロードを行ってください。
+</p>
+
+
+<p>
+限定配布版の情報交換の場として、
+<a href="http://www.humanoidrobots.org/openhrp/users_forum/c-board.cgi">
+OpenHRP3 ユーザーズフォーラム
+</a>
+を用意しました。
+
+<ul>
+<li>ユーザID: openhrp3user</li>
+<li>パスワード: jongara</li>
+</ul>
+ で入れます。
+</p>
+
+<p>
+OpenHRP3に関するご意見、ご質問等はこちらでお願いします。
+</p>
+<p>
+なお、掲示板投稿の際にファイルを添付できるようになっています。
+添付可能なファイルは拡張子が、jpg, png, txt, lzh, zip, mpg, wmv, mpeg, pdf, tgz, gz, py, sh, bat, mak, h, cpp, c
+のいずれかのもので、一度に添付可能なファイルの数は５つです。
+この制限で添付できない場合は、zip や tgz などのアーカイブにして添付してみてください。
+</p>
+
+
+
+

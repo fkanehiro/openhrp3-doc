@@ -1,0 +1,62 @@
+title = OpenHRP OS/Distribution Compatibility(Ver.3.0.8)
+base  = ..
+
+<h2>対応OS一覧</h2>
+<p>
+Currently, OpenHRP3 is supported on the following OS/Distributions.
+Please be reminded that we can't guarantee the compatibility of OpenHRP on officially 
+unsupported OS/Distributions.
+</p>
+
+<h3>Linux</h3>
+
+<p>
+<ul>
+ <li>Ubuntu Linux
+  <ul>
+   <li>version 8.10, x86, 32bit</li>
+   <li>version 8.04, x86, 32bit</li>
+   <li>version 7.10, x86, 32bit</li>
+   <li>version 7.04, x86, 32bit</li>
+  </ul>
+ </li>
+ <li>Fedora Core
+  <ul>
+   <li>version 6, x86, 32bit</li>
+   <li>version 5, x86, 32bit</li>
+  </ul>
+ </li>
+ <li>Vine Linux
+  <ul>
+   <li>version 4.1, x86</li>
+   <li>version 3.2, x86</li>
+  </ul>
+ </li>
+</ul>
+</p>
+
+
+<h3>Windows</h3>
+
+<p>
+<ul>
+ <li>Windows Vista, 32bit</li>
+ <li>Windows XP (SP2・SP3), 32bit</li>
+</ul>
+</p>
+
+<h3>MacOS X</h3>
+
+<p>
+<ul>
+ <li><a href=./install_macosx.html>MaxOS X 10.5</a></li>
+</ul>
+</p>
+
+
+<h2>About 64bit versions</h2>
+<p>
+Currently we support only 32bit versions of Linux and Windows distributions, since one part of the 
+coding does not compatible for 64bit versions. We are now working on it and 64bit versions will also 
+be supported with future releases of OpenHRP.
+</p>

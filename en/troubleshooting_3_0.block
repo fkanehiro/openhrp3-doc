@@ -1,0 +1,414 @@
+title = OpenHRP3 Troubleshooting(Ver.3.0)
+base  = ..
+
+<h2>Platform Independent Problems</h2>
+
+<h3>Cannot open the model files created with OpenHRP previous versions</h3>
+
+<p>
+We have made few changes on the model file format. Locate following line, under <i>"Proto Joint"</i> 
+definition:
+</p>
+
+<blockquote>
+  exposedField SFFloat jointId -1
+</blockquote>
+
+<p>Edit the above line as follows:</p>
+
+<blockquote>
+  exposedField SFInt32 jointId -1
+</blockquote>
+
+
+<h3 id="start_hang">GrxUI stuck at start-up</h3>
+
+<p>
+This problem can be resolved by clearing the contents of omniNames(omniORBs' name server).
+</p>
+
+<p>
+Once the CORBA objects are created, omniNames name server would try to keep them stored 
+as a log file. To recover from this issue, just delete the log file and re-start omniNames.
+</p>
+
+<p>
+For instance, let's say we have installed omniORB package on Ubuntu platform.
+Once omniNames is started the temporary files named "omninames-(HostName).bak" and 
+"omninames-(HostName).log" will be created at /var/log . Delete these temporary files and
+move into /etc/init.d . Restart the name server as follows;
+</p>
+<pre>
+$ ./omniorb4-nameserver restart
+</pre>
+<p>
+Since the name server is cleared, OpenHRP would be started as normally.
+</p>
+
+
+<h3>Modaless dialog at GrxUI start-up remains displayed</h3>
+
+<p>
+This problem is different from <a href="#start_hang">"GrxUI stuck at start-up"</a> problem.
+GrxUI is active and operatable, but the modaless dialog that displays at GrxUI start-up, keep 
+remains on the top of the screen without disappearing. It will be gone, when you do some 
+activities like loading sample project etc. However this problem is now fixed in OpenHRP Ver.3.0.3 .
+</p>
+<br>
+
+<h3>Change is not reflected even if you change the contents of VRML file. </h3>
+<p>
+The modelloader of OpenHRP3.0 has the function to cache the contents of the file read before.
+For this reason, those contents are not reflected even if you change the contents of a file, without a file name changing. 
+Please reboot GrxUI or reboot ModelLoader. 
+</p>
+
+<h2>Linux Specific Problems</h2>
+
+<h3>3D view of GrxUI is abnormal / Program stucks (On Linux)</h3>
+
+<p>
+When "Direct Rendering" feature is activated for OpenGL displays on X-Windows systems, 
+this kind of troublesome situations could take place, due to the 3D-rendering unsupported 
+graphics drivers. Deactivating "Direct Rendeing" can cause to slower the 3D graphics, 
+but it would let GrxUI to execute as normal.
+</p>
+
+<p>
+Concretly speaking, we have noticed this type situation, when running Ubuntu 7.10 on a 
+notebook PC that have Intel GM965 chipset onboard. In that case, we deactivated direct-
+rendering by appending following line under [Section "Device"] in /etc/X11/xorg.conf file.
+</p>
+<pre>
+Option "DRI" "false"
+</pre>
+<p>
+Then restarted X-windows system. Direct rendering was disabled and the program execution 
+got back to normal.
+</p>
+<p>
+Probably, this may be a bug of OpenGL driver or Java3D.
+</p>
+
+
+<h3>X-Windows system freezes during GrxUI execution (On Linux)</h3>
+
+<p>
+This issue can be occur, when the X-Window display-driver has not been configured properly 
+for OpenGL. In this case, you have to re-install an OpenGL supportive display-driver.
+</p>
+<p>
+ For video adaptors such as nvidia or ATI, there are display-drivers provided by manufacture, 
+that aimed for better support on OpenGL. Installing these specific display-driver would 
+resolve the problem. (For more details, refer <a href="./g3d_support.html">here</a>)
+</p>
+
+
+<h3 id="gcj_sun_error">Compile errors / Java exceptions occurs after applying Ubuntu system updates (On Linux)</h3>
+
+<p>
+When installing OpenHRP3 we 
+<a href="./install_ubuntu.html#switch_java">set 'Sun-java' as default java environment</a>. 
+But when applying Ubuntu system updates, it renews 'Java-gcj' to its latest version and set as 
+default java environment automatically, which may cause to compile errors or Java exceptions when 
+starting GrxUI.
+</p>
+
+<p>When starting GrxUI, it may hang-up giving following messege;
+<pre>
+$ ./GrxUI.sh
+message logging level : SEVERE
+classpath added: file:/home/user/aist/OpenHRP3.0/client/gui/plugin/
+/home/user/aist/OpenHRP3.0/client/gui
+Null peer?!
+</pre>
+</p>
+
+<p><a href="./install_ubuntu.html#switch_java">Switching the default java environment</a> 
+back to 'Sun-java', will resolve the problem.</p>
+
+<pre>
+$ sudo update-java-alternatives -s java-6-sun
+</pre>
+
+<p>
+If you are not willing to use 'gcj' for any other applications, you can uninstall it, so that the 
+problem will never be take place.
+</p>
+
+
+<h3>Display empty dialog boxes when Extra-visual-effects are applied in Ubuntu environment (On Linux)</h3>
+
+<p>
+This problem could only be noticed in native Ubuntu environments (not in virtual Ubuntu environments 
+running on VMware). When trying to open a project file, the dialog box goes empty as shown in Fig.1 .
+
+<center>
+<img src="../img_new/trouble/white_dlg.png" align="top"><br>
+Fig.1
+</center>
+</p>
+<br>
+
+<p>
+Resetting the visual-effects settings to "None", will resolve this issue.<br>
+The procedure is as follows;<br>
+
+Goto <i>"System"</i> &rarr; <i>"Preferences"</i> &rarr; <i>"Appearance"</i> on menubar. (Fig.2)<br>
+<center>
+<img src="../img_new/trouble/view_config1_en.png" align="top"><br>
+Fig.2
+</center>
+</p>
+<br>
+
+<p>
+"Appearence Preference" dialog box will be pop-up. Move to "Visual Effetcs" tab, select "None" 
+radio-button and close the dialog box. (Fig.3)
+<center>
+<img src="../img_new/trouble/view_config2_en.png" align="top"><br>
+Fig.3
+</center>
+</p>
+<br>
+
+<h3 id="error_ipv6_localhost">RTC on "GrxUI on Eclipse" does not work on Ubuntu-9.04 </h3>
+<p>
+If you install OpenHRP for the first time on Ubuntu-9.04 environment, RTC based sample models may 
+not work on "GrxUI on Eclipse". In such case, open terminal window and run,
+<pre>
+$ openhrp-aist-dynamics-simulator -ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService
+</pre>
+if you get the output as follows,
+
+<pre>
+IDL:omg.org/CORBA/TRANSIENT:1.0
+</pre>
+the problem has occured because ipv6 on Ubuntu-9.04 has not been enabled by default.<br>
+<br>
+To resolve this problem, locate <i>"/etc/hosts"</i> file and comment-out the line 
+<i>"::1        localhost ip6-localhost ip6-loopback"</i> where keeps localhost settings of IPv6.
+</p>
+
+<h3>A ModelLoader server cannot be accessed from other PCs. </h3>
+Now, the ModelLoader server on ubuntu cannot be accessed from other PCs with the interface of CORBA. 
+The cause is unknown.
+
+<h3 id="compileError_rtmUpdate">A compile error happens at the time of update of the system after 2009/05/25, or new installation of OpenHRP.</h3>
+
+<p>
+After 2009/05/25, if update of ubuntu or new installation of OpenHRP is performed, OpenRTM-aist-1.0.0-RC1 will be installed.
+In OpenHRP of 2009/06/09 present, since OpenRTM-aist-1.0.0-RC1 is not supported, the following compile errors occur. 
+<pre>
+error: ExtTrigExecutionContextService_var in namespace RTC does not name a type
+error: RTC::ExtTrigExecutionContextService has not been declared
+error: ExtTrigExecutionContextService_ptr is not a member of RTC
+</pre>
+Please cope with it as follows according to a case. 
+</p>
+<br><br>
+
+
+<h4 id="fresh_install">When OpenHRP is newly installed </h4>
+<p>
+2010/05/31 previous package introduction script installs OpenRTM-aist-1.0.0-RC1. <br>
+Please replace (OpenHRP3)/util/pkg_install_ubuntu.sh by the following script files. 
+
+<ul>
+ <li>OpenHRP 3.0.5 Package introduction script: <a href="../download/pkg_install_ubuntu.sh">pkg_install_ubuntu.sh</a></li>
+</ul>
+If a package is replaced, please introduce a package as explanation of <a href="./install_ubuntu_3_0.html#install_script">Running Package Installation Script</a>.
+</p>
+
+<p>
+In addition, it may be upgraded to the latest version by package automatic update. 
+Please <a href="#stop_update">stop the automatic update of OpenRTM-aist</a>. 
+</p>
+
+<p>
+<font color="red">When OpenRTM-aist-1.0 has already been installed, OpenRTM-aist-1.0 needs to be uninstalled. </font><br>
+Please perform a package introduction script after uninstalling OpenRTM-aist-1.0. 
+<pre>
+sudo apt-get remove openrtm-aist openrtm-aist-doc openrtm-aist-dev openrtm-aist-example
+</pre>
+</p>
+
+<h4 id="stop_update">Stop the automatic update of OpenRTM-aist</h4>
+<p>
+Please choose System-Administration-Software Sources from a menu, and open a "software of third party" tab. 
+Please uncheck the item OpneRTM like Fig.4. 
+</p>
+<center>
+<img src="../img_new/trouble/compileError_rtmUpdate.png" align="top"><br>
+Fig.4
+</center>
+<br>
+
+<h2>Windows Specific Problems</h2>
+
+<h3 id="ns_error">OmniORB name server does not start (On Windows)</h3>
+<p>
+When trying to start GrxUI on Windows environments having OmniORB version 4.1.2 installed, 
+a messege saying "3DVIEW : failed to bind to localhost NameService" can be displayed as 
+shown in figure below and fails starting GrxUI.
+</p>
+<p>
+<center>
+<img src="../image/failed_bind.png" align="top"><br>
+Fig.1: failed to bind to localhost NameService
+</center><br>
+</p>
+
+<p>
+This type of error occurs when the 'Computer name' of your computer could not be identified 
+correctly.
+</p>
+<p>
+If your computer name is longer than 14 characters or if it contains characters other than 
+[A-Z,a-z,0-9,'_'] , that may cause problems.You can check your computer name and re-define, 
+according to the following procedure.
+</p>
+<p>
+Open "System Properties" dialog box using one of the following method.
+</p>
+<p>
+* Right-click "My Computer" icon on the Desktop, and click "Properties" in the menu.<br>
+* Press "Start" button, right-click "My Computer" and click "Properties" in the menu.<br>
+* Press "Start" button, select "Run". Enter "sysdm.cpl" in the text box and hit "OK".<br>
+* Press "Start" button, browse in to "Control Panel" > "System".
+</p>
+<p>
+Select "Computer name" tab in the opened dialog box and check whether your computer name is 
+in right order. Click "change" button if you want to re-define it. Then restart the computer to 
+apply the changes.
+</p>
+
+
+<h3>3D view of GrxUI is abnormal (On Windows)</h3>
+<p>
+For some video adaptors, when the GrxUI 3DView frame is kept smaller, 3D model start 
+flickering and vertex-buffer collapses.The cause is not yet confirmed, but according 
+to the phenomenon we saw on a note-book pc, it seems like a malfunction of video adaptor.
+</p>
+<p>
+However, enlarging the frame size of GrxUI tab window, may resolve the matter.
+</p>
+
+
+<h3>Displays 3D-device error at GrxUI start-up (On Windows)</h3>
+
+<p>
+For some environments, it gives following error messege when starting up GrxUI, and the 
+program exits.
+</p>
+
+<blockquote>Fail to create referance rasterizer 3D Device - D3DERR_NOTAVAILABLE</blockquote>
+
+<p>According to article at 
+<a href="http://support.microsoft.com/kb/191660/en" target="_blank">
+http://support.microsoft.com/kb/191660/en</a>, this issue may occur due to any of the 
+following reasons:</p>
+
+<ol>
+  <li><b>Your computer does not meet the minimum 3D hardware requirements to run GrxUI</b></li>
+  <li><b>Your video adapter does not have sufficient video memory to run GrxUI</b></li><br>
+    Resolution:
+    <ol>
+      Reason(1) and reason(2), mean that the hardware equipments in your pc such as CPU, 
+      RAM, video-RAM etc, does not satisfy the minimum requirements to run 3D graphics. 
+      Therefore you have to check which equipments does not meet the requirements and 
+      replace those with better ones.
+      <p>
+      Here we provide the hardware spesifications of a computer that can run OpenHRP at 
+      optimum condition. Refer these specifications and compare with yours.
+      <ul>
+        <li>CPU: PentiumIV 2Ghz</li>
+        <li>RAM: 1024MB </li>
+        <li>Video adaptor: NVIDIA</li>
+        <li>Video RAM: 128MB </li>
+        <li>HDD space available: 5GB</li>
+      </ul>
+    </ol>
+  </li>
+  <li>
+    <b>"DirectDraw Acceleration" is disabled</b><br>
+    Resolution:
+    <ul>
+      <li>
+        Click "Start" > "Run". Enter "dxdiag" in the textbox and press OK.
+        "DirectX Diagnostic tool" window will be opened.
+      </li>
+      <li>
+        Select "Display" tab. Check out the status of "DirectDraw Acceleration" and "Direct3D 
+        Acceleration". If the status of any of those are "Disabled", press "Enable" button 
+        along with.
+      </li>
+      <li>
+        In case of "Enable" button is not active(state that cannot press), go through the 
+        resolutions of section (4) and (5).
+      </li>
+    </ul>
+  </li>
+  <li>
+    <b>Video adaptor drivers are out-of-date</b><br>
+    Resolution:
+    <ul>
+      If you use older version of video driver, the above accelerator features would not 
+      be supported. In this case, you have to search for the latest compatible (better if 
+      stable) driver version for your video adaptor and install it. At most cases, latest 
+      drivers can be found at makers' homepage. It will be easier for you to find download 
+      location, by searching internet for driver name that displays under "Device Manager" > 
+      "Display Adaptor" section.
+    </ul>
+  </li>
+  <li>
+    <b>DirectX version you are using is not up-to-date or damaged</b><br>
+    Resolution:
+    <ul>
+      Go to "DirectX Diagnostic tool" > "Display" tab, as explained in section (3). Run 
+      "DireactDraw Test" and "Direct3D Test". You will see some graphical displays during the 
+      tests. If it does not displayed correctly, the tests will fail and we can say that your 
+      DirectX-run-time-engine is performing abnormal.In that case, download the latest 
+      <a href="http://www.gamesforwindows.com/en-US/aboutgfw/Pages/directx10-a.aspx" target="_blank">DirectX installer</a> 
+      and re-install DirectX.
+    </ul>
+  </li>
+  <li>
+    <b>One or more programs that are running in the background are interfering with the game</b><br>
+    Resolution:
+    <ul>
+      While running GrxUI, if you keep running any 3D graphics application softwares at 
+      back-ground that uses DirectDraw and Direct3D features, it can be difficult to handle 
+      and cause to slower the execution of all running applications. (However, handling 
+      applications depends on the performance of your pc). In this case, please shut down 
+      the unusing applications and try again.
+    </ul>
+  </li>
+</ol>
+
+
+<h3>System freezes while GrxUI being execute (On Windows)</h3>
+
+<p>
+This problem seems to be occur olny on some specific video adaptors and driver versions.
+Please refer to the following table for those particular video adaptor. 
+</p>
+
+<table border="1" align="center">
+ <tr>
+  <td>Video Adaptor</td>
+  <td>Problematic Driver Ver.</td>
+  <td>Solution</td>
+ </tr>
+ <tr>
+  <td>ATI Radeon HD 2400 XT</td>
+  <td>8.420.0.0 (2007/09/14)edition</td>
+  <td>Update the driver to the latest version.</td>
+ </tr>
+</table>
+<center>Table 1: Problematic video adaptor list</center>
+<br>
+
+
+
+

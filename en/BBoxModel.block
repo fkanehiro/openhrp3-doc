@@ -1,0 +1,56 @@
+title = How to form the shape data of a model into a bounding box 
+base = ..
+
+<h2>Overview</h2>
+<p>
+If the model for simulations is created from an actual robot's CAD data, etc., form data will be too detailed and the computation time of a simulation will become excessive. 
+In such a case, the computation time of a simulation is shortened by transposing form data to simple bounding box (Below, it is written as BBox.) form. 
+You can specify the minimum number of BBox with which form data is replaced for every link. 
+Therefore, if you specify many number of BBox to the link which collides, calculation accuracy can be improved, if you specify the few number of BBox to the link which does not collide, calculation can be speeded up.  
+</p>
+<h2>Specification of the minimum number of BBox </h2>
+<p>
+First, please load a model and choose link(①).<br />
+If a property view is displayed, NumOfAABB is displayed as "original data". 
+This shows that conversion of form data is not performed. <br />
+Please input the minimum number of BBox into NumOfAABB(②).A model loader changes the form data of a model so that it may become beyond this input value. <br />
+The value which can be inputted is from 1 to the maximum number determined with the Axis Aligned Bounding Box tree created from the original form. 
+An input value is too large when a value cannot be changed. <br />
+Moreover, if you are going to input into a link without form data, it is displayed as "no shape Data" and cannot input. <br />
+("original data" cannot be inputted with a property view. Please reload a model to return form data. )<br />
+Please set up NumOfAABB of other links similarly. <br />
+Click the BBox display button of 3D view(③). BBox form is expressed as a white line. If you click once again, a display will disappear. 
+</p>
+<img src="../img_new/BBoxModel1.jpg">
+<p>
+The following messages will be displayed, if you click a BBox display button when there is a link to which the value of NumOfAABB is not set. </p>
+<img src="../img_new/BBoxModel2.jpg">
+<p>
+If you click "OK", unset up link will be set as 1 and BBox form will be displayed. Your click of "Cancel" will not display BBox form.<br />
+Even if you choose "Cancel", the value of already set-up NumOfAABB is not changed. <br />
+A message is displayed to all the models loaded. Please choose "Cancel" for the model which does not need to be changed into BBox. 
+</p>
+
+<h2>A simulation and a collision check </h2>
+<p>
+Please operate it like usual. The data used for an collision check is the value set up by NumOfAABB. 
+Form data is changed, if the value of NumOfAABB is set up even if the BBox display has disappeared. 
+Moreover, one model cannot have the link changed into BBox, and a link with the original form. 
+Please use one of whether NumOfAABB of all the links is "original data", or the value is set to all. 
+Therefore, when you change a model into BBox, in order to set a value to all the links, please turn ON a BBox display. 
+</p>
+
+<h2>Saveing of a setup </h2>
+<p>
+Please save a project. A setup is saved at a project file. 
+</p>
+
+<h2>The model loaded from the same model file </h2>
+<p>
+All the models loaded from the same model file are similarly changed into BBox. 
+For example, when RobotA and RobotB are loaded from the file "PA10.main.wrl", 
+if a setup of NumOfAABB of the link J1 of RobotA is changed, a setup of NumOfAABB of the link J1 of RobotB is also changed. <br />
+Moreover, if RobotC is newly loaded from the file "PA10.main.wrl", the same value as the NumOfAABB value of each link of already loaded RobotA (RobotB) is set as RobotC.
+Furthermore, if RobotA is reloaded, RobotB and RobotC will also be reloaded and it will return to the original form data. <br />
+When a model is loaded by a project file, a setup of the model described at the end is effective. 
+</p>

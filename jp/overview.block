@@ -1,0 +1,50 @@
+title = ユーザインタフェース
+base  = ..
+
+<h2>ユーザインタフェース概要</h2>
+<p>
+OpenHRPを構成する各種要素について説明します。
+</p>
+<p>
+GrxUIを起動すると下図のようなウインドウとなります（バージョンにより多少画面の構成等が異なります）。
+</p>
+<p align=center>
+<img src="../img_new/um_001.png">
+</p>
+
+<ul>
+<ol>
+<li><a href="./um_item_view.html">Item View</a></li>
+<li><a href="./um_logger_view.html">Logger View</a></li>
+<li>Start Simulationボタン　…　シミュレーションを開始／停止します。</li>
+<li><a href="./um_grxui_menu.html">GrxUI メニュー</a></li>
+<li><a href="./um_nameservice_view.html">NameService Monitor View</a></li>
+<li><a href="./um_processmanager_view.html">Process Manager View</a></li>
+<li><a href="./um_servermanager_view.html">Server Manager View</a></li>
+<li><a href="./um_graph_view.html">Graph View</a></li>
+<li><a href="./um_property_view.html">Property View</a></li>
+<li><a href="./um_robotstate_view.html">Robot State View</a></li>
+<li>GrxUIのパースペクティブを開いていることを表します。</li>
+<li><a href="./um_3d_view.html">3D View</a></li>
+<li><a href="./um_simulation_view.html">Simulation View</a></li>
+<li><a href="./um_controller_view.html">Controller View</a></li>
+<li><a href="./um_collision_view.html">Collision Pair View</a></li>
+<li><a href="./um_texteditor_view.html">Text Editor View</a></li>
+<li><a href="./um_jythonprompt_view.html">JythonPrompt View</a>　…　初期状態では表示されません。</li>
+<li><a href="./um_rangesensor_view.html">Range Sensor View</a>　…　初期状態では表示されません。</li>
+<li>Path Planning View …　初期状態では表示されません。「<a href=pathplanner.html>移動動作設計チュートリアル</a>」を参照してください．</li>
+</ol>
+</ul>
+
+
+
+<h2>ウインドウ(View)の操作</h2>
+<p>
+<ul>
+<li>ウインドウ(View)の枠をドラッグしてサイズを変更することができます。</li>
+<li>ウインドウ(View)をドラッグ＆ドロップして位置を変更することができます。</li>
+<li>ウインドウ(View)をドラッグ＆ドロップして外に出すと独立したウインドウになります。</li>
+<li>表示されていないウィンドウを開くには、ウィンドウメニューから、ビューの表示　－　その他　を選択し、表示したいビューを選択します。</li>
+</ul>
+</p>
+

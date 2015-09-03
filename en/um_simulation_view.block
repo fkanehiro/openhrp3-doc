@@ -1,0 +1,43 @@
+title = Simulation View
+base  = ..
+
+<h2>Simulation View</h2>
+<p>
+Here we explain the various elements that compose Simulation View.
+</p>
+<p align=center>
+<img src="../img_new/um_015.png"><br>
+Simulation View
+</p>
+
+<ul>
+<ol>
+<li>Total Time[s]<br>
+Specify the total duration of simulating in seconds.
+</li>
+<li>Integration Step[s]<br>
+Specify the integration time step in seconds.
+</li>
+<li>Logging Step[s]<br>
+Specify the logging time step in seconds.
+</li>
+<li>Integration Method<br>
+Specify the integration method.
+</li>
+<li>Gravity[m/s~2]<br>
+Specify the gravity acceleration.
+</li>
+<li>Forward Dynamics<br>
+Enable/Disable forward dynamics calculation.
+</li>
+<li>Real Time<br>
+When the computation time of a simulation is shorter than real time, waiting time is put in and it unites at real time. 
+It is not effective when computation time is longer than real time. 
+</li>
+<li>View Simulation<br>
+Enable/Disable View Simulation. 
+when this check box is checked, if <a href=create_model.html#VISIONSENSOR>VisionSensor</a> Node was added to the robot of the simulation target and an environmental object, visual field image generation is performed, and a window to display is shown visual field image with simulation start.
+To the contrary, when this check box is not checked, it does not generate visual field image even if it simulates a model added VisionSensor node.
+</li>
+</ol>
+</ul>

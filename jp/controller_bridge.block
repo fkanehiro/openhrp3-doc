@@ -1,0 +1,130 @@
+title = コントローラブリッジ使用マニュアル
+base  = ..
+
+<h2> 概要 </h2>
+<p>
+コントローラブリッジは、シミュレーション対象のモデルと各OpenRTMコンポーネント間の入出力を介するプロセスです。<br>
+起動オプションまたは、設定ファイルによって入出力ポートを設定しポート間の接続を指定します。
+</p>
+<h2> マニュアル </h2>
+<h3> 起動オプション </h3>
+<p>
+起動オプションは以下の通りです。
+<table border="1" align="center">
+<tr><td>起動オプション(書式)</td><td>説明</td></tr>
+<tr><td>--server-name コントローラ名</td><td>CORBAネームサーバにコンポーネントを生成するファクトリサーバの名前を指定します</td></tr>
+<tr><td>--in-port ポート名[:識別名]:プロパティ名</td><td>入力ポート名を与えプロパティを指定します</td></tr>
+<tr><td>--out-port ポート名[:識別名]:プロパティ名</td><td>出力ポート名を与えプロパティを指定します</td></tr>
+<tr><td>--connection ポート名[:コントローラ側インスタンス名]:ポート名</td><td>ポート間接続を指定します</td></tr>
+<tr><td>-h / --help</td><td>起動オプションの表示</td></tr>
+<tr><td>--config-file 設定ファイル名</td><td>起動オプションを設定したファイルを指定します</td></tr>
+<tr><td>--robot-name 対象モデル名</td><td>対象モデル名を与えます</td></tr>
+<tr><td>--name-server ネームサーバホスト名:ポート</td><td>OpenHRPのCORBAネームサーバを指定します</td></tr>
+</table>
+<center>Table 1:起動オプション一覧</center>
+</p>
+<p>
+<b>--server-name コントローラ名</b><br>
+ブリッジのCORBA側コンポーネントを生成するファクトリサーバの名前を指定します。GrxUIのControlle View のControllerプルダウンに表示されます。<br>
+  <center>
+    <img src="../img_new/GrxUI_controller2.png" align="top"><br>Fig.1: GrxUI Controller View
+  </center>
+</p>
+<p>
+<b>--in-port ポート名[:識別名]:プロパティ名</b><br>
+入力ポート名を与え、そのポートのプロパティを指定します。識別名を指定すれば特定の部位の値だけ入力します。<br>
+識別名は<a href="./create_model.html">VRMLモデル</a>のノード名を指定します。<br>
+識別名はコンマ(,)で区切って複数指定することができます。データは指定した順番で入力します。<br>
+例:--in-port arm_elbow:RARM_ELBOW,LARM_ELBOW:JOINT_VALUE<br>
+関節名称RARM_ELBOWとLARM_ELBOWのJOINT_VALUEプロパティの値を入力します。
+</p>
+<p>
+<b>--out-port ポート名[:識別名]:プロパティ名[:出力間隔（秒）]</b><br>
+出力ポート名を与え、そのポートのプロパティを指定します。識別名を指定すれば特定の部位の値だけ出力します。<br>
+識別名は<a href="./create_model.html">VRMLモデル</a>のノード名を指定します。<br>
+識別名は , で区切って複数指定することができます。指定した順番でデータは出力されます。
+ただし、プロパティ名がCONSTRAINT_FORCEのときは、識別名は1つしか指定できません。<br>
+出力間隔を指定すると、Fig.1に示すControll Timeで指定した時間の整数倍で指定間隔に近い時間で、データを出力します。
+指定しない場合は、Control Timeで指定した時間間隔で出力します。<br>
+画像データを出力する場合には、識別名のかわりに必ずVisionSensorのsensorIdの値を指定します。
+sensorIdを複数指定することはできません。<br>
+例:--out-port image:0:COLOR_IMAGE:0.1<br>
+sensorIdが0のVisionSensorのカラー画像を0.1秒毎に出力します。
+</p>
+<p>
+<b>--connection ポート名[:コントローラ側インスタンス名]:ポート名</b><br>
+入出力ポート間の接続を指定します。左は対象モデル側のポート名、右はコントローラ側のポート名を指定しコロンで区切ります。<br>
+コントローラ側のインスタンス名は省略できます。<br>
+例:--connection angle:JoystickController0:angle<br>
+対象モデル側のポートangleとインスタンス名JoystickController0のポートangleを接続します。
+</p>
+<p>
+<b>-h / --help</b><br>
+起動オプションの表示と説明を英文で標準出力します。 -h または --help が使えます。
+</p>
+<p>
+<b>--config-file 設定ファイル名</b><br>
+起動オプションを設定したファイルを指定します。
+起動オプションを一元化したり複雑な入出力ポート設定の時に利用してください。
+サンプルフォルダには設定ファイル"bridge.conf"がありますので参考にしてください。<font color="red">※</font><br>
+OpenHRP/Controller/rtc/SamplePD/bridge.conf の場合
+<pre>
+server-name = SamplePDController
+in-port     = torque:JOINT_TORQUE
+out-port    = angle:JOINT_VALUE
+connection  = angle:angle
+connection  = torque:torque
+</pre>
+という記述です。<br>
+書式は起動オプションからハイフンを取り除き '=' でオプションに文字列を与えたテキストファイルです。<br>
+'='の左右に連続して隣接する半角空白とtabは無視されます。<br>
+Unix環境の運用も考慮してWindows環境でも改行コードはLFに統一した方が無難です。<br>
+</p>
+<p>
+<font color="red">※:Ver3.0.0より前にはありません。さらにVer3.0.2では書式を一部変更いたしましたので最新のOpenHRPを導入してください。</font>
+</p>
+<p>
+<b>--robot-name 対象モデル名</b><br>
+入出力ポートを備えた通信対象モデル名を指定します。デフォルト値は"VirtualRobot"です。<br>
+インスタンスが複数生成されることも考慮して名前にindex番号を0から割り振りますから、ネームサーバーには"対象モデル名0"が最初に登録されます。<br>
+</p>
+<p>
+<b>--name-server ネームサーバホスト名:ポート</b><br>
+OpenHRPのCORBAネームサーバを指定します。<br>
+デフォルト値は"localhost:2809"です。<br>
+例:--module 192.168.1.10:2809<br>
+IPアドレス192.168.1.10のポート番号2809で接続待ちするOpenHRPのCORBAネームサーバを指定します。
+</p>
+
+<h3> プロパティ </h3>
+<p>
+指定可能なプロパティは以下の通りです。
+<table border="1" align="center">
+<tr><td>プロパティ名</td><td>In Port / Out Port</td><td>データ型</td><td>データ数</td><td>説明</td></tr>
+<tr><td>JOINT_VALUE</td><td>yes/yes</td><td>RTC::TimedDouble</td><td>1</td><td>関節角度または関節位置</td></tr>
+<tr><td>JOINT_VELOCITY</td><td>yes/yes</td><td>RTC::TimedDouble</td><td>1</td><td>同上微分</td></tr>
+<tr><td>JOINT_ACCELERATION</td><td>yes/yes</td><td>RTC::TimedDouble</td><td>1</td><td>同上２階微分</td></tr>
+<tr><td>JOINT_TORQUE</td><td>yes/yes</td><td>RTC::TimedDouble</td><td>1</td><td>関節トルク</td></tr>
+<tr><td>EXTERNAL_FORCE</td><td>yes<sup>(1)</sup>/no</td><td>RTC::TimedDoubleSeq</td><td>6</td><td>力, トルク</td></tr>
+<tr><td>ABS_TRANSFORM</td><td>yes<sup>(1)</sup>/yes<sup>(1)</sup></td><td>RTC::TimedDoubleSeq</td><td>12</td><td>ワールド座標系における位置姿勢(最初の3要素が位置ベクトル、9要素が姿勢)</td></tr>
+<tr><td>ABS_VELOCITY</td><td>yes<sup>(1)</sup>/yes<sup>(1)</sup></td><td>RTC::TimedDoubleSeq</td><td>6</td><td>ワールド座標系における速度(3次元ベクトル)と角速度(3次元ベクトル)</td></tr>
+<tr><td>ABS_ACCELERATION</td><td>yes<sup>(1)</sup>/yes<sup>(1)</sup></td><td>RTC::TimedDoubleSeq</td><td>6</td><td>ワールド座標系における加速度(3次元ベクトル)と角加速度(3次元ベクトル)</td></tr>
+<tr><td>FORCE_SENSOR</td><td>no/yes</td><td>RTC::TimedDoubleSeq</td><td>6</td><td>力(3次元ベクトル), トルク(3次元ベクトル)</td></tr>
+<tr><td>RATE_GYRO_SENSOR</td><td>no/yes</td><td>RTC::TimedDoubleSeq</td><td>3</td><td>ジャイロセンサー(3次元ベクトル)</td></tr>
+<tr><td>ACCELERATION_SENSOR</td><td>no/yes</td><td>RTC::TimedDoubleSeq</td><td>3</td><td>加速度センサー(3次元ベクトル)</td></tr>
+<tr><td>RANGE_SENSOR</td><td>no/yes</td><td>RTC::TimedDoubleSeq</td><td>センサー出力数</td><td>距離センサー．計測方向に向かって右方向からスキャンした際の距離データが入っています。
+距離は干渉が発生する限り、maxDistanceよりも遠い場合も出力されます．干渉がない場合は0が出力されます。
+</td></tr>
+<tr><td>CONSTRAINT_FORCE</td><td>no/yes<sup>(3)</sup></td><td>RTC::TimedDoubleSeq</td><td>6*接触点数</td><td>ワールド座標系における接触位置(3次元ベクトル)と力(3次元ベクトル)</td></tr>
+<tr><td>COLOR_IMAGE<sup>(4)</sup></td><td>no/yes<sup>(2)</sup></td><td>RTC::TimedLongSeq</td><td>ピクセル数</td><td>color画像</td></tr>
+<tr><td>GRAYSCALE_IMAGE<sup>(4)</sup></td><td>no/yes<sup>(2)</sup></td><td>RTC::TimedOctetSeq</td><td>ピクセル数</td><td>gray scale画像</td></tr>
+<tr><td>DEPTH_IMAGE<sup>(3)</sup>,<sup>(4)</sup></td><td>no/yes<sup>(2)</sup></td><td>RTC::TimedFloatSeq</td><td>ピクセル数</td><td>depth画像</td></tr>
+</table>
+<center>Table 2:プロパティ一覧</center><br>
+(1)：in-portオプションで[:識別名]を指定した場合のみ有効　<br>
+(2)：out-portオプションで[:識別名（sensorId)]を指定した場合のみ有効<br>
+(3)：out-portオプションで[:識別名]を１つ指定した場合のみ有効<br>
+(4)：<a href="./um_simulation_view.html">Simulation View</a>でView Simulationにチェックを入れた場合のみ有効<br>
+</p>
+<br>
+<br>

@@ -1,0 +1,826 @@
+title = ジョイスティック接続サンプル
+base  = ..
+
+<p>
+<center>
+産業技術総合研究所 中岡 慎一郎<br>
+2008年5月29日 改訂<br>
+</center>
+</p>
+
+
+<h2>概要</h2>
+
+<p>
+本ページでは、RTCを連携させてジョイスティック操作により
+車輪型機構をインタラクティブに操作するサンプルについて解説します。
+車輪型機構のコントローラとジョイスティックはそれぞれOpenRTMのコンポーネントとして作成し、
+両者の接続をOpenRTMのツールを用いてビジュアルに行います。
+</p>
+
+<p>
+本サンプルが対象とするモデルは、OpenHRPのサンプルモデルのひとつである
+以下の車輪型機構です。
+</p>
+
+<p align="center">
+<img src="../image/JoystickSample/model.png" align="top"> 
+</p>
+
+<p>
+車輪を３つ備えており、前輪(車輪がひとつの方)によるステアリングが可能です。
+ステアリングの一軸と各車軸の３軸で、合計４つの回転関節からなるモデルとなっています。
+</p>
+
+<p>
+このモデルのファイルはOpenHRP3ソースの etc ディレクトリにある
+simple_vehicle.wrl になります。
+また、以下で説明するサンプルのプログラムやプロジェクトのファイル一式は
+OpenHRP3 ソースの sample/JoysticControl 以下にあります。
+<p>
+
+
+
+<h2>準備</h2>
+
+<p>
+本サンプルはOpenRTMの環境として、以下をそろえておく必要があります。
+</p>
+
+<ul>
+ <li>OpenRTM-aist C++版
+  <ul><li>これについては、OpenHRPのインストール時にインストールしているはずです。
+  バージョンは 0.4 系列の 0.4.2 以降が必要です。</li></ul>
+ </li>
+ <li>OpenRTM-aist Python版
+  <ul><li>今回のサンプルではPythonスクリプトとして書かれたRTコンポーネントも使用しますので、
+          python環境が必要になります。<br>
+	  Windowsでは、OpenRTM-aist C++版が使用するPythonと互換性を保つため、
+	  OpenRTM-aist Python版はPython2.4系列のものをインストールしてください。</ul></li>
+ </li>
+ <li>RTCLink, RTCTemplate
+  <ul><li>Eclipseプラグインとして動作するOpenRTMの基本ツールです。
+   RTコンポーネントの作成・接続に使用します。
+   OpenRTM-aistのページで配布されている「全部入り版」Eclipseを使えば比較的楽にセットアップできます。</li></ul>
+ </li>
+</ul>
+
+<p>
+これらのソフトウェアのインストールについては、
+<a href="http://www.is.aist.go.jp/rt/OpenRTM-aist/html/">OpenRTM-aistのページ</a>
+のを参照してください。
+ソースバッケージとビルド済みパッケージが配布されていますが、特に理由がなければ、
+ビルド済みパッケージを使ってインストールを行います.
+</p>
+
+
+
+<h2>ネームサーバの起動</h2>
+
+<p>
+CORBAやOpenRTMでは、システム各所で生成されたオブジェクトを名前で参照するために、
+通常「ネームサーバ」というプログラムを用います。
+このためには、あらかじめネームサーバを起動しておく必要があります。
+ネームサーバを起動するには以下のような方法があります。
+</p>
+
+<ol>
+ <li>OSのデーモンとして起動させる<br>
+ 起動スクリプトなどの設定により、OS起動時にネームサーバを起動させることが可能です。
+ 例えば Ubuntu Linux では omniORBをインストールすると
+ OS起動時に自動的にネームサーバが起動するようになります。
+ </li>
+
+ <li>GrxUIを起動する<br>
+ OpenHRPのGUIであるGrxUIは、起動時にネームサーバの存在を調べて、
+ 未起動であれば自動的にネームサーバを起動してくれます。
+ この場合GrxUIを終了させるとネームサーバも停止となります。
+ </li>
+
+ <li>手動で起動する<br>
+ OpenRTM-aistやOpenHRPが標準で使用しているCORBAシステムであるomniORBでは、
+ omniNamesというネームサーバプログラムが提供されますので、
+ このプログラムを手動で起動してもOKです。
+ この場合、omniORBのマニュアルを参照の上、適切なオプションで
+ omniNamesを起動するようにしてください。
+ </li>
+</ol>
+
+<p>
+GrxUI経由の起動だと、GrxUIの停止や再起動がOpenRTMのツールやコンポーネントの動作に
+影響を与えてしまうため、ネームサーバは初めからずっと起動させた状態しておくとよいです。
+以下にUbuntuとWindowsの場合の起動の例を示します.
+</p>
+
+<h3>Ubuntuの場合</h3>
+
+<p>
+Ubuntuの場合、パッケージとしてomniORBを入れると自動的にネームサーバも起動される
+ようになりますので、これを確認しましょう。
+</p>
+
+<p>
+コマンドラインで
+<pre>
+$ ps ax | grep omniNames
+</pre>
+と入力して、出力結果に"omniNames"のプロセスがあることを確認します.
+あればOKですし、なければ以下のようにして手動で起動しましょう。
+<pre>
+$ sudo /etc/init.d/omniorb4-nameserver start
+</pre>
+ここではUbuntuのデーモン用スクリプトを使いましたが、
+omniNamesのコマンドを使ってもOKです。
+</p>
+
+<h3>Windowsの場合</h3>
+
+WindowsでOpenRTM-aistのインストーラ版をインストールすると、
+スタートメニューの"OpenRTM-aist" - "C++" - "examples" 以下に、
+ネームサーバを起動する項目 "Start Naming Service" が登録されますので、
+これを使って起動しましょう。
+ネームサーバが起動すると、以下のようなコンソール画面がでます。
+</p>
+
+<p align="center">
+<img src="../image/JoystickSample/NameServer.png" align="top"><br>
+ネームサーバ(omniNames)起動時に現れるコンソール画面
+</p>
+
+<p>
+(注) OpenRTM-aist 0.4.2 とWindows Vistaの環境においては、 以上のスタートメニュー項目からネームサーバを
+起動すると、これから説明するRTCLinkというツールからネームサーバが認識出来ないという症状がでています。
+この問題については、"Start Naiming Service" の参照先である "rtm-naming.bat" というバッチファイルにて、
+<pre>
+set OMNIORB_USEHOSTNAME=localhost
+</pre>
+となっている部分を、
+<pre>
+rem set OMNIORB_USEHOSTNAME=localhost
+</pre>
+として無効化すると、とりあえず問題を避けることが出来ています。
+
+
+<h3>ネームサーバ起動における注意</h3>
+
+<p>
+omniORBのネームサーバomniNamesは、
+登録内容をログファイルに保存し、
+再起動された時に以前の登録内容を復活させるようになっています。
+この仕組みが問題を起こすことがあるので注意が必要です.
+例えば、DHCPなどでネットワークが変わってIPアドレスが変わると、
+復活させた内容との不整合がおこるのか、ネームサーバを利用するシステムがうまく動作
+しなくなったりします。
+</p>
+
+<p>
+これを解消するには、ネームサーバ起動前に以前のログファイルを消去するようにします。
+例えばUbuntuでは、
+<pre>
+$ sudo /etc/init.d/omniorb4-nameserver stop
+$ sudo rm /var/log/omninames*
+$ sudo /etc/init.d/omniorb4-nameserver start
+</pre>
+などとします。
+</p>
+
+
+<h2>ジョイスティックコンポーネントの起動</h2>
+
+<p>
+OpenHRP3 を展開したフォルダの
+sample/JoystickControl/TkJoyStick のフォルダへ移動し、
+Pythonスクリプト "TkJoystickComp.py" を起動してください。
+Windowsでは、エクスプローラからこのファイルをダブルクリックすることでも起動できます。
+コマンドラインから起動する場合は、
+<pre>
+$ cd OpenHRP展開フォルダ/sample/JoystickControl/TkJoyStick
+$ ./TkJoyStick
+</pre>
+などとします。
+</p>
+
+<p>
+なお、このフォルダにはコンポーネントの設定ファイル"rtc.conf"があります。
+"rtc.conf"は、特に指定しなければ、コンポーネント起動時のカレントディレクトリから読み込まれる
+ようになっています。
+したがって今回の例では、"TkJoyStick"フォルダに移動したうえで"TkJoystickComp.py"を
+起動するようにしてください。
+</p>
+
+<p>
+ジョイスティックコンポーネントが起動すると、以下のような画面が表れます。
+（うまくいかない場合はPythonやOpenRTM-aist Python版が正しくインストールされているかを確認してください。）
+</p>
+<p align="center">
+<img src="../image/JoystickSample/TkJoyStickComp.png" align="top"> 
+</p>
+
+<p>
+ここで、真ん中の丸い部分をマウスでドラッグして動かすことができます。
+この丸い部分の位置が、ジョイスティックの傾きに相当します。
+</p>
+
+<p>
+本プログラムはOpenRTMのコンポーネントとして作成されており、
+ジョイスティックの傾きを出力するOpenRTMのポートを備えています。
+このポートを他のRTコンポーネントの入力へ接続することが可能です。
+</p>
+<p>
+今回はこれをロボットのコントローラへとつないで、
+ロボットをジョイスティックで操作できるようにします。
+</p>
+
+
+<h2>RTCLinkにおけるジョイスティックコンポーネントの確認</h2>
+
+<p>
+ここで、RTCLinkを起動してジョイスティックコンポーネントがオブジェクトとして
+認識されていることを確認してみましょう。
+RTCLinkをインストールしたeclipseを起動してください。
+</p>
+<p>
+eclipseが起動したらRTCLinkのパースペクティブを開きます。
+</p>
+<p>
+"NameServiceView"で"Refresh Name Service"ボタンを押すと、
+先ほど起動したジョイスティックコンポーネントに対応する、
+"TkJoyStick0|rtc"という項目がみられるはずです。
+</p>
+<p align="center">
+<img src="../image/JoystickSample/RTCLink1.png" align="top"><br>
+NameServiceViewの画面
+</p>
+
+<p>
+TkJoyStick0|rtcの項目をクリックすると、プロパティーウィンドウに
+このコンポーネントのプロパティーが表示されます。
+
+<p align="center">
+<img src="../image/JoystickSample/RTCLink2.png" align="top"><br>
+プロパティーウィンドウの画面
+</p>
+
+<p>
+次に、"System Dialog" ビューを開き、"NameServiceView" から
+コンポーネントTkJoyStick0の項目をドラッグ＆ドロップしてください。
+すると、ジョイスティックコンポーネントに対応する箱が"System Dialog"上に
+表示されます。
+</p>
+
+<p align="center">
+<img src="../image/JoystickSample/SystemDialog1.png" align="top"><br>
+SystemDialogビューと、コンポーネントのドラッグ
+</p>
+
+<p>
+SystemDialog上では、コンポーネントがもつポート間の接続を行います。
+ここでは、ドラッグして表示された"TkJoyStick0"の箱の右側に、２つ突起のようなものが
+ついていることに着目してください。
+これがこのコンポーネントがもつポートです。
+本サンプルでは上側についている、"pos"というジョイスティックの傾きを出力するポートを使います。
+</p>
+
+
+
+<h2>RTCTemplateを用いたコントローラコンポーネント雛形の作成</h2>
+
+<p>
+Eclipseのツールボタン"Open New RTC Template Editor" またはファイルメニュー"Open New Template Editor"
+をクリックすることで、コンポーネントプログラムの雛形を作成するRTCTemplateのウィンドウが
+表れます。
+この中の項目を埋めていくことにより、比較的簡単にコンポーネントの雛形コードを作成することができます。
+</p>
+
+<p>
+今回作成するコントローラの設定を保存したものが、
+OpenHRP3展開フォルダの sample/JoystickControl/Controller/JoystickController.rtctemplate
+にあります。
+RTCTemplateのウィンドウ上で右クリックするとでるメニューから"Open"を選んで、
+このファイルを読み込んでみてください。
+</p>
+
+<h3>モジュール設定</h3>
+
+<p>
+では、RTCTemplateにおける設定内容をみていきましょう。
+"Module Definition"の項目では、コンポーネントの名前（正確には型名）や、各種メタ情報、
+動作のタイプなどを設定します。
+今回は、"Module name" を "JoystickController"とし、コントローラのコンポーネントを作成することにします。
+</p>
+
+<p align="center">
+<img src="../image/JoystickSample/ModuleDefinition.png" align="top"><br>
+モジュールの設定項目
+</p>
+
+<h3>ポートの設定</h3>
+
+<p>
+Inport definition をみると、angle, velocity, command というポートが定義されているのが分かると思います。
+angle, velocityはシミュレータから出力されるロボットの関節角、関節角速度を入力するためのポートです。
+また、commandはジョイスティックコンポーネントが出力するx, y 位置を入力するためのポートで、
+この入力値をもとにして、ロボットを制御するためのトルクを計算します。
+後ほど、RTCLinkを用いてこのポートをジョイスティックの出力ポートを接続します。
+</p>
+<p>
+そして、OutPort definition に定義されているtorqueというポートが、
+ロボットを制御するための関節トルク値を出力するポートです。
+</p>
+
+<p align="center">
+<img src="../image/JoystickSample/RTCTemplate1.png" align="top"><br>
+RTCTemplateにおけるポートの設定
+</p>
+
+<p>
+RTCTemplateウィンドウの下部にある"Output directory"に出力先を設定して、
+"Generate"ボタンを押すことにより、コンポーネントプログラムの
+雛形となるファイル群が生成されます。
+</p>
+
+<h3>プログラミング言語の設定</h3>
+
+<p>
+"Programming language selection"では、
+生成する雛形のプログラミング言語やコンパイル環境を指定します。
+</p>
+
+<p>
+Windowsの場合は "C++(Windows)" を選択することで、
+Visual C++ のソリューション・プロジェクトファイル一式が生成されます。
+本サンプルでは、ソリューション "JoystickController.sln"を Visual C++ から開いて、
+コンポーネントのコンパイルや実行を行います。
+</p>
+
+<p>
+Linux等の場合は、 "C++" を選択することで、
+Makefileが生成されます。
+本サンプルでは "Makefile.JoystickController" という名前のMakefileが生成されるので、
+これを用いてコンポーネントのコンパイルを行います。
+</p>
+
+<h3>雛形の生成</h3>
+
+<p>
+"Output directory" にディレクトリを設定し、
+"Generate"ボタンを押すと、設定したディレクトリ以下に雛形コード一式が生成されます.
+</p>
+
+<p>
+本サンプルでは、生成された雛形コードに以下の節で説明するコーディングを
+施したものを、sample/JoystickControl/Controller 以下に置いてあります。
+</p>
+
+
+
+<h2>コントローラコンポーネントのコーディング</h2>
+
+<p>
+前項の操作によってRTCTemplateがコンポーネントの雛形は生成してくれますが、
+コンポーネントの実際の動作に対応する部分（コアロジックと呼ぶ）は
+当然ですがコンポーネント開発ユーザが記述する必要があります。
+</p>
+<p>
+RTコンポーネントにおいてはその動作を記述する関数があらかじめいくつか定義されており、
+開発者は動作の種類に応じてそれら関数を上書きすることで、
+望みのコントローラを作成することができます。
+今回のサンプルでは、それらの関数は雛形として生成された"JoystickController.cpp"上に実装します。
+以下に上書き可能な関数の一覧を示します．
+</p>
+
+<table border="1"><tbody>
+<tr><td>onInitialize</td><td>初期化処理.コンポーネントライフサイクルの開始時に一度だけ呼ばれる.</td></tr>
+<tr><td>onActivated</td><td>非アクティブ状態からアクティブ化されるとき1度だけ呼ばれる.</td></tr>
+<tr><td>onExecute</td><td>アクティブ状態時に周期的に呼ばれる.</td></tr>
+<tr><td>onDeactivated</td><td>アクティブ状態から非アクティブ化されるとき1度だけ呼ばれる.</td></tr>
+<tr><td>onAborting</td><td>ERROR状態に入る前に1度だけ呼ばれる.</td></tr>
+<tr><td>onReset</td><td>エラー状態からリセットされ非アクティブ状態に移行するときに1度だけ呼ばれる.</td></tr>
+<tr><td>onError</td><td>エラー状態にいる間周期的に呼ばれる.</td></tr>
+<tr><td>onFinalize</td><td>コンポーネントライフサイクルの終了時に1度だけ呼ばれる.</td></tr>
+<tr><td>onStateUpdate</td><td>onExecuteの後毎回呼ばれる.</td></tr>
+<tr><td>onRateChanged</td><td>ExecutionContextのrateが変更されたとき呼ばれる.</td></tr>
+<tr><td>onStartup</td><td>ExecutionContextが実行を開始するとき1度だけ呼ばれる.</td></tr>
+<tr><td>onShutdown</td><td>ExecutionContextが実行を停止するとき1度だけ呼ばれる.</td></tr>
+</tbody></table>
+
+<p>
+以上の上書き可能な関数の詳細はOpenRTMのマニュアルを参照ください．
+ここでは，このようにいくつかの用途別に上書き可能な関数が定義されていて，
+それらのうち必要な部分を上書きしていくことで，コンポーネントの開発が行えるということが
+理解できればよいかと思います．
+</p>
+
+<p>
+今回実際に上書きする関数は，コンポーネント生成時の初期化を行う"onInitialize"メソッドと、
+周期的に呼ばれ制御等を行う部分である"onExecute"メソッドの部分です．
+これらは上に一覧で挙げた関数の中でも，重要で使用頻度の高いものだと言えます．
+エラーにも対応可能なきちんとしたコントローラを作るためには，他のいくつかの関数も上書きすべきなのですが，
+今回はあえて必要最低限の部分にしぼって，「完全ではないがとりあえず動く」という
+コンポーネントを作成したいと思います．
+</p>
+
+
+<h3>onInitializeメソッドの上書き</h3>
+<p>
+"JoystickController.cpp"において、初期状態ではonInitialize関数はコメントアウトされています。
+このコメントアウト部分を有効化して、以下のように記述します。
+</p>
+
+<pre>
+RTC::ReturnCode_t JoystickController::onInitialize()
+{
+  // ポート初期化
+  m_torque.data.length(4);
+
+  return RTC::RTC_OK;
+}
+</pre>
+
+<p>
+ここでは、トルクの出力ポートにおけるdouble配列のサイズを、
+ロボットの関節数にあわせて４に設定しています。
+入力ポートに関しては、出力側がサイズを決定しますので、今回は特に初期化等はしていません。
+</p>
+
+<p>
+なお、cppファイルの変更とあわせて、ヘッダファイル"JoystickController.h"の対応する関数の
+コメントアウトも解除しておきます。
+</p>
+
+<h3>onExecuteメソッドの上書き</h3>
+<p>
+制御コードを記述するonExecute関数は、
+少し複雑ですが以下のような実装を行うことにします。
+この関数に関しても、ヘッダファイルにて対応する部分も有効化しておきましょう。
+</p>
+
+<pre>
+RTC::ReturnCode_t JoystickController::onExecute(RTC::UniqueId ec_id)
+{
+  // ロボットからのデータ入力
+  m_angleIn.read();
+  m_velocityIn.read();
+  double steerAngle = m_angle.data[0];
+  double steerVel = m_velocity.data[0];
+  double tireVel = m_velocity.data[1];
+
+  // ジョイスティック（ユーザ）からのデータ入力
+  m_commandIn.read();
+  double steerCommandAngle = 3.14159 * -0.5 * m_command.data[0] / 180.0;
+  double tireCommandVel = m_command.data[1] / 10;
+
+  // ステアリングトルク計算
+  double steerCommandTorque = 20.0 * (steerCommandAngle - steerAngle) - 2.0 * steerVel;
+
+  // 駆動トルク計算
+  double tireCommandTorque = 1.0 * (tireCommandVel - tireVel);
+
+  // ロボットへのトルク出力
+  m_torque.data[0] = steerCommandTorque;
+  m_torque.data[1] = tireCommandTorque;
+  m_torque.data[2] = tireCommandTorque; 
+  m_torque.data[3] = tireCommandTorque; 
+  m_torqueOut.write(); 
+
+  return RTC::RTC_OK;
+}
+</pre>
+
+<p>
+ここではジョイスティックからの入力のうち、最初の要素であるx値をステアリングの目標角に設定し、
+２番目の要素であるy値を駆動速度の目標値として設定します。
+その上でそれら目標値に追従するよう、適当なゲインを用いてステアリングと駆動輪のトルクを決定しています。
+</p>
+
+
+<h3>コンポーネントのコンパイル</h3>
+
+<p>
+以上の追加コーディングを
+"sample/JoystickControl/Controller" 以下のソースファイルに行っていますので、
+それらの確認やコンパイルを行ってください。
+</p>
+
+<p>
+Windowsでは、Visual C++ から JoystickController.sln を読み込んで、
+IDE上でソースを確認したり、ビルドメニューからコンパイルを行うことができます。
+</p>
+
+<p>
+Linuxでは、Controlelr ディレクトリにて
+<pre>
+$ make -f Makefile.JoystickController
+</pre>
+としてコンパイルを行ってください.
+</p>
+
+
+
+<h2>コントローラコンポーネントの起動</h2>
+
+<p>
+前節で作成したコンポーネントを起動・生成し、
+システムにおいて利用できるようにしましょう。
+OpenRTMのコンポーネントを起動する方法はいくつかありますが、
+今回の例では、コンパイルして作成された実行ファイル "JoystickController.exe" を実行することで、
+コンポーネントを生成することができます。
+</p>
+
+<h3>rtc.confの作成</h3>
+
+<p>
+コンポーネントを起動する前に、
+コンポーネント実行時の挙動を設定する "rtc.conf" というファイルを用意しておく必要があります。
+今回は、以下のようなファイルを作成して使用することにします。
+</p>
+
+<pre>
+corba.nameservers: localhost
+naming.formats: %n.rtc
+exec_cxt.periodic.type: SynchExtTriggerEC
+</pre>
+
+<p>
+OpenHRPのコントローラの場合、今のところはnaming.formatsとexec_cxtを以上のように設定する必要があります。
+exec_cxt は，コンポーネントの "onExecute" 関数をどのように駆動させるかを決定する
+「実行コンテキスト」の種類を指定します．
+コントローラのコンポーネントをOpenHRPと接続してシミュレーションを行う場合は，
+シミュレーション中の世界における時間の進みと同期してコントローラを動かす必要があります．
+これを実現するために， "SynchExtTriggerEC" という実行コンテキストを設定します．
+</p>
+
+<p>
+以上の内容のテキストを、"rtc.conf"というファイル名で作成しておきます。
+"rtc.conf"は、コンポーネント生成の際のカレントディレクトリから読み込まれるため、
+それを考慮してファイルを置くフォルダを決めてください。
+本サンプルでは、"sample/JoystickControl/Controller/" 以下に置いています。
+</p>
+
+<p>
+なお、rtc.confに記述する設定内容の詳細は、OpenRTMのマニュアルを参照してください。
+上で設定した以外にも，様々な設定項目が用意されていますし，
+ユーザが独自の設定項目を記述することも可能です．
+また、rtc.confの読み込みについては、カレントディレクトリに置く以外にも、
+コマンドラインから読み込むファイルを指定するなどの方法もあります。
+それらの詳細もOpenRTMのマニュアルをあたってください。
+</p>
+
+<h3>Windows・Visual C++ の場合</h3>
+
+<p>
+Visual C++ でビルドを行うと、プロジェクトのサブフォルダ "debug" または "release"
+以下に "JoystickController.exe" という実行ファイルが生成されます。
+ここでは、Visual C++ の「開始」メニューを利用して起動することにしましょう。
+こうすると、プロジェクトのトップフォルダである"Controller"フォルダを
+カレントディレクトリとして実行ファイルが起動されるので、
+上で作成した"rtc.conf"を正しく読み込むことができます。
+以下の図のように、Visual C++ の「デバッグ」-「デバッグなしで開始」メニューを
+クリックします。
+</p>
+
+<p align="center">
+<img src="../image/JoystickSample/RunMenu.png" align="top"><br>
+Visual C++ の「デバッグなしで開始」メニューの例
+</p>
+
+<p>
+起動すると、空のコンソールウィンドウがでます。
+</p>
+
+<h3>Linuxの場合</h3>
+
+コマンドライン上で Controller フォルダに移動し、
+<pre>
+./JoystickControllerComp
+</pre>
+とします。
+
+
+<h3>RTCLinkによるコンポーネントの確認</h3>
+
+コントローラのコンポーネントがうまく起動していれば、RTCLinkの"NameServiceView"において、
+以下の図のように、"JoystickController0|rtc" という項目が追加されているはずです。
+</p>
+
+<p align="center">
+<img src="../image/JoystickSample/NameServiceView2.png" align="top"><br>
+NameServiceViewにおけるJoystickControllerの確認
+</p>
+
+<p>
+ここでコンポーネントの名前が JoystickController0 というように
+最後に数字が付加されているのは、これがコンポーネントの「インスタンス」だからです。
+本サンプルでは、"JoystickController"というのはコンポーネントの「型名」（"Module name"とも言う）
+であり、これが実際に生成された「インスタンス」は複数個生成され得るものなので、
+それらを区別するため、OpenRTMでは通常型名に数字を付加してインスタンス名とするようになっています。
+今回のインスタンス名である "JoystickController0" は後ほどの設定でも参照するので、覚えて置いてください。
+</p>
+
+<p>
+TkJoyStickコンポーネントと同様に、JoystickControllerもSystemDialog上に
+ドラッグして表示させましょう。
+</p>
+
+<p align="center">
+<img src="../image/JoystickSample/SystemDialog2.png" align="top"><br>
+JoystickController0をSystemDialogへドラッグして表示させる
+</p>
+
+<p>
+JoystickController0の箱には4つの突起がついており、
+これがRTCTemplateで設定した各ポートに対応します。
+ポートの上にマウスをもっていくと、そのポートの情報が表示されますので、
+各ポートについて試してみてください。
+TkJoystick0とJoystickController0のポート接続は後ほど行います。
+</p>
+
+
+<h2>コントローラブリッジ</h2>
+
+<p>
+OpenHRP3では、シミュレーション対象のモデルとコントローラコンポーネントとの接続を、
+「コントローラブリッジ」というプログラムが行います。
+このプログラムは、OpenHRP3フォルダの "Controller/bridge/ControllerBridge" という実行ファイルです。
+(Windowsの場合は ControllerBridge.exeです。）
+</p>
+
+<h3>コントローラブリッジの設定</h3>
+
+<p>
+コントローラブリッジの設定には、
+実行ファイル起動時に与えるコマンドラインオプションを用いることができます。
+本サンプルでは、オプションを記述したシェルスクリプトファイルを作成しておき、
+そのファイルを用いてコントローラブリッジを起動することにします。
+</p>
+
+<p>
+以下の内容で "JoystickController.sh" というファイルを作成することにします。
+(ソースの "sample/JoysticControl/Controller" 以下に入れてあります。
+Windowsでは同様の内容を "JoystickController.bat" というバッチファイルとして作成してあります。)
+</p>
+
+<pre>
+CONTROLLER_BRIDGE_DIR=../../../Controller/bridge
+
+$CONTROLLER_BRIDGE_DIR/ControllerBridge \
+--server-name JoystickController \
+--out-port angle:JOINT_VALUE \
+--out-port velocity:JOINT_VELOCITY \
+--in-port torque:JOINT_TORQUE \
+--connection angle:JoystickController0:angle \
+--connection velocity:JoystickController0:velocity \
+--connection torque:JoystickController0:torque
+</pre>
+
+<p>
+以下に各オプションの内容を示します。
+<ul>
+ <li>--server-name JoystickController<br>
+ OpenHRPのコントローラファクトリサーバとして生成されるCORBAオブジェクトの名前を指定します。
+ シミュレータからみたコントローラの名前になり、
+ この名前をGrxUI上でモデルに対応付けるコントローラの指定に使用します。
+ </li>
+ <li>--out-port angle:JOINT_VALUE<br>
+ 関節角度を"angle"という名前の出力ポートに割り当てます。
+ シミュレーション対象のモデル(本サンプルでは車輪型機構）からコントローラへの出力ポートになります。
+ </li>
+ <li>--out-port velocity:JOINT_VELOCIY<br>
+ 関節角速度を"velocity"という名前の出力ポートに割り当てます。
+ 上と同様に、モデルからコントローラへの出力ポートになります。
+ </li>
+ <li>--in-port torque:JOINT_TORQUE<br>
+ 関節トルクを"torque"という名前の入力ポートに割り当てます。
+ コントローラからモデルへの入力ポートになります。
+ </li>
+ <li>--connection angle:JoystickController0:angle<br>
+ "angle"ポートをコンポーネント"JoystickController0"の"angle"ポートと接続します。
+ velocity, torqueについても同様のオプションを与えています。
+ </li>
+</ul>
+</p>
+
+<h3>コントローラブリッジの起動</h3>
+
+<p>
+以上の設定でコントローラブリッジを起動します。
+Windowsの場合はエクスプローラ上でダブルクリックするなどして、
+作成したバッチファイル "JoystickController.bat" を実行しましょう。
+コマンドラインから起動する場合は、Controllerディレクトリに移動してから
+起動してください。これは、コントローラブリッジが生成するRTコンポーネントも
+先ほど作成したrtc.confの設定を必要とし、これをカレントディレクトリから読み込むためです。
+</p>
+
+<p>
+コントローラブリッジが起動すると、シミュレーション対象のモデルに対応するRTコンポーネントが
+オプションの内容に従って生成されます。RTCLink上からこれを確認してみましょう。
+"NameServiceView" にて "VirtualRobot0" というコンポーネントが追加されていることを確認し、
+これを例によって"SystemDialog"上へドラッグしてください。
+このコンポーネントが、シミュレーション対象のモデルに対応するコンポーネントになります。
+</p>
+
+<p align="center">
+<img src="../image/JoystickSample/SystemDialog3.png" align="top"><br>
+コントローラブリッジが生成したコンポーネント"VirtualRobot0"の確認
+</p>
+
+<p>
+RTCLink上で"VirtualRobot0"のポートを確認してください。
+コントローラブリッジのオプション "--out-port" と "--in-port" で設定したポートが
+備わっているのが分かると思います。
+</p>
+
+<p>
+以上でシミュレーションに必要なコンポーネントがそろいました。
+</p>
+
+
+<h2>シミュレーションプロジェクトの作成</h2>
+
+モデルの配置とモデルに対するコントローラの対応付けを、
+GrxUI上でシミュレーションプロジェクトとして作成します。
+シミュレーションプロジェクトの作成法に関する詳細は別途GrxUIのマニュアルをみていただくとして、
+ここでは既に設定したプロジェクトを読み込んでみましょう。
+</p>
+<p>
+GrxUIを起動し、sample/JoysticControl 以下の "SimulationProject.xml"をプロジェクトとして読み込んでください。
+するとGrxUI上に車輪型機構が床の上にある状態が表れます。
+</p>
+
+<p align="center">
+<img src="../image/JoystickSample/SimulationProject.png" align="top"><br>
+シミュレーションプロジェクトを読み込んだGrxUI
+</p>
+
+<p>
+"OpenHRP"-"Controller"タブにて、車輪型機構のモデルに"JoystickController"を指定してあります。
+これはコントローラブリッジのオプション "--server-name" で指定した名前です。
+コントローラブリッジは既に起動してあるので、この名前のサーバにアクセス可能となっており、
+シミュレーション開始時にサーバとの接続が行われます。
+</p>
+
+<h2>RTCLinkを用いたジョイスティックとコントローラの接続</h2>
+
+<p>
+シミュレーション前の最後の準備として、
+RTCLinkを用いてジョイスティックコンポーネントコントローラコンポーネントとの接続を行います。
+</p>
+
+<p>
+RTCLinkのSystemDialog上では既に３つのコンポーネントが表示されていると思います。
+ここで、"TkJoystick0"の右上にある"pos"ポートから"JoystickController0"の左下にある"command"ポートへと
+マウスのドラッグを行います。
+そこで現れるダイアログで"OK"とすると、下図のようにドラッグしたポート間が線で結ばれます。
+</p>
+
+<p align="center">
+<img src="../image/JoystickSample/connection.png" align="top"><br>
+</p>
+
+
+
+<p>
+これは、ポート"pos"と"command"がOpenRTMシステムにおいて接続されたことを示しています。
+これで、ジョイスティックの倒れ具合が、コントローラへのコマンド入力として与えられることになります。
+</p>
+
+<p>
+ただし、ジョイスティックからのポート出力を有効にするために、ジョイスティックコンポーネントの
+active化を行う必用があります。
+TkJoyStick0を右クリックするとでるメニューから"Active"を選択し、
+ジョイスティックコンポーネントの色が青から緑へと変わったことを確認してください。
+</p>
+
+<p>
+ところで、"JoystickController0"のangle, velocity, torqueのポートと、
+"VirtualRobot0" の同名のポートも、コントローラを機能させるためには接続する必要があります。
+本来の流れとしては、ここで ポート"pos"と"command"の接続と同様にRTCLinkを使った接続を行いたいのですが、
+OpenRTM-aist 0.4.1 ではこれが出来ないため、今回は見送りました。(OpenRTM-aist 0.4.2 だと出来ます。）
+</p>
+
+<p>
+これらのポートの接続に関しては、コントローラブリッジの設定で"--connection"オプションを指定したので、
+シミュレーション開始時に自動的に接続が行われます。
+シミュレーション開始後にRTCLinkをみれば、
+以下のようにコントローラの全てのポートが接続されていることを確認できます。
+<p align="center">
+<img src="../image/JoystickSample/allconnection.png" align="top"><br>
+</p>
+
+</p>
+
+
+<h2>シミュレーションの開始とジョイスティック操作</h2>
+
+<p>
+では、シミュレーションを開始してみましょう。
+GrxUIの"Start Simulation"ボタンをクリックします。
+</p>
+
+<p>
+シミュレーションが開始しても、車輪モデルは停止していると思います。
+この状態であらかじめ起動しておいたジョイスティックのウィンドウを表にだし、
+ジョイスティックの操作を行ってください。
+ジョイスティックの左右がステアリング、上下が駆動力に対応しており、
+ラジコンのようにモデルを操作できることと思います。
+</p>

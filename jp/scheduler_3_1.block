@@ -1,0 +1,298 @@
+title=スケジューラ作成法(Ver.3.1)
+base=..
+
+<h2> 概要 </h2>
+<p>
+ここでは、通常GrxUIの操作で行っているシミュレーションを、C++によるプログラムで行う方法を、サンプルを用いて説明します。　<br/>
+サンプルプログラムは、OpenHRP/sample/project/samplePD.xml プロジェクトを用いたシミュレーションと同じ動作をします。
+</p>
+<p>
+流れは以下のとおりです。
+</p>
+<ol>
+<li>モデルを読み込む</li>
+<li>CORBA初期化</li>
+<li>NamingServiceを取得する</li>
+<li>OnlineViewerを取得し、モデルを読み込む</li>
+<li>DynamicsServerを取得し、初期設定を行う</li>
+<li>Controllerを取得し、初期設定を行う</li>
+<li>シミュレーションのループ</li>
+</ol>
+
+<h3> モデルの読み込み </h3>
+<p>
+まず、ModelLoaderを用いてモデルファイルを読み込みます。
+Model[0],model[1]には、床とロボットのモデルファイルへのパスを指定します。
+</p>
+<pre>
+BodyInfo_var floor = loadBodyInfo(Model[0].c_str(), argc, argv);
+BodyInfo_var body = loadBodyInfo(Model[1].c_str(), argc, argv);
+</pre>
+
+<a name="corbainit"></a>
+<h3> CORBA初期化 </h3>
+<p>
+次にCORBA ORBの初期化とNamingServiceの参照取得を行います。
+</p>
+<pre>
+CORBA::ORB_var orb;
+orb = CORBA::ORB_init(argc, argv);
+
+CORBA::Object_var poaObj = orb -> resolve_initial_references("RootPOA");
+PortableServer::POA_var rootPOA = PortableServer::POA::_narrow(poaObj);
+
+PortableServer::POAManager_var manager = rootPOA -> the_POAManager();
+
+CosNaming::NamingContext_var cxt;
+CORBA::Object_var	nS = orb->resolve_initial_references("NameService");
+cxt = CosNaming::NamingContext::_narrow(nS);
+</pre>
+
+<h3> OnlineViewer </h3>
+<p>
+OnlineViewerの取得を行います。
+</p>
+<pre>
+OnlineViewer_var olv = getOnlineViewer(argc, argv);
+</pre>
+<p>
+さらに、OnlineViewerに対してもモデルを読み込ませ、初期化します。
+</p>
+<pre>
+olv->load(floor->name(), Model[0].c_str());
+olv->load(body->name(), Model[1].c_str());
+olv->clearLog();
+</pre>
+
+
+
+<h3> DynamicsSimulator</h3>
+<p>
+サーバ群を取得するために以下のような関数を用意します。
+</p>
+<pre>
+template &lt;typename X, typename X_ptr&gt;
+X_ptr checkCorbaServer(std::string n, CosNaming::NamingContext_var &cxt)
+{
+  CosNaming::Name ncName;
+  ncName.length(1);
+  ncName[0].id = CORBA::string_dup(n.c_str());
+  ncName[0].kind = CORBA::string_dup("");
+  X_ptr srv = NULL;
+  try {
+    srv = X::_narrow(cxt->resolve(ncName));
+  } catch(const CosNaming::NamingContext::NotFound &exc) {
+    std::cerr << n << " not found: ";
+    switch(exc.why) {
+    case CosNaming::NamingContext::missing_node:
+      std::cerr << "Missing Node" << std::endl;
+    case CosNaming::NamingContext::not_context:
+      std::cerr << "Not Context" << std::endl;
+      break;
+    case CosNaming::NamingContext::not_object:
+      std::cerr << "Not Object" << std::endl;
+      break;
+    }
+    return (X_ptr)NULL;
+  } catch(CosNaming::NamingContext::CannotProceed &exc) {
+    std::cerr << "Resolve " << n << " CannotProceed" << std::endl;
+  } catch(CosNaming::NamingContext::AlreadyBound &exc) {
+    std::cerr << "Resolve " << n << " InvalidName" << std::endl;
+  }
+  return srv;
+}
+</pre>
+<p>
+これはNamingServiceから指定した型を取得した後、種々の例外処理を行うものです。この関数を利用してDynamicsSimulatorFactoryの取得を行います。
+</p>
+<pre>
+DynamicsSimulatorFactory_var dynamicsSimulatorFactory;
+dynamicsSimulatorFactory =
+  checkCorbaServer &lt;DynamicsSimulatorFactory, DynamicsSimulatorFactory_var&gt; ("DynamicsSimulatorFactory", cxt);
+
+if (CORBA::is_nil(dynamicsSimulatorFactory)) {
+  std::cerr << "DynamicsSimulatorFactory not found" << std::endl;
+}
+
+DynamicsSimulator_var dynamicsSimulator = dynamicsSimulatorFactory->create();
+</pre>
+<p>
+ここでは、DynamicsSimulatorFactoryから、createメソッドを使用しDynamicsSimulatorを作成しています。<br/>
+次に、DynamicsSimulatorの初期化を行います。
+</p>
+<pre>
+dynamicsSimulator->registerCharacter(floor->name(), floor);			    
+dynamicsSimulator->registerCharacter(body->name(), body);
+dynamicsSimulator->init(timeStep, DynamicsSimulator::RUNGE_KUTTA, DynamicsSimulator::ENABLE_SENSOR);
+</pre>
+<p>
+最初に、DynamicsSimulatorに床とロボットのモデルを登録します。<br/>
+次に、initメソッドでシミュレーション1ステップごとの時間、差分法、センサーの有効/無効を設定します。<br/>
+差分法にはオイラー法を用いるDynamicsSimulator::EULERとルンゲクッタ法を用いるDynamicsSimulator::RUNGE_KUTTAが設定できます。<br/>
+センサーは有効にするDynamicsSimulator::ENABLE_SENSORと無効にするDynamicsSimulator::DISABLE_SENSORがあります。<br/>
+</p>
+<p>
+次に、重力ベクトルを設定します。
+</p>
+<pre>
+DblSequence3 g;
+g.length(3);
+g[0] = 0.0;
+g[1] = 0.0;
+g[2] = world_gravity;
+dynamicsSimulator->setGVector(g);
+</pre>
+<p>
+次に、ロボットの初期位置と姿勢を設定します。
+</p>
+<pre>
+Vector3  waist_p;
+Matrix33 waist_R;
+waist_p = 0, 0, 0.7135;
+waist_R = tvmet::identity&lt;Matrix33&gt;();
+DblSequence trans;
+trans.length(12);
+for(int i=0; i<3; i++) trans[i]   = waist_p(i);
+for(int i=0; i<3; i++){
+	for(int j=0; j<3; j++) trans[3+3*i+j] = waist_R(i,j);
+}
+dynamicsSimulator->setCharacterLinkData( body->name(), "WAIST", DynamicsSimulator::ABS_TRANSFORM, trans );
+</pre>
+<p>
+関節の初期角度も設定します。
+</p>
+<pre>
+DblSequence angle;
+angle.length(29);
+angle[0] = 0.0;         angle[1] = -0.0360373;  angle[2] = 0.0;         angle[3] = 0.0785047;
+angle[4] = -0.0424675;  angle[5] = 0.0;         angle[6] = 0.174533;    angle[7] = -0.00349066;
+angle[8] = 0.0;         angle[9] = -1.5708;     angle[10] = 0.0;        angle[11] = 0.0;
+angle[12] = 0.0;        angle[13] = 0.0;        angle[14] = -0.0360373; angle[15] = 0.0;
+angle[16] = 0.0785047;  angle[17] = -0.0424675; angle[18] = 0.0;        angle[19] = 0.174533;
+angle[20] = -0.00349066;angle[21] = 0.0;        angle[22] = -1.5708;    angle[23] = 0.0;
+angle[24] = 0.0;        angle[25] = 0.0;        angle[26] = 0.0;        angle[27] = 0.0;
+angle[28] = 0.0;
+dynamicsSimulator->setCharacterAllLinkData( body->name(), DynamicsSimulator::JOINT_VALUE, angle );
+</pre>
+<p>
+設定が終わったら順運動学計算を１回行い、姿勢に反映させます。
+</p>
+<pre>
+dynamicsSimulator->calcWorldForwardKinematics();
+</pre>
+<p>
+次に衝突検出ペアの登録を行います。ここで登録されたペア同士の衝突検出が行われることになります。ロボットと床の間にペアを設定しています。
+</p>
+<pre>
+DblSequence6 K, C;    
+K.length(0);
+C.length(0);
+dynamicsSimulator->registerCollisionCheckPair(floor->name(),"", body->name() ,"",
+		                                            statFric,slipFric,K,C,culling_thresh);
+</pre>
+<p>
+最後に初期化メソッドを呼びます。
+</p>
+<pre>
+dynamicsSimulator->initSimulation();
+</pre>
+
+<h3> Controller </h3>
+<p>
+Controllerを取得する際はそれぞれのController名で行います。
+</p>
+<pre>
+Controller_var controller;
+controller = checkCorbaServer &lt;Controller, Controller_var&gt; ("SamplePDController", cxt);
+
+if (CORBA::is_nil(controller)) {
+   std::cerr << "Controller not found" << std::endl;
+}
+</pre>
+<p>
+この場合はSamplePDControllerという名前のControllerを取得しています。</br>
+Controllerの設定を行います。
+</p>
+<pre>
+controller->setModelName(body->name());
+controller->setDynamicsSimulator(dynamicsSimulator);
+controller->initialize();
+controller->setTimeStep(controlTimeStep);
+</pre>
+<p>
+最後にスタートさせます。
+</p>
+<pre>
+controller->start();
+</pre>
+
+<h3> シミュレーションループ </h3>
+<p>
+実際のシミュレーション実行時にまわされるループです。以下の構成を持ちます。
+</p>
+
+<ol>
+<li>Controller::inputの呼び出し（DynamicsSimulatorからControllerへロボットデータを入力）</li>
+<li>Controller::controlの呼び出し（Controllerの出力値の計算）</li>
+<li>dynamicsSimulator::stepSimulationの呼び出し　(シミュレーション1ステップ実行）</li>
+<li>dynamicsSimulator::getWorldStateの呼び出し　(シミュレーション結果の読み出し)</li>
+<li>OnlineViewer::updateの呼び出し　（OnlineViewerの更新)</li>
+<li>Controller::outputの呼び出し (ControllerからCynamicdSimulatorへ制御値を出力）</li>
+</ol>
+<p>
+具体的な形は以下のようになります。
+</p>
+<pre>
+bool control=false;
+if(controlTime <= time){
+    control=true;
+    j++;
+}
+
+if(control)
+    controller->input();
+
+i++;
+time = timeStep * i;
+controlTime = controlTimeStep * j;
+
+if(control)
+    controller->control();
+               
+// ================== simulate one step ==============
+dynamicsSimulator->stepSimulation();					    
+              
+// ================== viewer update ====================
+try {
+    dynamicsSimulator -> getWorldState( state );
+    olv->update( state );
+} catch (CORBA::SystemException& ex) {
+    return 1;
+}
+
+// ===================== get robot status ===================
+DblSequence_var waist_pR;  // position and attitude
+DblSequence_var waist_vw;  // linear and angular velocities
+dynamicsSimulator->getCharacterLinkData(body->name(), "WAIST", DynamicsSimulator::ABS_TRANSFORM, waist_pR);
+dynamicsSimulator->getCharacterLinkData(body->name(), "WAIST", DynamicsSimulator::ABS_VELOCITY,  waist_vw);
+
+// ================== log data save =====================
+log_file << time << " ";
+log_file << waist_vw[2] << " ";
+log_file << endl;
+
+if(control)
+    controller->output();
+
+if( time > EndTime ) break;
+</pre>
+
+<h2> 実行方法 </h2>
+<ol>
+<li>GrxUIを起動。</li>
+<li>OpenHRP/sample/controller/SamplePD/SamplePD.sh (.bat) をコマンドラインから実行。</li>
+<li>OpenHRP/sample/example/scheduler/scheduler.sh (.bat) をコマンドラインから実行。</li>
+</ol>
+<p>
+Windowsでコマンドラインから実行する時は、(OpenHRPのインストールディレクトリ)/bin にパスを通してください。
+</p>

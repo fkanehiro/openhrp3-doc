@@ -1,0 +1,66 @@
+title=ビューシミュレータクライアントの作成方法(Ver.3.1)
+base=..
+
+<h2> 概要 </h2>
+<p>
+ここでは、ビューシミュレータクライアントの作成方法を、サンプルを用いて説明します。<br/>
+サンプルプログラムは、OpenHRP/sample/example/viewSimulator にあります。<br/>
+このサンプルは、スケジューラのサンプルプログラムを元に作成していますので、変更部分のみを説明しています。説明のない部分に関しては、<a href="./scheduler_3_1.html">スケジューラ作成マニュアル(Ver.3.1)</a>をご覧ください。<br/>
+</p>
+
+<h3>　ViewSimurator </h3>
+<p>
+ViewSimuratorの取得を行います。
+</p>
+<pre>
+    ViewSimulator_var viewSimulator;
+    viewSimulator = checkCorbaServer &lt;ViewSimulator, ViewSimulator_var&gt; ("ViewSimulator", cxt);
+    
+    if (CORBA::is_nil(viewSimulator)) {
+        std::cerr << "viewSimulator not found" << std::endl;
+        return 1;
+    }
+</pre>
+<p>
+ViewSimuratorに対してもモデルを読み込ませます。
+</p>
+<pre>
+    viewSimulator->registerCharacter(floor->name(), floor);			    
+    viewSimulator->registerCharacter(body->name(), body);
+</pre>
+
+<h3> ビューシミュレータの更新 </h3>
+<p>
+スケジューラのサンプルでは、シミュレーションループ内で行っていたOnlineViewerの更新の替わりに、ビューシミュレータを更新します。
+このサンプルでは、カメラのデータ取得を行い、データを間引いて標準出力に表示しています。
+</p>
+
+<pre>
+    try {
+        dynamicsSimulator -> getWorldState( state );
+        if((int)(time*500)%30==0){
+            viewSimulator->updateScene( state );
+            CameraSequence_var cameras;
+            viewSimulator->getCameraSequence(cameras);
+            for(int k=0; k<cameras->length(); k++){
+                ImageData_var imageData = cameras[k]->getImageData();
+                std::cout << "camera(" << k << ") ";
+                for(int l=0; l<imageData->floatData.length(); l+=100)
+                    std::cout <<imageData->floatData[l] << " " ;
+                std::cout << std::endl;
+            }
+        }
+    } catch (CORBA::SystemException& ex) {
+        return 1;
+    }
+</pre>
+
+<h2> 実行方法 </h2>
+<ol>
+<li>GrxUIを起動。</li>
+<li>OpenHRP/sample/controller/SamplePD/SamplePD.sh (.bat) をコマンドラインから実行。</li>
+<li>OpenHRP/sample/example/viewSimulator/viewSimulator.sh (.bat) をコマンドラインから実行。</li>
+</ol>
+<p>
+Windowsでコマンドラインから実行する時は、(OpenHRPのインストールディレクトリ)/bin にパスを通してください。
+</p>

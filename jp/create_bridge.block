@@ -1,0 +1,194 @@
+title = コントローラの設定ファイルの作成
+base  = ..
+
+<h2> 概要 </h2>
+<p>
+コントローラの動作には、RTコンポーネントとしての設定を記述するrtc.confファイルと、コントローラブリッジとRTコンポーネントとの接続設定を記述したスクリプト（バッチ）ファイルが必要です。
+コントローラブリッジは、シミュレーション対象のロボットと各OpenRTMコンポーネント間の入出力を介するプロセスで、ロボットの入出力用のRTコンポーネントも作成します。
+ここでは、２つのファイルの作成方法を説明します。
+</p>
+
+<h2> GUIを利用して作成する方法 </h2>
+<p>
+Controller View</a>でロボットのリストからSampleを選択し、Editボタンを押します。
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Controller.png"><br>
+図1 : Controller View
+</p>
+
+<p>
+Controllerの名前とコントローラの動作間隔を設定し"new File"ボタンを押します。<br>
+既にファイルを作成している場合は、"select File"ボタンを押してファイルを選択した後、"open file"ボタンを押すと、ファイルを編集できます。
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Controller_newFile.png"><br>
+図2 : Controller View
+</p>
+
+<p>
+ファイル設定用のダイアログが開きます。コントローラの名前は、Controller　Viewで設定した名前と一致していなければならないので、既に表示されています。<br>
+他にもデフォルトの内容が表示されています。
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel.png"><br>
+図3 : Controller Bridge Dialog
+</p>
+
+<p>
+制御対象のロボットの入出力ポートを設定します。<br>
+テーブルを右クリックして"add"を選択してください。削除したい場合は、テーブルの行を選択してから右クリックして、"delete"を選択してください。<br>
+行が追加されるので、各セルを選択して図のように設定します。
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel_port.png"><br>
+図4 : Controller Bridge Dialog
+</p>
+
+<p>
+idのセルを選択すると、id編集用のダイアログが開きます。ロボットのリンク名、センサ名が表示されるので、チェックを入れてください。<br>
+"All joints"ボタンを選択すると、Joint IDを持つリンクが全て選択されます。また、入出力順はチェックボタンが並んでいる順番になります。ボタンはドラッグ＆ドロップ操作で順番を入れ替えることができます。<br>
+propertyの設定と矛盾しないように設定してください。詳しい設定の内容は<a href="./controller_bridge.html">「コントローラーブリッジ使用マニュアル」</a>をご覧ください。
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel_id.png"><br>
+図5 : Controller Bridge ID Dialog
+</p>
+
+<p>
+Module NameとController RTC Nameを設定し、"check"ボタンを押してください。<br>
+ファイルの内容とエラーメッセージが表示されていないことを確認してください。
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel_check.png"><br>
+図6 : Controller Bridge Dialog
+</p>
+
+<p>
+接続設定は、別ファイルに保存することもできます。<br>
+その場合は、Use the configuration fileにチェックを入れて、ファイル名を入れた後、"check"ボタンを押してください。
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel_conf.png"><br>
+図7 : Controller Bridge Dialog
+</p>
+
+<p>
+"Save as"ボタンを押してファイルを選択し、内容を保存します。本ドキュメントの例ではmySamplePDディレクトリにSamplePD.sh(.bat)として保存してください。
+"Close"ボタンを押してDialogを閉じてください。
+</p>
+
+<h2> テキストエディタを利用して作成する方法 </h2>
+<p>
+２つの設定ファイルは、テキスト形式ですので、使い慣れたエディタを用いて編集することができます。<br>
+GUIでは対応していないrtc.confの詳細な設定や、スクリプトに環境変数の設定を含める場合などは、エディタを使用してください。
+</p>
+
+<h3 id="rtc_conf"> rtc.conf </h3>
+<p>
+rtc.conf はこのコントローラブリッジを起動する際のカレントディレクトリに配置します。<br>
+本ドキュメントの例ではmySamplePDディレクトリに配置してください。<br>
+<br>
+rtc.conf には以下の内容を記述してください。
+</p>
+<p>
+環境に合わせてネームサーバの場所を記述します。
+</p>
+<pre>
+corba.nameservers: localhost:2809
+</pre>
+<p>
+ログファイル作りの有無を設定します。
+</p>
+<ul>
+  <li>ログファイル作りを無効にする場合
+    <ul>
+    <pre>logger.enable:NO</pre>
+    </ul>
+  </li>
+  <li>ログファイル作りを有効にする場合
+    <ul>
+    <pre>logger.enable:YES</pre>
+    </ul>
+  </li>
+  <p>
+  ログファイルの作り先（パス）と名前形式を設定します。以下の例のようにパスを直接記述することも可能です。
+  </p>
+  <ul><pre>logger.file_name: D:\\Temp\\rtc%p.log</pre></ul>
+  <p>
+  ログレベルの設定です。
+  </p>
+  <ul>
+    <pre>logger.log_level: TRACE</pre>
+  </ul>
+</ul>
+<p>
+モジュールファイル名と、コンポーネント名を設定します。
+</p>
+<pre>
+manager.modules.preload: SamplePD
+manager.components.precreate: SamplePD
+</pre>
+<p>
+以下の内容は基本的には変更しないでください。
+</p>
+<pre>
+naming.formats: %n.rtc
+manager.modules.load_path: .
+exec_cxt.periodic.rate: 1000000
+manager.modules.abs_path_allowed: yes
+exec_cxt.periodic.type: SynchExtTriggerEC
+</pre>
+<p>
+RTコンポーネントの設定オプションに関する詳しい説明は、OpenRTM マニュアルの 
+<a href="http://www.is.aist.go.jp/rt/OpenRTM-aist/html/E3839EE3838BE383A5E382A2E383AB2FE382B3E383B3E38395E382A3E382AEE383A5E383ACE383BCE382B7E383A7E383B3.html" target="_blank">コンフィギュレーション</a>
+で確認してください。
+</p>
+<p>
+<b>※</b> なお、"OpenHRP3/sample/controller/SamplePD/rtc.conf" に設定ファイルのサンプルがありますので、それをコピーし、変更を行って使用してください。<br>
+&beta;4から対応したバイナリパッケージによるインストールでは、
+<ul>
+ <li>Ubuntu環境の場合：/usr/share/</li>
+ <li>Windows環境の場合：OpenHRPSDK/share/</li>
+</ul>
+以下のOpenHRP-3.1/sample/controller/SamplePD/rtc.confをご使用ください。<br>
+ファイル内容はいずれの場合も同じです。<br>
+</p><br>
+
+<h3> コントローラブリッジ用設定ファイル</h3>
+<p>
+各コンポーネント毎に実装を分離する目的は、開発における保守性・可搬性の向上です。
+ここでは、コントローラブリッジとコンポーネントとの接続設定を説明します。<br>
+OpenHRP-3.1/sample/controller/SamplePDにあるSamplePD.sh(.bat)をmySamplePDにコピーして使用してください。
+</p>
+<h4>SamplePD.sh</h4>
+<pre>
+#!/bin/sh
+
+openhrp-controller-bridge \
+--server-name SamplePDController \
+--out-port angle:JOINT_VALUE \
+--in-port torque:JOINT_TORQUE \
+--connection angle:angle \
+--connection torque:torque
+</pre>
+<p>
+server-name：OpenHRPコントローラの名前を指定します。<br>
+上述では、"SamplePDController"という名前でネームサーバにコンポーネントを登録します。<br>
+</p>
+<p>
+out-port：出力ポート名と出力するプロパティの順にコロンで区切って指定します。<br>
+上述では、出力ポート名"angle"がJOINT_VALUEプロパティを出力するよう指定します。<br>
+</p>
+<p>
+in-port：入力ポート名と入力するプロパティの順にコロンで区切って指定します。<br>
+上述では、入力ポート名"torque"にJOINT_TORQUEプロパティを入力するよう指定します。<br>
+</p>
+<p>
+connection：ポートどうしを接続します。モデル側入出力ポート名、コントローラ側入出力ポート名の順にコロンで区切って指定します。<br>
+上述では、ロボット側ポート"angle"とコントローラ側ポート"angle"を接続します。同様に次の行ではロボット側ポート"torque"とコントローラ側ポート"torque"も接続します。<br>
+</p>
+<p>
+起動オプションの詳細、その他の起動オプションについては<a href="./controller_bridge.html">「コントローラーブリッジ使用マニュアル」</a>をご覧ください。
+</p>
+

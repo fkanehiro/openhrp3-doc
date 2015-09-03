@@ -1,0 +1,55 @@
+title = シミュレーション時間に同期して周期実行されるRTコンポーネントの作成法
+base = ..
+
+<h2>シミュレーション時間に同期して周期実行されるRTコンポーネントの作成法</h2>
+
+<p>
+周期実行タイプのRTコンポーネントをシミュレーション時間に同期して実行されるようにする方法を説明します。<br>
+サンプルは、(OpenHRPをインストールしたディレクトリ)/share/OpenHRP-3.1/sample/example/simulationECにあります。
+</p>
+
+<h3>実行コンテキストの登録</h3>
+
+<p>
+OpenHRPにはシミュレーション時間に同期してRTコンポーネントの周期実行を実現するための実行コンテキストが含まれています。この実行コンテキストは以下の場所に収録されています。<br>
+</p>
+
+<pre>
+(OpenHRPをインストールしたディレクトリ)/lib/SimulationEC.so
+</pre>
+
+<p>
+Windows版の場合は以下の場所です。<br>
+</p>
+
+<pre>
+(OpenHRPをインストールしたディレクトリ)/bin/SimulationEC.dll
+</pre>
+
+<h4>rtc.confの変更</h4>
+
+<p>
+RTコンポーネントが使用するコンフィギュレーションファイルに以下の行を追加します。1行目はシミュレーション用実行コンテキストを使用することを宣言し、以下の行は指定したディレクトリからSimulationEC.soをロードすることを設定します。
+</p>
+
+<pre>
+exec_cxt.periodic.type: SimulationEC
+manager.modules.load_path: (OpenHRPをインストールしたディレクトリ)/lib
+manager.modules.preload: SimulationEC.so
+</pre>
+
+<h3>サンプルの実行</h3>
+<ol>
+    <li>GrxUIを起動し、SimulationアイテムとWorld Stateアイテムを作成します。
+    <li>SampleSimulationECCompを起動します。
+    <li>RT System Editor を使用して　SampleSimulationECComp0 をActivateします。
+    <li>シミュレーションを開始します。
+    <li>SampleSimulationECCompの起動画面に　onExecute と周期的に表示されれば、成功です。
+</ol>
+
+<h3>注意事項</h3>
+
+<ul>
+<li>このシミュレーション用の実行コンテキストは生成時にSimulationアイテムへの登録処理を実行しますので、この実行コンテキストを使用するRTコンポーネントは、必ずSimulationアイテム生成後に起動して下さい。</li>
+<li>周期実行の時刻になるとRTコンポーネントの処理が開始され、その処理が終了するまでシミュレーションの処理は待ち状態に入ります。すなわち、RTコンポーネントの処理がどんなに長時間かかるものであってもシミュレーション世界では一瞬で終わることになります。従ってRTコンポーネントの実行周期時間にはRTコンポーネントの処理時間よりも必ず長い時間を設定して下さい。</li>
+</ul>

@@ -1,0 +1,16 @@
+title = OpenHRP3 サンプル動画
+base  = ..
+
+<ul>
+
+ <li><a href="../movie/simple_vehicle.mpg">車輪型機構のシミュレーション例</a></li>
+
+ <li><a href="../movie/liftup.mpg">ヒューマノイドの持ち上げ動作の例</a></li>
+
+ <li><a href="http://www.generalrobotix.com/product/choromet/index.htm" target="_blank">チョロメテ</a>による
+  <a href="../movie/choropunch.mpg">空手パンチ・キック動作</a>と
+  <a href="../movie/choromet.mpg">体操動作</a></li>
+ </li>
+
+</ul>
+

@@ -1,0 +1,28 @@
+title = Robot State View
+base  = ..
+
+<h2>Robot State View</h2>
+<p>
+Here we explain the various elements that compose Robot State View.
+</p>
+<p align=center>
+<img src="../img_new/um_013.png">
+</p>
+
+<ul>
+<ol>
+<li>Robot name<br>
+A particular robot can be selected from list box, when multiple robots are existed in Item.
+</li>
+<li>Joint list<br>
+Displays the list of robots' Joint information.
+</li>
+<li>Sensor list<br>
+Displays the list of Sensor information.
+</li>
+</ol>
+</ul>
+This shows the Robot State View, when sample project "SamplePD.xml" is loaded.
+
+
+

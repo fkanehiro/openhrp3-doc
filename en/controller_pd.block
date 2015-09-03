@@ -1,0 +1,373 @@
+title = Controller Building Guide<br> (Walking Pattern)
+base  = ..
+
+<h2> Overview </h2>
+
+<p>
+Here we describe the procedure of building a controller as an OpenRTM component, which makes a robot 
+walk by PD-control based on a walking pattern file.
+</p>
+
+<h2> Creating files </h2>
+
+<p>
+First, create a new folder as the working folder. (For example, let's say <i>"mySamplePD".</i>)<br>
+Prepare following three files in the above working folder.
+</p>
+
+Under "mySamplePD/etc/"
+<ul>
+<li>Walking Pattern Files</li>
+  <ul>
+	<li>angle.dat	(Joint angle data of controller)</li>
+	<li>vel.dat  	(Joint angular velocity data of controller)</li>
+  </ul>
+<li>Gain File</li>
+  <ul>
+	<li>PDgain.dat	(Gain of Controller)</li>
+  </ul>
+</ul>
+
+<p>Note:<br>
+We have prepared sample files and placed in <i>"OpenHRP3/sample/controller/SamplePD/etc/"</i>.
+As for testing purpose, you can use these files by simply copying them in to <i>"mySamplePD/etc/"</i>. 
+<br>
+Meanwhile if you are using binary packages distributed with Beta4 release, please be remined to use 
+the sample files placed in <i>"OpenHRP3/sample/controller/SamplePD/etc/"</i>, according to the appropriate 
+environment as shown below.
+<ul>
+ <li>On Ubuntu : /usr/share/</li>
+ <li>On Windows : OpenHRPSDK/share/</li>
+</ul>
+</p>
+
+
+<h3> Walking Pattern File </h3>
+
+<p>
+Here we explain about the format of Waking Pattern File(angle.dat, vel.dat).
+</p>
+
+<pre>
+Time  &lt;Joint-Data where JointID=0&gt;  &lt;Joint-Data where JointID=1&gt; ....  &lt;Joint-Data where JointID=n&gt;
+</pre>
+<p>
+One line corresponds to one frame, and each data in a line are delimited by tab.
+Time refers to the time-duration elapsed from starting-time. And Joint-data refers to Joint-angle(in 
+angle.dat) or Joints' angular-velocity(in vel.dat).
+</p>
+
+<p>
+For instance, 29 joint-data of 6701 frames has been expressed in the given sample files for 14 
+seconds. 
+</p>
+
+
+<h3> Gain File </h3>
+
+<p>
+Gain file is used to keep records of PD-control gains. Basically it consists of a collection of 
+P-gains and D-gains. Each line corresponds to JointID number. An arbitrary number of P-gains and 
+D-gains (corresponding with JointID) can be written per line, delimiting with spaces.<br>
+Concretely it can be described as follows:
+</p>
+
+<pre>
+P-Gain D-Gain (&lt;= JointID = 0)
+P-Gain D-Gain (&lt;= JointID = 1)
+...
+P-Gain D-Gain (&lt;= JointID = n)
+</pre>
+
+
+<h3> Generating the Skeleton </h3>
+<p>
+Let's generate the skeleton of the component. It is the SamplePD component having one Inport 
+named "angle" and one OutPort named "torque".
+</p>
+
+<h4> Case of RTC BUilder </h4>
+<p>
+Start RTC Builder.
+Refer to the <a href="http://www.openrtm.org/openrtm/en/node/4601" target="_blank">RTCBuilder-1.1.0</a> of an OpenRTM manual for the details of RTC Builder. <br>
+Open a basic profile input page, and set up as shown in Fig. 1. 
+</p>
+<p align="center">
+<img src="../img_new/RtcBuilderBasic.png"><br>
+Fig.1 : RTC Builder Basic
+</p>
+<p>
+Open a activity page, and set up as shown in Fig. 2.
+</p>
+<p align="center">
+<img src="../img_new/RtcBuilderActivity.png"><br>
+Fig.2 : RTC Builder Activity
+</p>
+<p>
+Open a data port page, and set up as shown in Fig. 3.
+</p>
+<p align="center">
+<img src="../img_new/RtcBuilderDataPort.png"><br>
+Fig. 3 : RTC Builder DataPort
+</p>
+<p>
+Open a language and environment page, and set up as shown in Fig. 4.
+In the case of Linux, please check "Use old buid environment".
+</p>
+<p align="center">
+<img src="../img_new/RtcBuilderLanguage.png"><br>
+Fig. 4 : RTC Builder Language and environment
+</p>
+<p>
+Return to a basic profile input page, and push code generation button to generate the skeleton of the component.
+</p>
+
+<h2> Programming </h2>
+
+<p>
+In this section we describe you about programing concepts we have used, inside the generated source.
+</p>
+
+<h3> SamplePD.h </h3>
+
+<p>
+Edit the generated source file "<i>SamplePD.h"</i> as described below.
+</p>
+<p>
+First, uncomment both <i>"onActivated"</i> method and <i>"onExecute"</i> method to make them 
+accessible within source.
+</p>
+
+<p>
+Now, add various members that use controller, as shown below.
+</p>
+
+<pre>
+private: 
+  int dummy; 
+  std::ifstream angle, vel;       // Joint-angle, Joints' angular-velocity
+  double *Pgain;                  // Array of Pgain
+  double *Dgain;                  // Array of Dgain
+  std::vector&lt;double&gt; qold;       // Preserve previous Joint-angle 
+</pre>
+
+
+<h3> SamplePD.cpp </h3>
+
+<p>
+First, we declare header file includes and macro.
+</p>
+
+<pre>
+#include &lt;iostream&gt;
+
+#define DOF (29)       // Degree of freedom
+#define TIMESTEP 0.002 // Time-step(time unit) of simulation
+
+// File group
+#define ANGLE_FILE "etc/angle.dat"
+#define VEL_FILE   "etc/vel.dat"
+#define GAIN_FILE  "etc/PDgain.dat"
+
+namespace {
+  const bool CONTROLLER_BRIDGE_DEBUG = false;
+}
+</pre>
+
+<p>
+Now, implement the method we declared in <i>"SamplePD.h"</i>.
+</p>
+
+<p>
+Contructor can be added by <i>"SamplePD::SamplePD"</i>.
+</p>
+
+<pre>
+SamplePD::SamplePD(RTC::Manager* manager)
+  : RTC::DataFlowComponentBase(manager),
+    // &lt;rtc-template block="initializer"&gt;
+    m_angleIn("angle", m_angle),
+    m_torqueOut("torque", m_torque),
+    
+    // &lt;/rtc-template&gt;
+    dummy(0),
+    qold(DOF)
+{
+</pre>
+<p>
+After <i>"SamplePD::onInitialize()"</i> is called, the walking pattern file is opened and 
+the PD gain values are taken from the gain file and substitute to the variables. 
+</p>
+<pre>
+RTC::ReturnCode_t SamplePD::onInitialize()
+{
+  // Registration: InPort/OutPort/Service
+  // &lt;rtc-template block="registration"&gt;
+  // Set InPort buffers
+  addInPort("angle", m_angleIn);
+
+  // Set OutPort buffer
+  addOutPort("torque", m_torqueOut);
+
+  // Set service provider to Ports
+
+  // Set service consumers to Ports
+
+  // Set CORBA Service Ports
+
+  // &lt;/rtc-template&gt;
+
+  // &lt;rtc-template block="bind_config"&gt;
+  // Bind variables and configuration variable
+
+  Pgain = new double[DOF];
+  Dgain = new double[DOF];
+
+  // Open joint-angle file
+  angle.open(ANGLE_FILE);
+  if (!angle.is_open()){
+    std::cerr &lt;&lt; ANGLE_FILE &lt;&lt; " not found" &lt;&lt; std::endl;
+  }
+
+  // Open joint angular-velocity file
+  vel.open(VEL_FILE);
+  if (!vel.is_open()){
+    std::cerr &lt;&lt; VEL_FILE &lt;&lt; " not found" &lt;&lt; std::endl;
+  }
+
+  // Open gain file and substitute to array
+  std::ifstream gain;
+  gain.open(GAIN_FILE);
+  if (gain.is_open()){
+    for (int i=0; i&lt;DOF; i++){
+      gain &gt;&gt; Pgain[i];
+      gain &gt;&gt; Dgain[i];
+    }
+    gain.close();
+  }else{
+    std::cerr &lt;&lt; GAIN_FILE &lt;&lt; " not found" &lt;&lt; std::endl;
+  }
+
+  // Ensure data length of torque and the joint-angle port by degree-of-freedom(DOF) of the robot
+  m_torque.data.length(DOF);
+  m_angle.data.length(DOF);
+
+  // &lt;/rtc-template&gt;
+  return RTC::RTC_OK;
+}
+</pre>
+
+<p>
+<i>"SamplePD::~SamplePD"</i> method is to release arrays and close the file.
+</p>
+
+<pre>
+  if (angle.is_open()) angle.close();
+  if (vel.is_open()) vel.close();
+  delete [] Pgain;
+  delete [] Dgain;
+</pre>
+
+<p>
+Initializing is done by <i>"RTC::ReturnCode_t SamplePD::onActivated"</i>.
+</p>
+
+<pre>
+RTC::ReturnCode_t SamplePD::onActivated(RTC::UniqueId ec_id)
+{
+  std::cout &lt;&lt; "on Activated" &lt;&lt; std::endl;
+  angle.seekg(0);
+  vel.seekg(0);
+
+  // Update the values of joint-angle InPort.
+  if(m_angleIn.isNew()){
+    m_angleIn.read();
+  }
+
+  // Preserve the values of previous frame.
+  for(int i=0; i &lt; DOF; ++i){
+    qold[i] = m_angle.data[i];
+  }
+
+  return RTC::RTC_OK;
+}
+</pre>
+
+<p>
+Edit the <i>"RTC::ReturnCode_t SamplePD::OnExecute"</i> method. This method is called in every step 
+of simulation to update the commands. 
+</p>
+
+<pre>
+RTC::ReturnCode_t SamplePD::onExecute(RTC::UniqueId ec_id)
+{
+  if( CONTROLLER_BRIDGE_DEBUG )
+  {
+    std::cout &lt;&lt; "onExecute" &lt;&lt; std::endl;
+  }
+
+  // Update the values of joint-angle InPort.
+  if(m_angleIn.isNew()){
+    m_angleIn.read();
+  }
+
+  double q_ref, dq_ref;
+  angle &gt;&gt; q_ref; vel &gt;&gt; dq_ref;// skip time
+  
+  
+  // Calculate torque of each joint
+  for (int i=0; i&lt;DOF; i++){
+    angle &gt;&gt; q_ref;
+    vel &gt;&gt; dq_ref;
+    double q = m_angle.data[i];
+    double dq = (q - qold[i]) / TIMESTEP;
+    qold[i] = q;
+    
+    m_torque.data[i] = -(q - q_ref) * Pgain[i] - (dq - dq_ref) * Dgain[i];
+  }
+  
+  // Outputs torque
+  m_torqueOut.write();
+  
+  return RTC::RTC_OK;
+}
+</pre>
+<br>
+
+
+<h2> Compile </h2>
+
+<h3>On Linux </h3>
+
+<p>
+A file called "Makefile" will be generated automatically. On Linux 
+environments, compiling is done by using this Makefile. 
+</p>
+
+<pre>
+make -f Makefile.SamplePD
+</pre>
+
+
+<h3>On Windows </h3>
+
+<p>
+"CMakeList.txt" for CMake will be generated automatically. <br>
+When Doxygen is not installed, please open CMakeList.txt by an editor and comment out the following line. 
+<pre>
+# check doxygen installed
+#find_package(Doxygen)
+#if(DOXYGEN_FOUND STREQUAL "NO")
+#    message(FATAL_ERROR "Doxygen not found.")
+#endif()
+</pre>
+
+<p>
+Please start GUI of CMake, set up required contents, choose the version of VC++, and generate a solution file.<br>
+Please open the created solution file (*. sln) and build. <br>
+For details, please refer to  
+<a href="http://www.openrtm.org/openrtm/en/node/4623" target="_blank">Compile</a>
+of OpenRTM manuals.<br>
+</p>
+
+

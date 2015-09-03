@@ -1,0 +1,41 @@
+title = The simulation using a virtual joint
+base = ..
+
+<h2>Overview</h2>
+
+<p>
+If a virtual joint is set up between the links of a separate model, constraint force can be generated between the specified links. <br>
+The constraint force in alignment with the specified axis is generated noting that two links are connected with ball joint.<br>
+When this is used, for example, you can make a robot hang down from the iron bar.<br>
+<p align="center">
+<img src="../img_new/ExtraJoint.png"><br>
+Fig 1: Extra Joint Sample
+</p>
+Here, the procedure of setting up a virtual joint is explained. <br>
+</p>
+
+<h2>Creation of a extra joint </h2>
+<p>
+Items are set up like other simulations and a project is created. <br>
+Please right-click the ExtraJoint folder of an item view and choose "create" from a menu.<br>
+Selection of the created ExtraJoint item will display the contents on a property view. Please edit this. <br>
+The meaning of a property is as follows. <br>
+</p>
+
+<div>
+<table border="1">
+<tr><td>name</td><td>Name of the virtual joint</td></tr>
+<tr><td>link1Name</td><td>Name of the link which has received ball joint</td></tr>
+<tr><td>link2Name</td><td>Name of the link to which ball joint is attached</td></tr>
+<tr><td>object1Name</td><td>The model name of link1Name</td></tr>
+<tr><td>object2Name</td><td>The model name of link2Name</td></tr>
+<tr><td>link1LocalPos</td><td>Connection (joint) position in the local coordinate of the link1Name link</td></tr>
+<tr><td>link2LocalPos</td><td>Connection (joint) position in the local coordinate of the link2Name link</td></tr>
+<tr><td>jointType</td><td>The number of constraint axes. xyz:three each other orthogonal axes. xy: two orthogonal axes to the axis specified by jointAxis. z:one axis specified by jointAxis. </td></tr>
+<tr><td>jointAxis</td><td>>A unit vector is specified by the local coordinate of the link1Name link. The meaning of a vector changes by specification of jointType. </td></tr>
+</table>
+</div>
+
+<h2>Execution of a sample </h2>
+Please start GrxUI and load project ExtraJoint.xml. <br>
+Please start a simulation. <br>

@@ -1,0 +1,95 @@
+title = Item View
+base  = ..
+
+<h2>Item View概要</h2>
+<p>
+Item Viewを構成する各種要素について説明します。
+</p>
+<p align=center>
+<img src="../img_new/um_002.png">
+</p>
+
+<ul>
+<ol>
+<li>プロジェクトホルダー<br>
+シミュレーションの設定を管理している各アイテムが保存されています。<br />
+右クリックすることで、新規作成、読み込み、保存等ができます。プロジェクト名を変えたいときは右クリック→"名前を付けて保存"によって別名で保存することにより行います。<br />
+プロジェクトはxml形式でファイルに保存されます。
+</li>
+<li>Simulation ホルダー<br>
+Simulationアイテム用のホルダーです。<br />
+右クリックすることで作成、全アイテム削除ができます。複数のSimulationアイテムを持つことができますが、同時に有効なのは１つだけです。
+</li>
+<li>Simulation アイテム<br>
+シミュレーションの時間や積分方法などを管理するアイテムです。<br />
+右クリックすることでプロパティの復元、名前の変更、削除ができます。<br>
+<a href="./um_simulation_view.html">"シミュレーション View"</a>で内容を編集することができます。プロパティの復元を実行すると、プロジェクトに保存された設定に戻すことができます。
+</li>
+<li>Model ホルダー<br>
+Modelアイテム用のホルダーです。
+右クリックすることで新規作成、読み込み、全アイテム削除ができます。複数のModelを持つことができます。<br />
+新規作成したモデルアイテムは、<a href="./howtoeditmodel.html">"GrxUIを用いたモデル作成"</a>を用いて編集することができます。
+</li>
+<li>Model アイテム（ロボット）<br>
+モデルを記述したVRMLファイルです。ロボットの表示は、コントローラを持つことができるモデルを示します。<br />
+右クリックすることで名前の変更や再読み込み、環境モデルへの変更等ができます。
+</li>
+<li>Model アイテム（環境）<br>
+モデルを記述したVRMLファイルです。環境の表示は、コントローラを持つことができないモデルを示します。<br />
+右クリックすることで名前の変更や再読み込み、ロボットモデルへの変更等ができます。
+</li>
+<li>World State ホルダー<br>
+World Stateアイテム用のホルダーです。<br />
+右クリックすることで作成、読み込み、全アイテム削除ができます。複数のWorld Stateアイテムを持つことができますが、同時に有効なのは１つだけです。
+</li>
+<li>World State アイテム<br>
+シミュレーションのログを管理するアイテムです。<br />
+右クリックすることでログの読み出しや保存ができます。
+</li>
+<li>Collision Pair ホルダー<br>
+Collision Pairアイテム用のホルダーです。<br>
+右クリックすることで全アイテム削除ができます。複数のCollision Pairを持つことができます。<br>
+Collision Pairは<a href="./um_collision_view.html">"コリジョン View"</a>で追加、編集ができます。
+</li>
+<li>Collision Pair アイテム<br>
+衝突計算を行うモデルの組み合わせを管理するアイテムです。<br>
+右クリックすることで名前の変更、削除などができます。
+</li>
+<li>Graph Contents ホルダー<br>
+Graph Contentsアイテム用のホルダーです。<br>
+右クリックすることで作成、全アイテム削除ができます。複数のGraph Contentsを持つことができますが、同時に有効なのは１つだけです。<br>
+</li>
+<li>Graph Contents アイテム<br>
+グラフ表示の内容を管理するアイテムです。<br />
+右クリックすることで名前の変更、削除などができます。
+Graph Contentsは<a href="./um_graph_view.html">"グラフ View"</a>で編集できます。
+</li>
+<li>Python Script ホルダー<br>
+Python Scriptアイテム用のホルダーです。<br>
+右クリックすることで作成、読み込み、全アイテム削除ができます。複数のPython Scriptを持つことができますが、同時に有効なのは１つだけです。<br>
+</li>
+<li>Python Script アイテム<br>
+Python Scriptファイルです。<br>
+右クリックすることで削除、保存などができます。<br>
+有効なPython Scriptは<a href="./um_texteditor_view.html">"テキストエディタ View"</a>で編集できます。
+</li>
+<li>PPAlgorithm ホルダー<br>
+PPAlgorithm アイテム用のホルダーです。<br />
+右クリックすることで作成、全アイテム削除ができます。複数のPPAlgorithmを持つことができますが、同時に有効なのは１つだけです。<br>
+</li>
+<li>PPAlgorithm アイテム<br>
+Path Planningパラメーターを管理するアイテムです。<br />
+右クリックすることで名前の変更、削除などができます。<br>
+PPAlgorithmは<a href="./um_property_view.html">"プロパティ View"</a>で編集できます。
+</li>
+
+</ol>
+<ul>
+<li>アイテムをダブルクリックすることで、有効/無効を切り替えることができます。無効の場合アイテム名が"(アイテム名)"のように括弧付きになります。</li>
+<li>アイテム選択すると<a href="./um_property_view.html">"プロパティ View"</a>に詳細が表示されます。</li>
+</ul>
+</ul>
+
+
+
+

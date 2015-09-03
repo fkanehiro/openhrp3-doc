@@ -1,0 +1,539 @@
+title = Installing OpenHRP3 on Windows
+base  = ..
+
+<h2>Table of contents</h2>
+<p>
+<ul>
+ <li>Installation from a source code </li><br>
+ It is the usual installation procedure. We explain on this page. 
+  <ol type="1">
+   <li><a href="#check_env">Before you begin</a></li>
+   <li><a href="#env_set">Setup Environment</a></li>
+    <ol type="I">
+     <li><a href="#install_vc">Installing Visual C++ Compiler</a></li>
+     <li><a href="#install_jdk">Installing JDK</a></li>
+     <li><a href="#install_othres">Installing supported softwares</a></li>
+     <li><a href="#install_cmake">CMake</a></li>
+     <li><a href="#extract_package">Extracting OpenHRP3 Package</a></li>
+    </ol>
+   <li><a href="#compile">Compilation</a></li>
+    <ol type="I">
+     <li><a href="#cmake">Generating Build-files with CMake</a></li>
+     <li><a href="#main_compile">Project Compilation using Visual C++</a></li>
+      <ol type="A">
+       <li><a href="#open_sln">How to open project</a></li>
+       <li><a href="#build">Building the Project</a></li>
+      </ol>
+    </ol>
+   <li><a href="#install_grxui">Installation of Eclipse and GrxUI plug-in</a></li>
+   <ol type="I">
+    <li><a href="#install_eclipse">Installation of Eclipse</a></li>
+    <li><a href="#install_eclipse">Installation of GrxUI plug-in</a></li>
+    <ol type="disc">
+     <li><a href="#install_grxui_jar">Installation of compiled GrxUI plug-in</a></li>
+     <li><a href="#install_grxui_build">Installation of creating GrxUI plug-in from a source code</a></li>
+      <ol type="A">
+       <li><a href="#config_eclipse">Eclipse settings</a></li>
+       <li><a href="#install_grxui_">GrxUI plug-in's Import / Compile / Export / Install</a></li>
+        <ol type="i">
+         <li><a href="#install_grxui_import">Import</a></li>
+         <li><a href="#install_grxui_compile">Compile</a></li>
+         <li><a href="#install_grxui_export">Export</a></li>
+         <li><a href="#install_grxui_install">Install</a></li>
+        </ol>
+      </ol>
+    </ol>
+  </ol>
+</ul>
+
+<ul  type="disc">
+ <li><a href="#note">Note</a></li>
+ <ul  type="disc">
+  <li><a href="#note">Abolishing bin/dos</a></li>
+  <li><a href="#note">Java compliance level</a></li>
+ </ul>
+</ul>
+</p>
+<p>
+<ul>
+ <li>Installation of OpenHRPSDK </li>
+  We offer the binary package which can try operation of OpenHRP3 and GrxUI by Windows Installer. <br>
+  <ul>
+   <li><a href="./sdk_install.html">Installation of OpenHRPSDK</a></li>
+  </ul>
+</ul>
+</p>
+
+<h2>Before you begin</h2>
+
+<p>
+Please confirm that if your "Computer Name" is not longer than 8 letters and contains alpha-numeric
+letters only. Unless the Nameserver will not be started normally. 
+Please refer <a href="./troubleshooting.html#ns_error">here</a> for more details.
+</p>
+
+<h2 id="env_set">Setup Environment</h2>
+
+<p>
+At first, please install <a href="./required_programs.html">required softwares to compile/run OpenHRP3</a>
+as belowing procedures.
+</p>
+<p>
+Although 32 bit software can run in 64 bit OS, you need to choose either OpenHRP for 32 bit, or for 64bit. Please do not mix them in required softwares.<br>
+In addition, please keep in mind that the Express Edition cannot build 64 bits binary by default. 
+</p>
+<p>
+If you have already installed a compatible version of following software, you can simply skip 
+that part of installation and use the currently installed package. Also you are free to browse 
+and change the installing path and set where ever you wish to install. If you choose 
+a different location instead of default installing path, please beware to specify that in 
+<a href="#cmake_build">"CMake Build"</a> properties explained below.
+</p>
+
+<h3 id="vcinstall">Installing Visual C++ Compiler</h3>
+
+<p>
+Currently we support Visual C++ 2010, Visual C++ 2008 as C++ compiler for Windows.<br> 
+</p>
+
+<p>
+You can use Express Edition(free distributed) as well as commercial editions of Visual C++ provided by Microsoft. 
+If you wish to install the Express Edition, use the following link and download the web-installer of "Visual C++ 2010 Express Edition" or 
+"Visual C++ 2008 Express Edition". Proceed the installation process, according to the installer 
+instructions. You don`t have to change the installer options. Just keep it as default.
+</p>
+
+<ul>
+  <li>
+  <a href="http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express" target="_blank">Visual C++ 2010 Express Edition </a>
+  </li>
+  <li>
+  <a href="http://www.microsoft.com/visualstudio/en-us/products/2008-editions/express" target="_blank">Visual C++ 2008 Express Edition</a>
+  </li>
+  Note:Express Edition cannot build 64 bits binary by default.
+</ul>
+
+<p>
+If it is "Visual Studio 2008 Standard Edition", please install both C++ and C#.
+</p>
+
+
+<h3>Installing JDK</h3>
+
+<p>
+Please download "JDK for windows" from the download page of JavaSE at <a href="http://java.sun.com" target="_blank">http://java.sun.com/</a>.<br>
+Even if you are using 64 bit OS, please install a 32 bit version for 32 bit OpenHRP.
+Currently, we have checked and confirmed the compatibility issues with versions of JDK7.
+</p>
+
+<p>
+Once you run the downloaded file, installer of JDK will be launched.
+Please install as guided by the installer. You can proceed with the default 
+installer settings, witout making any changes.
+</p>
+<br>
+
+<h3>Installing supported softwares</h3>
+
+<h4>Installing with "Environment Configurator"</h4>
+
+<p>
+To complete the environment configuration, there are some other supported softwares other than 
+above mentioned, need to be installed on your system. To make the download and install process 
+of those softwares ease and automate, we have developed and introduced an "Environment Configurator" 
+package, starting from OpenHRP Ver.3.0.3 .
+</p>
+
+<p>
+If you are newly installing OpenHRP3 on your system, please visit 
+<a href="./download.html#download_others">Downloading related softwares</a> page in this site; then
+download and run following package. It will handle rest of the configurations of your system 
+environment.
+</p>
+
+<ul>
+ <li>Environment Configurator -Windows VS2020 64bit: Package-1.2.2_VC10_x64.zip</li>
+ <li>Environment Configurator -Windows VS2010 32bit: Package-1.2.2_VC10.zip</li>
+ <li>Environment Configurator -Windows VS2008: Package-1.2.2_vc9.zip</li>
+ <p>
+ Please note that, this configurator requires "Windows Installer 3.1" and ".NET Framework 3.5" 
+ or later version installed on your system.
+ </p>
+ <ul>
+  <li>
+   "Windows Installer 3.1" should have alrerady been installed on your system, since it comes 
+   with Windows system updates. Detailed referance and installer is available at 
+   <a href="http://support.microsoft.com/kb/893803" target="_blank">here</a>.
+  </li>
+  <li>
+   ".NET Framework 3.5" should have alrerady been installed on your system, since it comes 
+   with VC++ application updates. Detailed referance and installer is available at 
+   <a href="http://www.microsoft.com/downloads/details.aspx?familyid=AB99342F-5D1A-413D-8319-81DA479AB0D7&displaylang=en" target="_blank">here</a>.
+  </li>
+ </ul>
+</ul>
+
+<p>
+If you hope to install those supported softwares individually,
+please go through 
+<a href="./required_programs.html">required softwares to compile/run OpenHRP3</a>.
+</p>
+<br>
+
+<p>
+When you download and extract <i>"Package-1.2.2_***.zip"</i>, you will have a folder called 
+<i>Package</i>. Within the <i>Package</i> folder find the
+file <i>"install.cmd"</i> and run it.
+</p>
+
+<blockquote>
+.&yen;Package&yen;Install.cmd
+</blockquote>
+
+<p>
+This will start downloading supported softwares and installing automatically.<br>
+If you are on Windows Vista or 7, run as administrator as shown in Figure1. 
+</p>
+
+<p align="center">
+<img src="../image/install/admin_execute_en.png"><br>
+Figure 1: Run as Administrator
+</p>
+<br>
+
+<p>
+During the installation process, a sub-installer called <i>PyYAML</i> will be pop-out in GUI mode
+(Figure 2). Proceed the sub-installer pressing <i>Next</i> button with the default installer 
+settings.
+</p>
+
+<p align="center">
+<img src="../image/install/pyyaml_installer.png"><br>
+Figure 2: PyYAML Installer
+</p>
+<br>
+
+<p>
+When the installation completed successfully, it will be showed as Figure 3;
+</p>
+
+<p align="center">
+<img src="../image/install/installer_success_en.png"><br>
+Figure 3: Build Completed<br>
+</p>
+<br>
+
+<p>
+After the completion of installation process, you may delete the <i>Package</i> folder.
+</p>
+
+<p>
+Followings are the supported softwares you just installed;
+<ul>
+ <li>OpenRTM-aist Ver.1.1.0</li>
+ <li>python Ver.2.6.6</li>
+ <li>python-2.7.3.amd64 (only 64bit)</li>
+ <li>PyYAML Ver.3.10</li>
+ <li>Jython Ver.2.2.1</li>
+ <li>Eigen Ver.3.0.2</li>
+ <li>CLAPACK Ver.3.1.1</li>
+ <li>Boost Ver.1.44.0</li>
+ <li>Collada Ver.2.3.1</li></ul>
+</p>
+
+<p>
+Except for these, OpenHRP-3.1 series needs some other additional softwares installed 
+individually, to complete the environment configuration. 
+</p>
+
+<h4>CMake</h4>
+
+<p>
+Visit <a href="http://www.cmake.org/cmake/resources/software.html" target="_blank">CMake-2.8</a> release's page and 
+locate ver.2.8 release for Windows; simply download and install it. 
+</p>
+<p>
+Note:<br>
+On Windows environments, having both Cmake-2.4.x and Cmake-2.6.2 installed at the same time, causes 
+problems when generating VC++ project files. Please beware to uninstall previous versions of OpenHRP3,
+before you move to CMake-2.8.
+</p>
+
+<h2 id="extract_package">Extracting OpenHRP3 Package</h2>
+
+<p>
+Please download the OpenHRP3 source archive from 
+"<a href="./download.html#download_openhrp3">Downloading OpenHRP3</a>" 
+page and extract it to a appropriate directory.
+</p>
+
+<p>
+Note:<br> 
+When extracting, we recommond you to select a path where that does not contain 
+commas or unicode characters. Or move the extracted directory 
+to a path where that does not contain those characters. So then you can prevent the 
+failiures that could be occured due to faulty path, during the project build or at runtime. 
+</p>
+<br>
+
+<h2 id="compile">Compile</h2>
+
+<h3 id="cmake">Generating Build-files with CMake</h3>
+<p>
+Launch cmake from "start menu".
+</p>
+<p align="center">
+<img src="../img_new/install/cmake01.png"><br>
+Fig.4 : Launch cmake
+</p>
+<p>
+Locate following fields at the top.
+</p>
+<pre>
+where is the source code:
+where to build the binaries:
+</pre>
+<p>
+Specify OpenHRP3 home directory for them both.<br>
+Then check "show Advanced Values" checkbox.<br>
+Click "Configure" button.
+</p>
+<p align="center">
+<img src="../img_new/install/cmake02.png"><br>
+Fig.5 : Specification of a project 
+</p>
+The dialog which asks the kind of project as shown in Fig. 5 is displayed. 
+Select "Visual Studio 10 Win64" or "Visual Studio 2010" or "Visual Studio 9 2008" in the "Specify the generator for this project", 
+select "Use default native compiler", click "Finish" button. <br>
+A dialog is closed and a project is built. As shown in Fig. 6, the list of a variable identifier and values is displayed in a red bag ground. Please check and change a variable. <br>
+<p align="center">
+<img src="../img_new/install/cmake03.png"><br>
+Fig.6 : the list of a variable identifier and values
+</p>
+
+Errors will be displayed, when it can not locate the path to specified dependant libraries.<br> 
+Click "OK" to pass those errors or "Cancel" to supress further messages.<br>
+Enter the correct path to the appropriate field and click "Configure". <br>
+Repeat the process until all the errors get cleared.
+</p>
+<p>
+If you installation proceeded according to the default settings explained in this tutorial, 
+cmake will configure everything for you automatically. If not you will have to change the 
+appropriate fields and reconfigure.
+</p>
+
+<p>
+You can customize the OpenHRP3 install directory, by changing "CMAKE_INSTALL_PREFIX" field.<br>
+</p>
+<span style="color: red"> 
+*If you use JDK1.7.0_21 or later , please specify the directory which does not contain the space as an installation place. <br>
+*When two or more OpenRTM are installed, please specify OPENRTM_DIR explicitly. </span>
+<p>
+The "OK" button next to the "Configure", will be activated when all the errors are gone.
+Click the "OK" button and build files (project files, Makefile etc) will be generated according to 
+your configuration settings and placed in the source directory. Click "OK" to pass the warning 
+dialogs during the process.
+</p>
+<br>
+
+<h3 id="main_compile">Project Compilation using Visual C++</h3>
+<h4 id="open_sln">How to open project</h4>
+<p>
+Go to the directory where you have extracted OpenHRP3(the home directory of OpenHRP3). 
+Locate and double click on the file called "OpenHRP.sln"(Figure 7).
+</p>
+
+<p align="center">
+<img src="../img_new/install/vc++2008_start_en.png"><br>
+Fig. 7: Solution file
+</p>
+
+<p>
+OpenHRP3 Project will be open in Visual Studio, as shown in Figure 8.
+</p>
+<br>
+
+
+<h4 id="build">Building the Project</h4>
+
+<p>
+Once properties are configured correctly, you can build the project as below.
+</p>
+<p align="center">
+<img src="../img_new/install/vc++2008_build_en.png"><br>
+Fig. 8 : Building the project
+</p>
+<ol>
+ <li>Select Solution Explorer.</li>
+ <li>Select Release.</li>
+ <li>Select "Solution Build" from "Build" menu.</li>
+ <li>Build starts and results will be displayed.</li>
+</ol>
+</p>
+
+<p>
+Finally, the results will be shown as <br><br>
+========== Build:  41 succeeded, 0 failed, 0 up-to-date, 1 skipped ==========<br><br>
+If there is no errors, your build has been succeeded.<br>
+Number of sucesses may differ from version to version, but the important point is whether there is
+0 failed.
+</p>
+
+<p>
+In case of compilation failiure, recheck the 
+<a href="#env_set">Setup Environment</a> from the beginning and confirm 
+whether everything went correctly. Open the "Error list" window of Visual C++, and check the 
+error in detail.(To open Error list: Select 'View' -&gt; 'Other winows' -&gt; 'Error list'.
+Error winodow will be displayed at the bottom of Visual C++ window, along with 'output' window.)
+</p>
+
+<p>
+Next, build the "INSTALL" project to get copied execution files, to the OpenHRP3 install directory 
+where you specified in "CMAKE_INSTALL_PREFIX".
+</p>
+
+<p align="center">
+<img src="../img_new/install/vc++2008_install_build_en.png"><br>
+Fig. 9 : Building INSTALL project
+</p>
+<p>
+Build the INSTALL project using the popup menu, as shown in Figure 9. Popup menu can be viewed as
+ follows;
+<ol>
+  <li>Select "Solution Explorer"</li>
+  <li>Select INSTALL project</li>
+  <li>Right-click on INSTALL project</li>
+</ol>
+</p>
+
+<p>
+Note:<br>
+On Windows Vista or 7 environments, UAC(User Account Control) may prohibit copying files to 
+<i>C:\Program Files</i> folder due to security reasons, and cause to end up the project build with
+errors. In that case, try one of the following method and rebuild the INSTALL project.
+<ul>
+  <li><a href="http://www.howtogeek.com/howto/windows-vista/disable-user-account-control-uac-the-easy-way-on-windows-vista/" target="_blank">Disable UAC</a></li>
+  <li><a href="../img_new/install/vc++2008_launch_as_admin_en.png">Launch VC++ as Administrator</a></li>
+  <li>Change the install folder to a place where UAC does not prohibit</li>
+</ul>
+</p>
+
+<h2 id="install_grxui">Installation of Eclipse and GrxUI plug-in </h2>
+<h3 id="H1">Installation of Eclipse</h3>
+
+<p>
+GrxUI is an Eclipse plug-in and it supports with Eclipse-3.4 . 
+Download Eclipse All-in-one package from 
+<a href="./download.html">Download</a>
+and extract to an appropriate folder. 
+</p>
+
+<p>
+Note:<br>
+If you are on Windows Vista environment and extracting the package using system default extractor, 
+you will be lead to a message saying "Source path is too long". Even we haven't noticed any 
+problems by selecting "skip" option, it is recommend to use a dedicated extracting software for this
+purpose.
+</p>
+
+<h3 id="install_grxui_plugin">Installation of GrxUI plug-in</h3>
+<p>
+Installation of GrxUI on Eclipse plug-in has 
+the method of installing compiled GrxUI plug-in and the method of compiling from sauce code by Eclipse. 
+<ul>
+ <li><a href="#install_grxui_jar">Installation of compiled GrxUI plug-in</a>
+ </li>
+ <li><a href="#install_grxui_build">Installation of creating GrxUI plug-in from a source code </a>
+</a>
+ </li>
+</ul>
+</p>
+<h4 id="install_grxui_jar">Installation of compiled GrxUI plug-in</h4>
+<p>
+It is the method of installing a compiled jar file in Eclipse. <br>
+Please move to GrxUIonEclipse-project-0.9.8\plugins\Eclipse3.4_RTM1.1_WINDOWS from the directory of OpenHRP. <br>
+Please copy com.generalrobotix.ui.grxui_0.9.8.jar to the plugins directory of Eclipse. <br><br>
+Installation is completion now. Please start GrxUI with reference to <a href="./init_grxui.html">Starting and initial setting of GrxUI</a>
+</p>
+<br><br>
+
+<h3 id="install_grxui_build">Installation of creating GrxUI plug-in from a source code </h3>
+<h4 id="config_eclipse">Starting Eclipse</h4>
+Please start Eclipse with reference to <a href="./init_grxui.html">Starting and initial setting of GrxUI</a>.
+
+<h4 id="config_eclipse">Eclipse settings</h4>
+<p>
+First we configure Eclipse compiler settings.<br>
+Select "Window" -&gt; "Preferences" from menubar.<br>
+Select "Java" -&gt; "Compiler" and set "Compiler compliance level" to "5.0" or higher.<br>
+Click "Apply" to save the settings.<br>
+Here you will be asked whether to rebuild the project and click "Yes".
+</p>
+<p>
+Now we configure, the encoding type of workspace.<br>
+Select "General" -&gt; "Workspace" and click "Other" in "Text file encoding".<br>
+The nearby menu will be activated and select "UTF-8" in it.<br>
+Click "Apply" to save the settings, and "OK" to close the window.
+</p>
+<h5 id="install_grxui_src">GrxUI plug-in's Import / Compile / Export / Install</h5>
+<h6 id="install_grxui_import">Import</h6>
+<p>
+Select "Window" -&gt; "Open Perspective" -&gt; "Other" from menubar.<br>
+Select "Plug-in Development" and click "OK".<br>
+You can see the perspective has been changed from "Java" to "Plug-in Development" 
+at the top-right corner.
+</p>
+<p>
+Select "File" -&gt; "Import" from menubar. Project import wizard will be opened.<br>
+Select "General" -&gt; "Existing Projects into Workspace" and click "Next".<br>
+Click the "Browse" button next to "Select root directory" textbox and select 
+"GrxUIonEclipse-project-0.9.8" directory that located in OpenHRP-3.1.0(&beta;) 
+source directory.<br>
+Confirm that "com.generalrobotix.ui.grxui" is checked in the "Projects" list and click "Finish".
+</p>
+<h6 id="install_grxui_compile">Compile</h6>
+<p>
+When you complete the above process, the projejt will be build automatically. You can see 
+the prograss bar indicator at the right-bottum corner of the status bar. It will be 
+disappeared when the project build is completed.
+When a compile error occurs, please refer to <a href="#java_level">here</a>.
+</p>
+
+<h6 id="install_grxui_export">Export</h6>
+<p>
+Select "File" -&gt; "Export" from menubar. Project export wizard will be opened.<br>
+Select "Plug-in Development" -&gt; "Deployable plug-ins and fragments" and click "Next".<br>
+Check "com.generalrobotix.ui.grxui(0.9.8)" in "Available Plug-ins and Fragments" list.<br>
+Then select "Destination" tab and specify an appropriate directory to export the plug-in; 
+then click "Finish".<br>
+This will create "plugins" directory inside the specified directory. The 
+"com.generalrobotix.ui.grxui_0.9.8.jar" that generates inside the "plugins" directory,
+is supposed to be the GrxUI plug-in.
+</p>
+
+<h6 id="install_grxui_install">Install</h6>
+<p>
+Exit from Eclipse and copy the generated GrxUI plug-in directory to the "eclipse/plugins".
+Installation is completion now. Please start GrxUI with reference to <a href="./init_grxui.html">Starting and initial setting of GrxUI</a>
+</p>
+
+<h3 id="note">Note</h3>
+<h4 id="bin_unix">Abolishing bin/dos</h4>
+
+<p>
+Using of <i>bin/dos</i> folder in OpenHRP3 program directory is abolished starting 
+from OpenHRP3.1.0(&beta;2). Therefore if you upgraded from a prior version 
+of OpenHRP3, you may delete <i>bin/dos</i> folder at the path where you specified 
+in CMAKE_INSTALL_PREFIX field.<br>
+Default path is <i>C:/Program Files/OpenHRP/bin/dos</i>.
+</p>
+<br>
+
+<h4 id="java_level">Java compliance level</h4>
+<p>
+When the compile error of Java occurs, the Java compliance level may be wrong. <br>
+Select "Window" -&gt; "Preferences" from menubar.<br>
+Select "Java" -&gt; "Compiler" and set "Compiler compliance level" to "6.0" or higher.<br>
+Click "Apply" to save the settings.<br>
+Here you will be asked whether to rebuild the project and click "Yes".
+</p>

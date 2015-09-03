@@ -1,0 +1,72 @@
+title = Collision View
+base  = ..
+
+<h2>Collision View</h2>
+<p>
+Here we explain the various elements that compose Collision View.
+</p>
+<p align=center>
+<img src="../img_new/um_017.png"><br>
+Collision View
+</p>
+<ul>
+<ol>
+<li>Object1<br>
+List of objects of collision pair(No.1).
+</li>
+<li>Link1<br>
+List of links of collision pair(No.1).
+</li>
+<li>Object2<br>
+List of objects of collision pair(No.2).
+</li>
+<li>Link2<br>
+List of links of collision pair(No.2).
+</li>
+<li>Static<br>
+List of coefficients of static friction.
+</li>
+<li>Sliding<br>
+List of coefficients of dynamic friction.
+</li>
+<li>Culling Thresh<br>
+When calculating contact power, it is the list of the threshold values which thin out a contact point. 
+</li>
+<li>Add button<br>
+Adds collision pair.
+</li>
+<li>Remove button<br>
+Removes selected collision pair.
+</li>
+<li>Edit button<br>
+Edits selected collision pair.
+</li>
+<li>Add All button<br>
+Adds all combinable pairs.
+</li>
+<li>Object1<br>
+Selects objects of collision pair(No.1) in list box.
+</li>
+<li>Link1<br>
+Selects links of collision pair(No.1) in list box. When they do not choose it, all Links becomes target.
+</li>
+<li>Object2<br>
+Selects objects of collision pair(No.2) in list box.
+</li>
+<li>Link1<br>
+Selects links of collision pair(No.2) in list box. When does not choose it, all Links becomes target.
+</li>
+<li>Static<br>
+Inputs coefficient of static friction.
+</li>
+<li>Sliding<br>
+Inputs coefficient of dynamic friction.
+</li>
+<li>Culling Thresh<br>
+Inputs threshold values which thin out a contact point.
+It is considered that the contact point in which distance is below this value is the same point.
+</li>
+</ol>
+</ul>
+
+

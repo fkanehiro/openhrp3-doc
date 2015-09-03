@@ -1,0 +1,27 @@
+title = Process Manager View
+base  = ..
+
+<h2>Process Manager View概要</h2>
+<p>
+Process Manager Viewを構成する各種要素について説明します。
+</p>
+<p align=center>
+<img src="../img_new/um_006.png"><br>
+初期状態
+</p>
+
+<p align=center>
+<img src="../img_new/um_021.png"><br>
+表示エリア内で右クリックした場合
+</p>
+
+<ul>
+<li>表示エリア<br>
+各プロセスのメッセージが表示されます。<br>
+右クリックすることで、上図のようなメニューが表示され、表示するプロセスの選択や、メッセージのクリアができます。
+</li>
+</ul>
+
+
+
+

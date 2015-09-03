@@ -1,0 +1,100 @@
+title = Sample Simulation
+base  = ..
+
+<h2>Launching GrxUI</h2>
+
+<p>
+Launch GrxUI (GUI of OpenHRP3) using the startup script.
+To locate startup script, go to the directory where you extracted OpenHRP3, and 
+then browse;
+<ul>
+ <li>bin/unix/GrxUI.sh (Linux)</li>
+ <li>bin/dos/GrxUI.bat (Windows)</li>
+</ul>
+</p>
+
+<p>
+On Windows, you can easily start GrxUI, by double-clicking the above file browsed 
+through Explorer. Or if you used our Binary installation package(msi) to install 
+OpenHRP3, you can find a shortcut to "GrxUI.bat" in "Start" -> "All Programs" -> 
+"OpenHRP3" menu.</p>
+
+<p>
+On Linux also, you can start GrxUI by simply double-clicking the start script file 
+browsed through File Browser as same as Windows, or by typing the following command 
+in terminal.
+<pre>
+cd OpenHRP3 directory
+cd bin/unix
+./GrxUI.sh
+</pre>
+</p>
+<br>
+
+<h2 >Running simulation</h2>
+<h3 > Opening a Project </h3>
+<p>
+You can open a project by "File" -> "Load Project".
+</p>
+<p align="center">
+<img src="../image/GrxUI_LoadProject.jpg"><br>
+Fig1:  Load Project 
+</p>
+<p>
+A dialog box as shown below, will be opened. Select any project file and then press 
+"Open" button.(Due to version upgrades, the view of the standard collection of project 
+files could be different from the figure below.)
+</p>
+<p align="center">
+<img src="../image/GrxUI_LoadProject2.jpg"><br>
+Fig2: Open Project File 
+</p>
+<h3> Simulation </h3>
+<p>
+Now start the simulation by using "start simulation" button.
+</p>
+<p align="center">
+<img src="../image/GrxUI_StartSimulation.jpg"><br>
+Fig3: Start simulation
+</p>
+<p>
+Does the simulation model in the left-lower corner of GrxUI window, start animating?
+</p>
+<p>
+In our latest version, we have prepared some other simulation samples. Please try the 
+following model too.
+</p>
+<p>
+If the each of the following model animates as it was expected, and then the  simulation 
+completes wihtout showing error messeges, the installation of OpenHRP3 is succeeded.
+</p>
+
+<ul>
+ <li>FallingBoxes.xml
+  <ul>
+   <li>The simulation of some box falling on the floor.</li>
+  </ul>
+ </li>
+ <li>SamplePD.xml
+  <ul>
+   <li>The simulation of walking robot.</li>
+  </ul>
+ </li>
+ <li>SampleLF.xml
+  <ul>
+   <li>The simulation of a robot lifting a box.</li>
+  </ul>
+ </li>
+ <li>SampleSV.xml
+  <ul>
+   <li>The simulation of a cart moving on the floor.</li>
+  </ul>
+ </li>
+ <li>PA10Sample.xml
+  <ul>
+   <li>The simulation of the robot arm "PA10", lifting a box.<br>
+   (Model data of "PA10" was provided by Mitsubishi Heavy Industries,LTD)</li>
+  </ul>
+ </li>
+</ul>
+

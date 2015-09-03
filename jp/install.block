@@ -1,0 +1,107 @@
+title = インストール
+base  = ..
+
+<h2>目次</h2>
+<ul>
+ <li><a href="#support_os">対応OS</a></li>
+ <li><a href="#install">インストール手順</a></li>
+ <li><a href="#sample">GrxUIの起動・サンプルによる確認</a></li>
+ <li><a href="#original">独自環境構築のためのヒント</a></li>
+</ul>
+
+<h2 id="support_os">対応OS</h2>
+
+<p>
+現在のところ、OpenHRP3は以下の環境で動作確認を行っています．
+</p>
+
+<p>
+<ul>
+<li>OS</li>
+<ul>
+<li>Ubuntu Linux 10.04LTS ～12.10 </li>
+<li>Windows XP, 7</li>
+</ul>
+<li>OpenRTM-aist 1.0.0</li>
+<li>OpenRTM-aist 1.1.0</li>
+<li>Eclipse 3.4SR2</li>
+</ul>
+</p>
+
+<p>
+Linuxに関しては、Ubuntu以外のディストリビューションの多くで動作させることが可能だと思われます.
+動作実績のあるOSについては下記のページをご覧ください.
+
+<ul>
+ <li><a href="./os.html">OS/ディストリビューション 対応状況</a>
+</ul>
+
+<p>
+ただし、本サイトのマニュアルや配布パッケージの構成などは公式対応OSを前提としていますので、
+それ以外のOS上で使用する際には、OSの操作やプログラミングに関してより高度な知識を求められる場合があります。
+</p>
+
+<p>
+なお、使い勝手と動作速度の点でWindowsよりもLinux上での使用をおすすめ致します。
+</p>
+
+<h2 id="install">インストール手順</h2>
+
+<p>
+Ubuntu LinuxとWindowsのインストール手順です。
+</p>
+
+<ul>
+ <li>Ubuntu Linux におけるインストール
+ <ul>
+  <li><a href="./inst_ubu_src_3_1.html">ソースコードからインストール</a></li>
+  <li><a href="./inst_ubu_bin_3_1.html">バイナリパッケージからインストール</a></li>
+ </ul><br>
+ <li><a href="./inst_win_3_1.html">Windows におけるインストール</a></li>
+</ul>
+
+<h2 id="sample">GrxUIの起動・サンプルによる確認</h2>
+<p>
+GrxUI on Eclipseの起動、および、動作するための初期設定です。
+</p>
+<ul>
+ <li><a href="./init_grxui.html">GrxUIの起動・初期設定</a></li>
+</ul>
+
+<p>
+インストールが完了したら、以下で説明するサンプルシミュレーションを実行し、
+無事インストールできているかを確認してみてください。
+</p>
+<ul>
+ <li><a href="./simulate_sample.html">サンプルシミュレーションの実行</a></li>
+</ul>
+
+<br>
+<h2 id="original">独自環境構築のためのヒント</h2>
+<p>
+必ずしも、上記ページにおけるインストール手順に従う必要はなく、
+基本的には必要なライブラリ等をインストールして、
+コンパイルのための設定を適切に行えばOKです。
+そのための情報を以下に載せますので、
+使用環境を自由に構築したい場合や、
+公式対応OS以外のOS/ディストリビューションでOpenHRP3を動作させたい場合は、
+参考にしてください。
+</p>
+
+<ul>
+ <li><a href="./required_programs.html">OpenHRP3のコンパイル/実行に必要なソフトウェア</a>
+ <p>
+ OpenHRP3使用のための環境構築に関する説明です.
+ OpenHRP3のコンパイルや実行にあたっては、
+ 本ページで示すソフトウェアをOSにインストールしておく必要があります。
+ </p>
+ </li>
+
+ <li><a href="./howtomake.html">CMakeコマンドによるコンパイル</a>
+ <p>
+ OpenHRP3本体のソースコードをcmakeコマンドを使ってコンパイル、
+ 実行ファイルを生成するための手順を説明します。
+ </p>
+ </li>
+</ul>
+<br><br>

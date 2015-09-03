@@ -1,0 +1,637 @@
+title = Sample to connect a joystick
+base  = ..
+
+<h2>Table of contents</h2>
+<ul type="1">
+ <li><a href="#outline">Overview</a></li>
+ <li><a href="#preparation">Preparation</a></li>
+ <li><a href="#plugin">Creation of joy stick plug-in </a></li>
+ <li><a href="#name_server">Starting Nameserver</a></li>
+ <li><a href="#view">Starting of a joy stick view</a></li>
+ <li><a href="#controler">Generation and starting of a controller component</a></li>
+ <li><a href="#bridge">Controller bridge</a></li>
+ <li><a href="#simulation">Simulation project</a></li>
+ <li><a href="#rtsystemeditor">Connection of the joy stick and controller using RTSystemEditor</a></li>
+ <li><a href="#start">The start of a simulation, and joy stick operation</a></li>
+</ul>
+<ul>
+ <li><a href="#develop">Development of a controller component</a></li>
+ <ul>
+  <li><a href="#rtcbuilder">Creation of the controller component template using RTCBuilder</a></li>
+  <li><a href="#coding">Coding of a controller component</a></li>
+ </ul>
+</ul>
+
+<h2 id="outline">Overview</h2>
+
+<p>
+In this page, we demonstrate a sample robot model of a cart which is cooperated with RTC, that 
+has a wheeled mechanism and can be operated interactively by using joystick. Both Controller 
+and the joystick of this sample are made as OpenRTM components, and they are connected visually
+by using OpenRTM tools.
+</p>
+
+<p>
+The model we concern in this article is the following cart model(Fig.1), that is one of the 
+sample models available in OpenHRP. 
+</p>
+
+<p align="center">
+<img src="../img_new/JoystickSample/model.png" align="top"><br> 
+Fig.1 Cart model
+</p>
+
+<p>
+It has 3 wheels and can be steered by front wheel (the side having one wheel). The model 
+consists of 4 rotational joints in total; one for steering and three for wheels(1 per each 
+wheel).
+</p>
+
+<p>
+The model file of this sample can be located at <i>"sample/model/simple_vehicle.wrl"</i> in OpenHRP3 
+source. Moreover the set of project files and sample programs described below are available 
+at <i>"sample/JoystickControl"</i> in OpenHRP3 source directory.
+</p>
+
+
+<h2 id="preparation">Preparation</h2>
+
+<p>
+Since this sample requires OpenRTM based environment, the following packages/tools are need 
+to be configured on your system.
+</p>
+
+<ul>
+ <li>OpenRTM-aist C++ edition
+  <ul><li>This should have been installed with OpenHRP3. 
+</li></ul>
+ </li>
+ <li>RTSystemEditor.1.1.0ÅARTCBuilder.1.1.0
+  <ul>
+  <li>
+  These are the basic OpenRTM tools, running as Eclipse plug-ins and mainly used to 
+  create/connect RT components. You can setup these easily by using the Eclipse 
+  "All in one package", distributed by OpenRTM-aist.
+  </li>
+  </ul>
+ </li>
+</ul>
+
+<h2 id="plugin">Creation of joy stick plug-in </h2>
+<h3 id="plugin_import">Import</h3>
+<p>
+Please choose "Window"->"Opens Perspective"->"Others..." from a menu.<br>
+Please choose "Plug-in Development" and close with the "OK" button. </p>
+<p>
+Please choose the "File"->"Import..." from a menu, open a dialog, choose "General"->"Existing Projects into Worlspace", and push a "next" button.<br>
+Please push "Browse..." button of the next door of "Select root directory", choose (Installed directory)/sample/JoystickControl/JoystickComponent-project<br>
+Please check that "jp.go.aist.hrp.joystick" is checked by "projects", and push a "Finish" button. <br>
+
+<h3 id="plugin_compile">Compile</h3>
+<p>
+A project is built automatically. After an indicator is displayed on the lower right of a status bar and building is completed, it disappears. 
+</p>
+<h3 id="plugin_export">Export</h3>
+<p>
+Please choose jp.go.aist.hrp.joystick, choose "File"->"Export..." from a right-click menu, open a dialog, choose "Deployable plug-ins and fragments" of "plug-in development", and push a "next" button. <br>
+Please put a check into "jp.go.aist.hrp.joystick (1.0.0)" out of "Available Plug-ins and fragments", 
+then choose an "Destination" tab, set up a directory, and push a "Finish" button.<br>
+A plugins directory is created in the specified directory and jp.go.aist.hrp.joystick_1.0.0.jar is created in it. 
+This is plug-in of a joy stick.<br>
+</p>
+<h3 id="plugin_install">Install</h3>
+<p>
+Please once end Eclipse, copy plug-in of the joy stick to the plugins directory of Eclipse, specify -clean option, and start Eclipse. </p>
+<br><br>
+
+<h2 id="name_server">Starting Nameserver</h2>
+
+<p>
+In CORBA and OpenRTM, the program called "Nameserver" is usually used to refer the objects 
+generated at various places in system. For this, it is necessary to start the name server 
+beforehand. Nameserver can be started by any of the following methods.
+</p>
+
+<ol>
+ <li><b>Starting as OS daemon</b><br>
+  Nameserver can be set to start with OS start-up, by configuring a start-script. For example, 
+  if omniORB is installed in Ubuntu-Linux, the nameserver starts automatically with OS start-up. 
+ </li><br>
+ <li><b>Starting using GrxUI</b><br>
+  When starting GrxUI (GUI of OpenHRP), it examines for the existence of the nameserver and if it is 
+  not started by that time, GrxUI takes actions to start the nameserver automatically. In this case, 
+  nameserver also stops with the termination of GrxUI.
+ </li><br>
+ <li><b>Starting manually</b><br>
+  OmniORB (the standard CORBA system used by OpenRTM-aist and OpenHRP) comes with nameserver start-up 
+  program called <i>"omniNames"</i>; starting this program manually, will start the nameserver.
+  In this case, please start omniNames with appropriate options, as guided in OmniORB documentation.
+ </li>
+</ol>
+
+<p>
+When nameserver is started using GrxUI, GrxUI restart/termination effects on OpenRTM and its 
+components' operation. Therefore it is better if you can keep the nameserver started beforehand. 
+The start-up commands for Ubuntu and Windows are described below.
+</p>
+
+
+<h3>On Ubuntu</h3>
+
+<p>
+In Ubuntu, nameserver starts automatically if OmniORB is installed as a package; let's confirm this.
+</p>
+
+<p>Run following command on Terminal.</p>
+
+<pre>
+$ ps ax | grep omniNames
+</pre>
+
+<p>
+In the output list, check whether <i>"omniNames"</i> is available as a process. If it is available, 
+nameserver is running; and if not, start the nameserver manually as follows.
+</p>
+
+<pre>
+$ sudo /etc/init.d/omniorb4-nameserver start
+</pre>
+
+<p>
+Here we showed using Ubuntu deamon commands, but you can use omniNames commands too.
+</p>
+
+
+<h3>On Windows</h3>
+
+<p>
+When OpenRTM-aist is installed using its installer, a short-cut to start nameserver called 
+<i>"Start Naming Service"</i> will be appeared under <i>"Start menu"</i> &rarr; <i>"OpenRTM-aist 1.1"</i> 
+&rarr; <i>"C++"</i> &rarr; <i>"tools"</i>. When starting nameserver using this short-cut, a console 
+panel window will be displayed as shown below.
+</p>
+
+<p align="center">
+<img src="../img_new/JoystickSample/NameServer.png" align="top"><br>
+Fig.2: The console window appears at nameserver(omniNames) start-up
+</p>
+
+<h3>The cautions in name server starting </h3>
+
+<p>
+The name server omniNames of omniORB saves the contents of registration at a log file, and when rebooted, it revives the former contents of registration. 
+Since this structure may start a problem, cautions are required.
+If a network changes by DHCP etc. and an IP address changes, the system using a name server stops operating well. 
+</p>
+
+<p>
+In order to solve this problem, a former log file is eliminated before name server starting. 
+On Ubuntu
+<pre>
+$ sudo /etc/init.d/omniorb4-nameserver stop
+$ sudo rm /var/log/omninames*
+$ sudo /etc/init.d/omniorb4-nameserver start
+</pre>
+</p>
+
+<h2 id="view">Starting of a joy stick view </h2>
+
+<p>
+Please start Eclipse and start GrxUI on Eclipse. 
+Please choose "Window"->"Show View"->"Others..." from a menu, please choose "Joystick"->"Joystick View", and open the Joystick plug-in View.
+<p align="center">
+<img src="../img_new/JoystickSample/OpenView.png" align="top"><br>
+Fig.3: Dialog of show view
+</p>
+
+<p>
+Here, you can drag and move the center circle by your mouse.
+The location of this circle corresponds with a gradient of the joystick.
+</p>
+
+<p align="center">
+<img src="../img_new/JoystickSample/JoystickView.png" align="top"><br>
+Fig.4: Joystick View
+</p>
+
+<h2>Launch of RTSystemEditor</h2>
+
+<p>
+Please start Eclipse in which RTSystemEditor has been installed.
+</p>
+<p>
+Once Eclipse started, open RTSystemEditor perspective.
+</p>
+<p>
+In "NameServiceView", press "Refresh Name Service" button,
+and you will see an item "JoyStick0|rtc", which corresponds with
+the joystick component you launched earlier on.
+</p>
+<p align="center">
+<img src="../img_new/JoystickSample/RTSystemEditor1.png" align="top"><br>
+Fig.5: NameServiceView
+</p>
+
+When a localhost node is not displayed, Please push the "AddName Server" button on the right of a "Refresh Name Service" button, open a "Connect Name Server" dialog, and register localhost. 
+<p align="center">
+<img src="../img_new/JoystickSample/ConnectNameServer.png" align="top"><br>
+Fig.6: Dialog of connect Name Server
+</p>
+
+<p>
+Click an item JoyStick0|rtc, properties of this component will be
+shown in the Property Window.
+
+<p align="center">
+<img src="../img_new/JoystickSample/RTSystemEditor2.png" align="top"><br>
+Fig7:Property Window
+</p>
+
+<p>
+Next, click the item "Open New System Editor" from File menu or the tool button on Eclipse,
+and make SystemDiagram window visible.
+</p>
+<p>
+From NameServiceView, drag the item Joystick0 to SystemDiagram.
+The component of Joystick will be displayed on SystemDiagram window.
+</p>
+
+<p align="center">
+<img src="../img_new/JoystickSample/RTSystemEditor3.png" align="top"><br>
+Fig.8: A SystemDiagram view and the drug of a component
+</p>
+
+<h2 id="controler">Generation and starting of a controller component </h2>
+
+<p>
+A component development user needs to describe the portion (it is called core logic) corresponding to actual operation of a component. 
+Here, generation and starting of the controller component of a sample are explained. 
+</p>
+
+<h3>Compile of a component</h3>
+
+<p>
+Below "sample/JoystickControl/Controller" has a source file of a sample.Please compile these sauce. 
+</p>
+
+<p>
+In Windows, please start GUI of CMake, set up required contents, choose the version of VC++, and generate a solution file.<br>
+Please open the created solution file (*. sln). Then build and install.
+
+<p>
+In Linux,<pre>
+$ make -f Makefile.JoystickController
+</pre>
+Please compile to be shown above. in a Controlelr directory. 
+</p>
+
+<h3>Starting of a controller component </h3>
+
+<p>
+Let's start the component created for the foregoing paragraph and enable it to use in a system.
+Although there are some methods of starting the component of OpenRTM, in this example, a component is generable by performing the executable file compiled. 
+</p>
+
+<h4>Correction of rtc.conf</h4>
+
+<p>
+You need to change a "rtc.conf" file which is a configuration file of a component before starting a component. <br>
+Since "rtc.conf" is read from a current directory when a component is generated, 
+please determine the directory which places a file suitably. 
+<br>
+The contents of the following in "sample/JoystickControl/Controller/" are used with this sample. <br>
+</p>
+
+<pre>
+corba.nameservers: localhost
+naming.formats: %n.rtc
+exec_cxt.periodic.type: SynchExtTriggerEC
+</pre>
+
+<p>
+Currently, for an OpenHRP controller, naming.formats and exec_cxt need to be set up as above.
+"exec_cxt" specifies the kind of execution context which determines how the "onExecute" function of a component is made to drive. 
+When connecting the component of a controller with OpenHRP and performing a simulation, a controller needs to be performed synchronizing with progress of the time in the world under simulation.
+For this reason, you set up an execution context called "SynchExtTriggerEC". 
+</p>
+
+<p>
+In addition, refer to the manual of OpenRTM for the details of the contents of a setting described to rtc.conf. 
+You are able to describe various setting items also besides having set up in the above, and an original setting item.
+Moreover, how to read rtc.conf also has the method of specifying the file read from a command line.
+Refer to the manual of OpenRTM also for those details. 
+</p>
+
+<h4>Starting of a controller</h4>
+
+<h5>On Windows</h5>
+Please move to this controller directory on a command line, and run JoystickControllerComp.exe. 
+
+<h5>On Linux</h5>
+Please move to this controller directory on a command line, and run ./JoystickControllerComp. 
+
+<h3>The check of the component by RTSystemEditor </h3>
+
+When the component of a controller is started, "JoystickController0|rtc" item is added in "Name Service View" 
+of RTSystemEditor as shown in Fig. 9. 
+</p>
+
+<p align="center">
+<img src="../img_new/JoystickSample/RTSystemEditor4.png" align="top"><br>
+Fig.9: JoystickController in Name Service View 
+</p>
+
+<p>
+The number is added to the last of the name of a component like JoystickController0 because this is the "instance" of a component. 
+With this sample, "JoystickController" is the "model name" (it is also called "Modulename") of a component.
+Since two or more "instances" may be generated, in order to distinguish them, in OpenRTM, a number is added to a model name and it is considered as an instance name. 
+Since "JoystickController0" which is this instance name is referred to by setup explained later, please do not forget.
+</p>
+
+<p>
+Let's drag and display JoystickController as well as a TkJoyStick component on SystemDiagram. 
+</p>
+
+<p align="center">
+<img src="../img_new/JoystickSample/RTSystemEditor5.png" align="top"><br>
+Fig.10: JoystickController0 on SystemDiagram.
+</p>
+
+<p>
+JoystickController0 has four projections and it corresponds to each port which this set up by RTCBuilder. 
+The information of the port is displayed if you place a mouse on a port, please check each port. 
+Port connection of TkJoystick0 and JoystickController0 is made later. 
+</p>
+
+<h2 id="bridge">Controller bridge</h2>
+
+<p>
+In OpenHRP3, the program a "controller bridge" connects the model and controller component for a simulation. 
+This program is an executable file called "bin/openhrp-controller-bridge" in OpenHRP3 directory. 
+(In the case of Windows, it is openhrp-controller-bridge.exe. )
+</p>
+
+<h3 id="ConfigController">A setup of a controller bridge</h3>
+
+<p>
+A command line option can be used for a setup of a controller bridge. 
+With this sample, the shell script file which described the option is created and a controller bridge is started using the file. 
+</p>
+
+<p>
+Please create as follows the file "JoystickController.sh." 
+(This file is in "sample/JoysticControl/Controller".
+In Windows, it is "JoystickController.bat." )
+</p>
+
+<pre>
+openhrp-controller-bridge \
+--server-name JoystickController \
+--out-port angle:JOINT_VALUE \
+--out-port velocity:JOINT_VELOCITY \
+--in-port torque:JOINT_TORQUE
+</pre>
+
+<p>
+The contents of each option are explained below. 
+<ul>
+ <li>--server-name JoystickController<br>
+ Specify the name of the CORBA object generated as a controller factory server of OpenHRP. 
+ It becomes a name of the controller for a simulator and is used for the name of the controller matched with a model on GrxUI. 
+ </li>
+ <li>--out-port angle:JOINT_VALUE<br>
+ Joint angle is assigned to the output port of the name of "angle".
+ It is an output port from the model for a simulation (this sample wheel type mechanism) to a controller. 
+ </li>
+ <li>--out-port velocity:JOINT_VELOCITY<br>
+ Joint angular velocity is assigned to the output port of the name of "velocity". 
+ It is an output port from a model to a controller like the above. 
+ </li>
+ <li>--in-port torque:JOINT_TORQUE<br>
+ Joint torque is assigned to the input port of the name of "torque". 
+ It is an input port from a controller to a model.
+ </li>
+</ul>
+</p>
+
+<h3>Starting of a controller bridge</h3>
+
+<p>
+Let's start a controller bridge.
+In the case of Windows, let's double-click and run "JoystickController.bat" on Explorer. 
+When you start from a command line, please start after moving to a Controller directory. 
+Because, RT component which a controller bridge generates also need a setup of rtc.conf, and read a file from a current directory. 
+</p>
+
+<p>
+Controller bridge will generate RT component corresponding to the model for a simulation according to the contents of the option. 
+Let's check this on RTSystemEditor. 
+Please drag "JoystickController(Robot)0" component to "SystemDiagram" from "Name Service View". 
+This component is the component corresponding to the model for a simulation. </p>
+
+<p align="center">
+<img src="../img_new/JoystickSample/RTSystemEditor6.png" align="top"><br>
+Fig.11: Component "JoystickController(Robot) 0" generated by the controller bridge 
+</p>
+
+<p>
+Please check the port of "JoystickController(Robot)0" on RTSystemEditor. 
+It has the port set up as the options "--out-port" and "--in-port" of the controller bridge. 
+</p>
+
+<p>
+The component required for a simulation was prepared.</p>
+
+<h2 id="simulation">Simulation project </h2>
+
+Arrangement of a model and matching of a controller to a model are created as a simulation project on GrxUI.ÅB
+Let's read the already created project. 
+Refer to the manual of GrxUI for the details about the method of creating a simulation project. 
+</p>
+<p>
+Please start GrxUI and read "SimulationProject.xml" in sample/JoysticControl.
+Then, a wheel type mechanism is displayed on GrxUI. 
+</p>
+
+<p align="center">
+<img src="../img_new/JoystickSample/SimulationProject.png" align="top"><br>
+Fig.12: GrxUI which read the simulation project
+</p>
+
+<p>
+"JoystickController" is specified in "Controller View".
+This is the name specified as the option "--server-name" of the controller bridge.
+Since the controller bridge is already started, it is connected with a server at the time of a simulation start. 
+</p>
+
+<h2 id="rtsystemeditor">Connection of the joy stick and controller using RTSystemEditor</h2>
+
+<p>
+As the preparation before a simulation, 
+Let's connect a joy stick component and a controller component using RTSystemEditor. 
+</p>
+
+<p>
+On SystemDiagram of RTSystemEditor, three components should already be displayed. 
+Please drag a mouse to the "command" port in the lower left of "JoystickController0" from the "pos" port in the upper right of "TkJoystick0." 
+Please push "OK" in a dialog. 
+Between the ports dragged as shown in Fig. 13 is connected with a line. </p>
+
+<p align="center">
+<img src="../img_new/JoystickSample/RTSystemEditor7.png" align="top"><br>
+Fig.13: Connection of TkJoystick0 and JoystickController0 
+</p>
+
+<p>
+This shows that port "pos" and "command" were connected in the OpenRTM system. 
+Now, instructions of a joy stick will be given as a command input to a controller. 
+</p>
+
+<p>
+Similarly, please also connect the port of angle of "JoystickController0", velocity, and torque, and the port of the same name of "JoystickController(Robot)0.
+Now, connection between three components is completed. 
+</p>
+
+<p>
+However, in order to validate the port output from a joy stick, you have to set a joy stick component to active. 
+Please right-click "Joystick0" and choose "Active" from the menu displayed. 
+Then, the color of a joy stick component changes into green from blue. 
+</p>
+
+<p>Preparation of the simulation was completed.
+Please check RTSystemEditor before a simulation start. 
+</p>
+
+<p align="center">
+<img src="../img_new/JoystickSample/RTSystemEditor8.png" align="top"><br>
+Fig.14: RTSystemEditor before a simulation start
+</p>
+
+<p>
+After a simulation start, RTSystemEditor is displayed, as shown in Fig. 15.
+<p align="center">
+<img src="../img_new/JoystickSample/RTSystemEditor9.png" align="top"><br>
+Fig.15: RTSystemEditor after a simulation start
+</p>
+
+</p>
+
+
+<h2 id="start">The start of a simulation, and joy stick operation </h2>
+
+<p>
+Let's start a simulation.
+Please click the "Start Simulation" button of GrxUI. </p>
+
+<p>
+Please operate a joy stick on a joy stick window. 
+The right and left of a joy stick can respond to a steering, the upper and lower sides correspond to driving force, and it can operate a model like radio control.
+</p>
+<br>
+
+<hr>
+<h2 id="develop">Development of a controller component </h2>
+
+<p>
+Please refer a <a href="controller_pd.html"target="_blank">Controller Building Guide (Walking Pattern) </a> about creation of the controller component by RTCBuilder. 
+</p>
+
+<h3 id="coding">Coding of a controller component </h3>
+
+<p>
+You need to describe the portion (it is called core logic) corresponding to actual operation of a component.
+</p>
+<p>
+The function for describing operation is beforehand defined partly by RT component, and a controller can be created by overwriting these functions. 
+The list of the functions which can overwrite is shown below. 
+</p>
+
+<table border="1"><tbody>
+<tr><td>onInitialize</td><td>Initialization processing. It is called only once at the time of the start of a component life cycle. </td></tr>
+<tr><td>onActivated</td><td>When becoming active from a non-active state, it is called only once. </td></tr>
+<tr><td>onExecute</td><td>It is periodically called in an active state. </td></tr>
+<tr><td>onDeactivated</td><td>When becoming un-active from an active state, it is called only once. </td></tr>
+<tr><td>onAborting</td><td>Before being in an ERROR state, it is called only once. </td></tr>
+<tr><td>onReset</td><td>When it will be reset from an error condition and will be in a non-active state, it is called only once. </td></tr>
+<tr><td>onError</td><td>It is periodically called between error conditions. </td></tr>
+<tr><td>onFinalize</td><td>It is only once called at the time of the end of a component life cycle. </td></tr>
+<tr><td>onStateUpdate</td><td>It is called each time after onExecute.</td></tr>
+<tr><td>onRateChanged</td><td>It is called when rate of ExecutionContext is changed. </td></tr>
+<tr><td>onStartup</td><td>When ExecutionContext is started, it is called only once. </td></tr>
+<tr><td>onShutdown</td><td>When ExecutionContext is stopped, it is called only once. </td></tr>
+</tbody></table>
+
+<p>
+Refer to the manual of OpenRTM for the details of the function which can be overwritten. 
+</p>
+
+<p>
+This time, a "onInitialize" method and a "onExecute" method are overwritten. 
+</p>
+
+
+<h4>Overwrite of an onInitialize method</h4>
+<p>
+In "JoystickController.cpp", the onInitialize function is commented out in the state of the first stage. 
+Please delete this comment out and describe as follows.
+</p>
+
+<pre>
+RTC::ReturnCode_t JoystickController::onInitialize()
+{
+  m_torque.data.length(4);
+
+  return RTC::RTC_OK;
+}
+</pre>
+
+<p>
+The size of the double arrangement of the output port of torque was united with the robot's number of joints, and is set as 4. 
+In an input port, the output side determines size. 
+</p>
+
+<p>
+In addition, please also delete comment out of the corresponding function in header file"JoystickController.h." 
+</p>
+
+<h4>Overwrite of an onExecute method </h4>
+<p>
+Please describe the onExecute function as follows. Please also change a header file.
+</p>
+
+<pre>
+RTC::ReturnCode_t JoystickController::onExecute(RTC::UniqueId ec_id)
+{
+  // Data input from a robot 
+  m_angleIn.read();
+  m_velocityIn.read();
+  double steerAngle = m_angle.data[0];
+  double steerVel = m_velocity.data[0];
+  double tireVel = m_velocity.data[1];
+
+  // Data input from a joy stick (user)
+  m_commandIn.read();
+  double steerCommandAngle = 3.14159 * -0.5 * m_command.data[0] / 180.0;
+  double tireCommandVel = m_command.data[1] / 10;
+
+  // Steering torque calculation
+  double steerCommandTorque = 20.0 * (steerCommandAngle - steerAngle) - 2.0 * steerVel;
+
+  // Drive torque calculation
+  double tireCommandTorque = 1.0 * (tireCommandVel - tireVel);
+
+  // The torque output to a robot 
+  m_torque.data[0] = steerCommandTorque;
+  m_torque.data[1] = tireCommandTorque;
+  m_torque.data[2] = tireCommandTorque; 
+  m_torque.data[3] = tireCommandTorque; 
+  m_torqueOut.write(); 
+
+  return RTC::RTC_OK;
+}
+</pre>
+
+<p>
+x value which is an element of the beginning of the input from a joy stick is set as the target angle of a steering, and y value which is the 2nd element is set up as a desired value of drive speed. 
+The torque of a steering and a driving wheel is determined using a suitable gain so that these desired values may be followed. 
+</p>

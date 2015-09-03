@@ -1,0 +1,387 @@
+title = Installing OpenHRP on Windows
+base  = ..
+
+
+<h2 id="env_set">Setup Environment</h2>
+
+<p>
+At first, please install <a href="./required_programs.html">required softwares to compile/run OpenHRP</a>
+as belowing procedures.
+</p>
+
+<p>
+If you have already installed a compatible version of following software, you can simply skip 
+that part of installation and use the currently installed package. Also you are free to browse 
+and change the installing path and set where ever you wish to install. If you choose 
+a different location instead of default installing path, please beware to set the 
+<a href="#compile_property">Complie property</a> in "Property page" as explained below.
+</p>
+
+
+<h3 id="vcinstall">Installing Visual C++ Compiler</h3>
+
+<p>
+Currently we support Visual C++ 2008 as C++ compiler for Windows.<br> 
+(Please beware that, OpenHRP-3.0.0 and later versions will not be compatible with 
+Visual C++ 2005)
+</p>
+
+<p>
+You can use Express Edition as well as commercial editions of Visual C++ provided by Microsoft. 
+If you wish to install the Express Edition, use the following link and download the web-installer of 
+"Visual C++ 2008 Express Edition". Proceed the installation process, according to the installer 
+instructions. You don`t have to change the installer options. Just keep it as default.
+</p>
+
+<ul>
+  <li>
+  <a href="http://www.microsoft.com/express/Downloads/#Visual_Studio_2008_Express_Downloads" target="_blank">Visual C++ 2008 Express Edition (English)</a>
+  </li>
+</ul>
+<p>
+
+
+<h3>Installing JDK</h3>
+
+<p>
+Please download "JDK for windows" from the download page of JavaSE at 
+<a href="http://java.sun.com" target="_blank">http://java.sun.com/</a>.
+Currently, we have checked and confirmed the compatibility issues with versions of JDK5 and JDK6.
+</p>
+
+<p>
+Once you run the downloaded file, installer of JDK will be launched.
+Please install as guided by the installer. You can proceed with the default 
+installer settings, witout making any changes.
+</p>
+<br>
+
+<h3>Installing supported softwares</h3>
+
+<p>
+To complete the environment configuration, there are some other supported softwares other than 
+above mentioned, need to be installed on your system. To make the download and install process 
+of those softwares ease and automate, we have developed and introduced an "Environment Configurator" 
+package, starting with OpenHRP Ver.3.0.3 .
+</p>
+
+<p>
+If you are newly installing OpenHRP on your system, please visit 
+<a href="./download.html#download_others">Downloading related softwares</a> page in this site; then
+download and run following package. It will handle the rest of the configurations of your system 
+environment.
+</p>
+
+<ul>
+ <li>Environment Configurator -Windows: Package-1.0.1.zip</li>
+ <p>
+ Please note that, this configurator requires "Windows Installer 3.1" and ".NET Framework 3.5" 
+ or later version installed on your system.
+ </p>
+ <ul>
+  <li>
+   "Windows Installer 3.1" should have alrerady been installed on your system, since it comes 
+   with Windows system updates. Detailed referance and installer is available at 
+   <a href="http://support.microsoft.com/kb/893803" target="_blank">here</a>.
+  </li>
+  <li>
+   ".NET Framework 3.5" should have alrerady been installed on your system, since it comes 
+   with VC++ application updates. Detailed referance and installer is available at 
+   <a href="http://www.microsoft.com/downloads/details.aspx?familyid=AB99342F-5D1A-413D-8319-81DA479AB0D7&displaylang=en" target="_blank">here</a>.
+  </li>
+ </ul>
+</ul>
+
+<p>
+If you are updating OpenHRP or if you are willing to install those supported softwares individually,
+please go through 
+<a href="./install_windows_dependencies.html">"OpenHRP3 Supported Software's Installation"</a>.
+</p>
+<br>
+
+<p>
+When you download and extract <i>"Package-1.0.1.zip"</i>, you will have a folder called 
+<i>Package</i>. Within the <i>Package</i> folder find the
+file <i>"install.cmd"</i> and run it.
+</p>
+
+<blockquote>
+.&yen;Package&yen;Install.cmd
+</blockquote>
+
+<p>
+This will start downloading supported softwares and installing automatically.<br>
+If you are on Windows Vista, run as administrator as shown in Figure1. 
+</p>
+
+<p align="center">
+<img src="../image/install/admin_execute_en.png"><br>
+Figure 1: Run as Administrator
+</p>
+<br>
+
+<p>
+During the installation process, a sub-installer called <i>PyYAML</i> will be pop-out in GUI mode
+(Figure 2). Proceed the sub-installer pressing <i>Next</i> button with the default installer 
+settings.
+</p>
+
+<p align="center">
+<img src="../image/install/pyyaml_installer.png"><br>
+Figure 2: PyYAML Installer
+</p>
+<br>
+
+<p>
+When the installation completed successfully, it will be showed as Figure 3;
+</p>
+
+<p align="center">
+<img src="../image/install/installer_success_en.png"><br>
+Figure 3: Build Completed<br>
+</p>
+<br>
+
+<p>
+After the completion of installation process, you may delete the <i>Package</i> folder.
+</p>
+
+<p>
+Followings are the supported softwares you just installed;
+<ul>
+ <li>OpenRTM-aist Ver.1.0.0-RELEASE</li>
+ <li>python Ver.2.4.4</li>
+ <li>PyYAML Ver.3.05</li>
+ <li>Jython Ver.2.2.1</li>
+ <li>tvmet Ver.1.7.2</li>
+ <li>CLAPACK Ver.3.1.1</li>
+ <li>Boost Ver.1.35.0</li>
+</ul>
+</p>
+<br>
+
+<h2 id="extract_package">Extracting OpenHRP Package</h2>
+
+<p>
+Please download the OpenHRP3 source archive from 
+"<a href="./download.html#download_openhrp3">Downloading OpenHRP3</a>" 
+page and extract it to a appropriate directory.
+</p>
+
+<p>
+Note:<br> 
+When extracting, we recommond you to select a path where that does not contain 
+spaces, commas, brackets or unicode characters. Or move the extracted directory 
+to a path where that does not contain those characters. So then you can prevent the 
+failiures that could be occured due to faulty path, during the project build or at runtime. 
+</p>
+<br>
+
+
+<h2>Project Compilation using Visual C++</h2>
+
+<h3>How to open project</h3>
+
+<p>
+Go to the directory where you have extracted OpenHRP(the home directory of OpenHRP). 
+Locate and double click on the file called "copyprops.bat".  The property sheet "rtm_config.vsprops" is copied.
+Double click on the file called "OpenHRP.sln"(Figure 4).
+</p>
+
+<p align="center">
+<img src="../image/install/vc++2008_start_en.png"><br>
+Figure 4: Where to start
+</p>
+
+<p>
+OpenHRP Project will be open in Visual Studio, as shown in Figure 5.
+</p>
+<br>
+
+
+<h3 id ="compile_property">Configuring Compile Properties</h3>
+
+<p>
+First, open the property page according to the following steps(Figure 5) :
+<ol>
+<li>select Property Manager</li>
+<li>click ' + ' symbol, to expand the tree, and double click on "OpenHRP"</li>
+</ol>
+</p>
+
+<p align="center">
+<img src="../image/install/vc++2008_property_manager_en.png"><br>
+Figure 5: Property Manager
+</p>
+<br>
+
+<p>
+Then you will lead to the Property Page(Figure 6), where you can configure the references of 
+installed libraries.
+</p>
+
+<p align="center">
+<img src="../image/install/vc++2008_property_page_en.png"><br>
+Figure 6: Property Page
+</p>
+Go through the following steps in Property Page:
+<ol>
+<li value="3">Select User Macro</li>
+<li>The following table describes the concrete meaning of each macro represents(such as 
+installed path, software version etc). Refer the table carefully and set proper values 
+for each macro, to be compatible with your environment. 
+
+<p>
+<table border="1">
+ <tr><th colspan="2">Runtime Settings</th></tr>
+ <tr>
+  <th>DYNAMICS_ENGINE</th>
+  <td>Describe the Dynamics server you use. Specify either ut (The university of Tokyo edition) 
+  or aist (AIST edition). <sup>(1)</sup></td>
+ </tr>
+ <tr>
+  <th>NS_HOST</th>
+  <td>Name server host of the Middlewares(CORBA,OpenRTM). Normally it is 'localhost'. <sup>(1)</sup></td>
+ </tr>
+ <tr>
+  <th>NS_PORT</th>
+  <td>Port number of the Name Server of Middlewares(CORBA,OpenRTM). Default value is preferable. <sup>(1)</sup></td>
+ </tr>
+ <tr>
+  <th>J3D_REND</th>
+  <td>Specify Java3D renderer. If it is blank, OpenGL is used as default Java3D renderer. To use DirectX3D,
+  specify <i>'-Dj3d.rend=d3d'</i> option for the argument. <sup>(1)</sup></td>
+ </tr>
+
+ <tr><th colspan="2">Programing Language Environment Settings</th></tr>
+ <tr>
+  <th>JDK_DIR</th>
+  <td>Path to the JDK installed folder. <sup>(1)</sup></td>
+ </tr>
+ <tr>
+  <th>JYTHON_DIR</th>
+  <td>Path to the Jython installed folder (the folder where 'jython.jar' contains) <sup>(1)</sup></td>
+ </tr>
+
+<tr><th colspan="2">Library Settings</th>
+ <tr>
+  <th>J3DHOME</th>
+  <td>Path to the Java3D installed directory. If it is blank, 
+  <i>"%OPENHRPHOME%/client/gui/Java3D/1.4.1/Windows"</i> is substituted. <sup>(1)</sup></td>
+ </tr>
+ <tr>
+  <th>JMFHOME</th>
+  <td>Path to the JMF installed directory. If it is blank, 
+  <i>"%OPENHRPHOME%/client/gui/JMF2.1.1e/Windows"</i> is substituted. <sup>(1)</sup></td>
+ </tr>
+ <tr>
+  <th>OB_DIR</th>
+  <td>Path to the OmniORB installed folder</td>
+ </tr>
+ <tr>
+ <tr>
+  <th>OMNIORB4_LIBVER</th>
+  <td>Version of 'omniDynamic' library file<br>
+  		Ex: for omniORB-4.1.2, set value as '412'
+  </td>
+ </tr>
+ <tr>
+  <th>OMNI_TRDVER</th>
+  <td>Version of 'omnithread' library file<br>
+  		for omniORB-4.0.7, set value as '32'<br>
+  		for omniORB-4.1.2, set value as '33'
+  </td>
+ </tr>
+ <tr>
+  <th>BOOST_INC_DIR</th>
+  <td>Path of the Boost header files. Normally this is equivalent to Boost Installed path.</td>
+ </tr>
+ <tr>
+  <th>BOOST_LIB_DIR</th>
+  <td>Path of the Boost library files.<br>
+   Normally these libraries are placed in <i>'&lt Boost Installed path&gt\lib'</i> folder</td>
+ </tr>
+ <tr>
+  <th>TVMET_DIR</th>
+  <td>Path to the tvmet installed folder</td>
+ </tr>
+ <tr>
+  <th>CLAPACK_DIR</th>
+  <td>Path to the CLAPACK installed folder</td>
+ </tr> 
+<tr>
+  <th>OPENRTM_DIR</th>
+  <td>Path to the OpenRTM-aist installed folder</td>
+ </tr>
+<tr>
+  <th>OPENRTM_LIBVER</th>
+  <td>Version of OpenRTM-aist library files<br>
+		Ex: for OpenRTM-aist-0.4.2, set value as '042'</td>
+ </tr>
+ <tr><th colspan="2">Working space Settings</th></tr>
+ <tr>
+  <th>INSTALL_DIR</th>
+  <td>The path where OpenHRPs' header files and libraries are placed at.
+   If it is the same path as OpenHRPs' home directory, 
+   just keep the default value '$(SolutionDir)' as it is.</td>
+ </tr>
+</table>
+</p>
+<br>
+<sup>(1)</sup> : Edit <i>'bin/dos/config.bat'</i> to make changes, while runtime.
+</li><br>
+<li>Press OK button to save the configuration.</li>
+</ol>
+
+<p>The above property settings have been written in a XML file called "OpenHRP.vsprops", 
+which placed in OpenHRP source folder. It is possible to edit this file directly, before 
+starting Visual C++ IDE.
+</p>
+<br>
+
+
+<h3 id="build">Building the Project</h3>
+
+<p>
+Once properties are configured correctly, you can build the project as below.
+<ol>
+ <li>Select Solution Explorer.</li>
+ <li>Select Release.</li>
+ <li>Select "Solution Build" from "Build" menu.</li>
+ <li>Build starts and results will be displayed.</li>
+</ol>
+</p>
+
+<p align="center">
+<img src="../image/install/vc++2008_build_en.png"><br>
+Figure 7: Build
+</p>
+
+
+
+<p>
+Finally, the results will be shown as <br><br>
+========== Build:  27 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========<br><br>
+If there is no errors, your build has succeeded.<br>
+Number of sucesses may differ from version to version, but the important point is whether there is 
+0 failed.</p>
+
+<p>
+ In case of compilation failiure, recheck the 
+<a href="./install_windows_3_0.html#env_set">Setup Environment</a> from the beginning and confirm 
+whether everything went correctly. Open the "Error list" window of Visual C++, and check the 
+error in detail.(To open Error list: Select 'View' -> 'Other winows' -> 'Error list'.
+Error winodow will be displayed at the bottom of Visual C++ window, along with 'output' window.)
+</p>
+
+<p>
+Once you built successfully, run 
+<a href="./simulate_sample_3_0.html">Sample Simulation</a>, 
+and check whether the build works correctly.
+</p>
+
+<p>
+Library files of OpenHRP will also be generated in the place where you specified as 'INSTALL_DIR'.
+It is better to append this directory to your computers' PATH, so then in future you can make/run 
+programs which uses OpenHRP.
+</p>

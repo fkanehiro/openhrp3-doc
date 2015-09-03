@@ -1,0 +1,312 @@
+title = ビューシミュレーション機能利用チュートリアル
+base = ..
+
+<h2>概要</h2>
+
+<p>
+ここではサンプルとして付属しているSamplePD(人間型ロボットが歩行を行うサンプル）を拡張して、ビューシミュレーション機能を利用する手順を説明します。主な手順は以下のようになります。
+</p>
+
+<ol>
+<li>カメラモデルの設定
+<li>シミュレーションプロジェクトの設定変更
+<li>コントローラの変更
+<li>コントローラブリッジの設定変更
+</ol>
+
+<p>
+以下これらの手順について詳細に説明します。
+</p>
+
+<h3>カメラモデルの設定</h3>
+
+<p>
+まず最初にロボットあるいは環境オブジェクトに取り付けられているカメラの情報を対応するVRMLファイルに記述します。カメラ情報の記述はVRMLモデルに<a href=create_model.html#VISIONSENSOR>VisionSensorノード</a>を追加することによって行います。
+</p>
+
+<p>
+ここではロボット頭部に2台のカメラが取り付けられていることとします。SamplePDのシミュレーションで用いられているロボットのモデルはsample/model/sample.wrlに収録されています。このファイルを開くと頭部のリンク(CHEST)に以下のように既に2台のカメラが取り付けられています。
+</p>
+
+<div>
+<code>
+<pre>
+ :
+ :
+DEF CHEST Joint {
+      :
+      :
+  children [
+        :
+	:  
+    DEF VISION_SENSOR1 VisionSensor {
+      translation   0.15 0.05 0.15
+      rotation      0.4472 -0.4472 -0.7746 1.8235
+      name          "LeftCamera"
+      type          "DEPTH"
+      sensorId      0
+      children [
+        DEF CAMERA_SHAPE Transform {
+          rotation  1 0 0 -1.5708
+          children [
+            Shape {
+              geometry Cylinder {
+                radius      0.02
+                height      0.018
+              }
+              appearance Appearance {
+                material Material {
+                  diffuseColor      1 0 0
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+    DEF VISION_SENSOR2 VisionSensor {
+      translation   0.15 -0.05 0.15
+      rotation      0.4472 -0.4472 -0.7746 1.8235
+      name          "RightCamera"
+      type          "DEPTH"
+      sensorId      1
+      children [
+        USE CAMERA_SHAPE
+      ]
+    }
+ :
+ :
+</pre>
+</code>
+</div>
+<br>
+
+<p>
+2台のカメラとも、出力する画像のタイプが"DEPTH"（距離画像） となっています。ここでは画像タイプを次のように"COLOR"に変更します。
+</p>
+
+<div>
+<code>
+<pre>
+DEF VISION_SENSOR1 VisionSensor {
+   :
+   :
+  type          <span style="color: red">"COLOR"</span>
+   :
+   :
+}
+DEF VISION_SENSOR2 VisionSensor {
+   :
+   :
+  type          <span style="color: red">"COLOR"</span>
+   :
+   :
+}
+</pre>
+</code>
+</div>
+<br>
+
+<p>
+VisionSensorノードの属性値を変更することで画像のピクセル数や画角などを変更することができます。詳しくは<a href=create_model.html#VISIONSENSOR>こちら</a>を参照して下さい。
+</p>
+<br>
+
+<h3>シミュレーションプロジェクトの変更</h3>
+
+<p>
+モデルにカメラが取り付けられていてもコントローラが画像データを必要としない場合も考えられるため、ビューシミュレーション機能はデフォルトでOFFになっています。これを有効にするにはGrxUIを用いてシミュレーションプロジェクトの設定を変更してビューシミュレーション機能をONにする必要があります。</p>
+
+<p>
+<a href=um_openhrp_view.html>OpenHRP View</a>のsimulationタブを開き、ViewSimulationチェックボックスにチェックを入れて下さい。これでビューシミュレーション機能が有効になります。</p>
+
+<p>
+この段階で一度シミュレーションを実行してみて下さい。ビューシミュレーション機能が有効になっている状態でシミュレーションを開始すると、開始と同時にカメラからの画像を表示するウィンドウが現れ、シミュレーションの進行と共に表示される画像も更新されます。今回の場合2台のカメラが取り付けられているのでウィンドウが2つ表示されます。
+</p>
+<br>
+
+<h3>コントローラの変更</h3>
+
+<p>
+画像を利用した処理をコントローラに追加するため、コントローラのソースファイルsample/controller/SamplePD/SamplePD.{h, cpp}を編集します。</p>
+
+<p>
+ここでは非常に単純な処理ですが画像の中心から左右それぞれ10ピクセル分の情報を表示することにします。</p>
+
+<p>
+まず最初に画像を入力するためのポートを追加します。カラー画像はRTC::TimedLongSeq型のデータとしてコントローラブリッジから出力されますので、このデータ型で"image"という名前を持つ入力ポートを一つ追加します。以下の赤字の部分を追加して下さい。</p>
+
+SamplePD.h
+<div>
+<code>
+<pre>
+     :
+     :
+  // DataInPort declaration
+  // &lt;rtc-template block="inport_declare"&gt;
+  TimedDoubleSeq m_angle;
+  InPort&lt;TimedDoubleSeq&gt; m_angleIn;
+  <span style="color: red">TimedLongSeq m_image;</span>
+  <span style="color: red">InPort&lt;TimedLongSeq&gt; m_imageIn;</span>
+  
+  // &lt;/rtc-template&gt;
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+SamplePD.cpp
+<div>
+<code>
+<pre>
+     :
+     :
+SamplePD::SamplePD(RTC::Manager* manager)
+  : RTC::DataFlowComponentBase(manager),
+    // &lt;rtc-template block="initializer"&gt;
+    m_angleIn("angle", m_angle),
+    <span style="color: red">m_imageIn("image", m_image),</span>
+    m_torqueOut("torque", m_torque),
+     :
+     :
+  // Registration: InPort/OutPort/Service
+  // &lt;rtc-template block="registration"&gt;
+  // Set InPort buffers
+  registerInPort("angle", m_angleIn);
+  <span style="color: red">registerInPort("image", m_imageIn);</span>
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+<p>
+次に実際に画像を入力ポートから読み込んで処理（今回の場合はピクセルの情報を表示）する部分を追加します。こちらも赤字の部分です。</p>
+
+SamplePD.cpp
+<div>
+<code>
+<pre>
+     :
+     :
+RTC::ReturnCode_t SamplePD::onExecute(RTC::UniqueId ec_id)
+{
+     :
+     :
+  if(m_angleIn.isNew()){
+    m_angleIn.read();
+  }
+<span style="color: red">
+  if (m_imageIn.isNew()){
+	  m_imageIn.read();
+#if 0
+      static ::CORBA::ULong startl = 0U;
+	  if(startl == 0)
+	      startl = m_image.tm.sec;
+	  printf("t = %4.1f[s] : ",m_image.tm.sec - startl + m_image.tm.nsec*1e-9);
+#else
+      static int count = 0;
+	  printf("t = %4.1f[s] : ", count*0.1);
+      count++;
+#endif
+#define isBlack(x) (x)==0xff000000
+	  for (int i=320*120+150; i&lt;320*120+170; i++){
+		  if (isBlack(m_image.data[i])){
+			  printf("0");
+		  }else{
+			  printf("1");
+		  }
+	  }
+	  printf("\n");
+  }
+</span>
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+<p>
+今回の場合、入力される画像サイズは320x240です。これはVisionSensorノードのwidth, height属性値で変更することができます。各ピクセルの色情報は1ピクセル当たり4バイトの情報としてTimedLongSeqのdata部分に格納されています。この例では画像データに含まれる時刻の情報と、各ピクセルの色が黒であれば'0'、それ以外であれば'1'を表示するという処理を行っています。
+</p>
+<br>
+	
+<h3>コントローラブリッジの設定変更</h3>
+
+<p>
+次にコントローラブリッジから画像情報を出力させるための設定変更を行います。コントローラブリッジの設定は、Linuxの場合 sample/controller/SamplePD/SamplePD.sh, Windowsの場合 sample/controller/SamplePD/SamplePD.bat で行っていますので、これを以下のように変更します。赤字部分が変更部分です。</p>
+<div>
+<code>
+<pre>
+#!/bin/sh
+
+openhrp-controller-bridge \
+--server-name SamplePDController \
+--out-port angle:JOINT_VALUE \
+<span style="color: red">--out-port left-eye:0:COLOR_IMAGE:0.1</span> \
+--in-port torque:JOINT_TORQUE \
+--connection angle:angle \
+--connection torque:torque <span style="color: red">\
+--connection left-eye:image</span>
+</pre>
+</code>
+</div>
+
+<p>
+最初の変更部分がコントローラブリッジに画像出力を行うポートを追加している部分です。ここではロボットに搭載されている2台のカメラのうち左側のカメラの画像を出力することにします。左側のカメラのsensorIdは0ですので識別子として0を指定します。また出力ポートの名前を"left-eye"、出力周期を0.1[s]毎と指定しています。</p>
+
+<p>
+最後の変更部分はコントローラブリッジとSamplePDコンポーネントの接続を指定する部分です。先ほどSamplePDコンポーネントに追加したimageポートとコントローラブリッジに追加したleft-eyeポートを接続するように指定しています。</p>
+
+<br>
+コントローラブリッジの設定の詳細に関しては<a href=controller_bridge.html>こちら</a>を参照して下さい。
+<br>
+<br>
+
+<h3>シミュレーションの実行</h3>
+
+<p>
+以上で全ての設定変更は完了しましたので、シミュレーションを実行して下さい。コントローラからの以下のような出力が<a href=um_processmanager_view.html>ProcessManager View</a>に表示されます。</p>
+
+<div>
+<code>
+<pre>
+setting naming
+setup RT components
+detected SamplePD0
+detected the ExtTrigExecutionContext of SamplePD0
+connect VirtualRobot0:angle &lt;--&gt; SamplePD0:angle ...ok
+connect VirtualRobot0:torque &lt;--&gt; SamplePD0:torque ...ok
+connect VirtualRobot0:left-eye &lt;--&gt; SamplePD0:image ...ok
+on Activated
+t =  0.0[s] : 00000000000000000001
+t =  0.1[s] : 00000000000000001000
+t =  0.2[s] : 00000000000000000100
+t =  0.3[s] : 00000000000000001000
+t =  0.4[s] : 00000000000000001000
+t =  0.5[s] : 00000000000000010000
+t =  0.6[s] : 00000000000000010000
+t =  0.7[s] : 00000000000000100000
+t =  0.8[s] : 00000000000001000000
+t =  0.9[s] : 00000000000010000000
+t =  1.0[s] : 00000000000100000000
+t =  1.1[s] : 00000000001000000000
+t =  1.2[s] : 00000000001000000000
+t =  1.3[s] : 00000000010000000000
+t =  1.4[s] : 00000000010000000000
+t =  1.5[s] : 00000000010000000000
+t =  1.6[s] : 00000000010000000000
+t =  1.7[s] : 00000000010000000000
+    :
+    :
+    :
+</pre>
+</code>
+</div>
+
+<p>
+<a href=um_3d_view.html>3DView</a>で地面のグリッド表示をONにしている場合、生成される視野画像にもグリッドが含まれますので、視野内のグリッドがロボットの揺動によって移動するため上記のような出力が得られます。</p>

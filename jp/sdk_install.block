@@ -1,0 +1,150 @@
+title = OpenHRPSDKインストール
+base  = ..
+
+<h2>OpenHRPSDK</h2>
+<p>
+OpenHRPSDK は、OpenHRP とそれに関連するの実行ファイル等のバイナリを提供します。<br>
+バイナリは GrxUI の実行ファイル(Eclipse RCP 製品)を含み、ソースからコンパイルすることなく GrxUI の動作をお試しいただくことが可能です。
+</p>
+<br>
+
+<h3>必要なソフトウェア</h3>
+<p>
+OpenHRPSDKには、VS2008(32bit)用、VS2010 32bit用、VS2010 64bit用があります。
+これらに合わせて、次のソフトウェアをインストールして下さい。
+<ul>
+  <li>Java Development Kit (JDK)</li>
+    配布先 : <a href="http://java.sun.com" target="_blank">http://java.sun.com/</a> <br>
+　　32bit用のOpenHRPSDKには、64bitOSでも32bit版をインストールして下さい。
+</ul>
+<p>
+コントローラを作成するために以下のソフトウェアが必要です。
+</p>
+<ul>
+  <li>Visual C++ コンパイラ</li>
+    <a href="http://www.microsoft.com/japan/msdn/vstudio/2008/product/express/" target="_blank">
+		Visual C++ 2008 Express Edition 日本語版</a><br>
+  <li>Python</li>
+    配布先 : <a href="http://www.python.org" target="_blank">http://www.python.org/</a>
+</ul><br>
+または、<br>
+<ul>
+  <li>Visual C++ コンパイラ</li>
+	<a href="http://www.microsoft.com/ja-jp/dev/express/default.aspx" target="_blank">
+		Visual C++ 2010 Express Edition 日本語版</a><br>
+		Express版は(デフォルトでは)64bitバイナリのビルドができませんのでご注意ください。
+  <li>OpenRTM</li>
+  <li>RTCBuilder-1.1.0</li>
+  <li>CMake( バージョン 2.8.5 以上 )</li>
+</ul>
+<p>
+また、Jythonスクリプトを使用する場合、以下のソフトウェアも必要です。
+</p>
+<ul>
+  <li>Jython</li>
+    配布先 : <a href="http://www.jython.org" target="_blank">http://www.jython.org/</a>
+</ul>
+</p>
+
+<h3 id="check_env">インストール前確認</h2>
+<p>
+Name Serverが正常起動しなくなる恐れがありますので、コンピュータ名を半角８文字以内に設定してください。
+詳細については<a href="./troubleshooting.html#ns_error">こちら</a>をご覧ください。
+</p>
+
+<h3>インストール</h3>
+<p>
+<ol>
+<li>古いバージョンがインストールされている場合は、アンインストールし、インストール先のディレクトリを削除します。</li>
+<li><a href="./download.html">OpenHRPSDK</a> をダウンロードしてインストーラを起動します。</li>
+<p align="center">
+<img src="../img_new/sdk_inst_1.png">
+</p>
+<li>ソフトウェア使用許諾契約書に同意しますにチェックし、「次へ」をクリックします。</li>
+<p align="center">
+<img src="../img_new/sdk_inst_2.png">
+</p>
+<li>インストール場所を指定して「次へ」をクリックします。</li>
+<span style="color: red">※ JDK1.7.0_21を使用されている方は、インストール先をスペースを含まないディレクトリに変更して下さい。</span>
+<p align="center">
+<img src="../img_new/sdk_inst_3.png">
+</p>
+<li>画面の指示に従い進めるとインストールが完了します。</li>
+<p align="center">
+<img src="../img_new/sdk_inst_4.png">
+</p>
+<p align="center">
+<img src="../img_new/sdk_inst_5.png">
+</p>
+</ol>
+</p>
+
+<h3>ファイル構成</h3>
+<p>インストールすると指定したディレクトリに以下の構成で作成されます。
+<pre>
+OpenHRPSDK/           # インストールディレクトリ
+    +- bin/           # OpenHRPの実行ファイル, omniNames.exe, 実行に必要なDLL
+    +- etc/           # コントローラ作成に必要な vsprops 設定ファイル
+    +- GrxUI/         # GrxUI の Eclipse RCP 製品
+        +- GrxUI.exe  # GrxUI起動ファイル
+    +- include/       # OpenHRP, OpenRTM, OmniORB, 各ライブラリのヘッダ
+    +- lib/           # OpenHRP, OpenRTM, OmniORB, 各ライブラリのライブラリ
+    +- License/       # ライセンス文書
+    +- share/         # サンプルファイル
+    +- utils/         # RTコンポーネント作成ツール
+    +- epl-v10.html   # Eclipse Public License v1.0 ライセンス文書
+    +- license-en.txt # ライセンス文書(英語)
+    +- license-ja.txt # ライセンス文書(日本語)
+</pre>
+また、環境変数 OPENHRP_SDK_ROOT が (インストールディレクトリ) の値で追加されます。
+</p>
+
+<h3>サンプルシミュレーションの実行</h3>
+<ol>
+<li>(インストールディレクトリ)/bin/GrxUI.batを実行します。</li>
+
+<p align="center">
+<img src="../img_new/sdk_rcp_1.png">
+</p>
+<li>上部のメニュー[ウインドウ]-[設定]を選択して、GrxUIの設定を行います。</li>
+<p>
+<p align="center">
+<img src="../img_new/sdk_rcp_2.png">
+</p>
+<p>
+サーバインストールディレクトリに<br>
+(インストールディレクトリ)/bin<br>
+サーバインストールディレクトリに<br>
+(インストールディレクトリ)/share/OpenHRP-3.1/sample/project<br>
+を設定します。<br>
+<strong>設定後、再起動すると反映されます。</strong>
+</p>
+<li>[GrxUI]-[プロジェクトの読み込み]を選択して、サンプルプロジェクトを読み込みます。</li>
+<p align="center">
+<img src="../img_new/sdk_rcp_3.png">
+</p>
+<p align="center">
+<img src="../img_new/sdk_rcp_4.png">
+</p>
+<p>
+まず、SamplePD.xmlを選んでみましょう。左下のビューにロボットが表示されれば読み込み成功です。
+</p>
+<li>[GrxUI]-[シミュレーション開始]、もしくは左上のメニューボタンを選択してシミュレーションを実行します。</li>
+<p align="center">
+<img src="../img_new/sdk_rcp_5.png">
+</p>
+<p>
+ロボットが歩き始めたら成功です。他のサンプルプロジェクトもお試しください。
+</p>
+
+<h3>コントローラ作成</h3>
+<p>
+Visual C++ 2008を御使用の場合は、 "%OPENHRP_SDK_ROOT%\utils\rtc-template\rtc-template.py" を使用してコンポーネントのスケルトンを作成してください。<br>
+Visual C++ 2010を御使用の場合は、<a href="controller_pd.html" target="_blank">コントローラ作成ガイド(歩行パターン)</a>をご覧ください。
+</p>
+
+<h3>アンインストール</h3>
+<p>
+[コントロールパネル]の[プログラムの追加と削除]から当プログラムを選択して削除してください。
+</p>
+

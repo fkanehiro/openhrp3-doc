@@ -1,0 +1,123 @@
+title = Overview of Simulations
+base  = ..
+
+<h2>Formation of OpenHRP</h2>
+<p>
+OpenHRP is a software that formed as a distributed network system which consists of following 
+server group. However, all the operations correspond to these servers are handled by GrxUI, the 
+standard front-end GUI of OpenHRP. Therefore noramlly users won't have to worry about the existance 
+of these servers.
+</p>
+
+<h3>Servers</h3>
+<h4>DynamicsSimulator</h4>
+<p>
+The DynamicsSimulatorr calculates the forward dynamics of the link system, integrates the 
+obtained acceleration of the joint,and updates the joint speed and joint value. It can 
+handle arbitrary open-link-mechanisms and close-link-mechanicsms. Moreover, when it 
+detects a collision between links, and if there is relative velocity between the links, 
+first it adjust the relative velocity to zero via collision calculation, and then 
+calculates the necessary contact-power not to develope relative acceleration. A part of 
+the result of dynamics calculation can be taken out as sensor output. 
+</p>
+
+<h4>CollisionDetector</h4>
+<p>
+The CollisionDetector server detects contact between the robot and the environment using e geometric 
+model expressed as triangle mesh. It is 
+called from the DynamicsSimulator server during the simulation execution. 
+<a href="http://www.codercorner.com/Opcode.htm" target="_blank">OPCODE</a> is used as the 
+collision detection algorithm. User of DynamicsSimulator server does not need to call the 
+CollisionDetector server directly, but it is called from the DynamicsSimulator if necessary.
+Then the CollisionDetector calculates the contacts and the vector of the reaction-force.
+</p>
+
+<h4>ModelLoader</h4>
+<p>
+ModelLoader server loads model files which contain robot shape(link structure) and mechanism. 
+It goes through the text based model file and convert the data structure in to manageable format 
+upon programming environment. ModelLoader can be used all over the system.
+</p>
+
+<h4>VisionSimulator</h4>
+<p>
+The VisionSimulator server simulates the visual sensor(camera) attached to the robot.
+</p>
+
+<h4>Controller</h4> 
+<p>
+The Controller used to mount the control program of the robot. It links with each robot and 
+manipulate the robot behavior during the simulation. Developing a Controller allows the 
+user to simulate an original user-defined control program. 
+</p>
+
+<h3>CORBA</h3>
+<p>
+OpenHRP has a distributed object system implementation developed based on CORBA (Common 
+Object Request Broker Architecture). Because all the servers are implemented as CORBA 
+objects in OpenHRP, it is possible to run each server on separate machines and distribute 
+the calculation load. Since the communication between servers is done by CORBA, OpenHRP 
+has a platform independent system configuration. Therefore we succeeded with developing 
+each server on most appropriate programming language and OS, and finally connecting them 
+together. Currently, Windows and Linux versions of OpenHRP are available.
+</p>
+<p>
+The IDL files which describe the interface of each server, is necessary to use a server. 
+In OpenHRP, these IDL files are placed in <i>"idl/OpenHRP"</i> directory. When IDL files 
+are given to IDL compiler, it can generate the stubs and skeletons for each programming 
+language.
+</p>
+<br>
+
+<h2>About running simulation</h2>
+<p>
+The following three elements are necessary to run the simulation on OpenHRP.
+</p>
+
+<h3>Model</h3>
+<p>
+The model expresses dynamics parameters and the shape of the robot and the environment 
+on the simulator, by using VRML file. For more details about file format, please refer 
+<a href="./create_model.html">"Robot, Environmental Model Define Format"</a> and about 
+building models, refer <a href=howtoeditmodel.html>"Building Models using GrxUI"</a>.
+</p>
+
+<h3>Controller</h3>
+<p>
+The program that operates the robot represents by model, is controller. 
+The operation-control rules/regulations are defined here. In OpenHRP, the controller is 
+created using <a href="http://www.is.aist.go.jp/rt/" target="_blank">OpenRTM</a>. For more 
+details on this procedure, please refer 
+<a href="./controller_pd.html">"Controller Building Guide (Walking Pattern)"</a>.
+</p>
+
+<h3> Project </h3>
+<p>
+As described above, GrxUI controls models and controllers by becoming a client of various 
+servers. Then, the script that directs this control is called "Project". Project script is 
+edited by GrxUI. For more details about projects, please refer 
+<a href="./create_project.html">"Creating Simulation Project"</a>.
+</p>
+
+<h4> Simulation </h4>
+<p>
+The Simulation allows to configure the simulation environment settings such as duration of 
+simulation execution, gravity settings, etc.
+</p>
+
+<h4> WorldState </h4>
+<p>
+The WorldState sets up the time interval which records a result. 
+</p>
+
+<h4> Model </h4>
+<p>
+This refers to the same model we explained above. But here you decide which model to use, 
+whether to set as environment-model or robot-model and set joint angles, etc.
+</p>
+
+<h4> Collision-Pair </h4>
+<p>
+The collision-pair specifies the collision calculation. You can select, between which models 
+or which links the collision calculation to be done with.
+</p>

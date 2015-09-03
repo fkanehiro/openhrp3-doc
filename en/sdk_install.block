@@ -1,0 +1,154 @@
+title = Installation of OpenHRPSDK
+base  = ..
+
+<h2>OpenHRPSDK</h2>
+
+<p>
+OpenHRPSDK is a binary package containing OpenHRP and an executable file. <br>
+Since it contains the executable file (Eclipse RCP products) of GrxUI, you can try operation of GrxUI, without compiling. 
+</p>
+<br>
+
+<h3>Required software</h3>
+<p>
+OpenHRPSDK has a version for VS2008(32bit), for VS2010 32bit, and for VS2010 64bit.
+Please install the following software according to these. 
+<ul>
+  <li>Java Development Kit (JDK)</li>
+    Distribution place : <a href="http://java.sun.com" target="_blank">http://java.sun.com/</a> <br>
+    Even if you are using 64 bit OS, please install a 32 bit version for 32 bit OpenHRP.
+</ul>
+<p>
+Software required in order to create a controller
+</p>
+<ul>
+  <li>Visual C++ Compiler</li>
+    <a href="http://www.microsoft.com/visualstudio/en-us/products/2008-editions/express" target="_blank">Visual C++ 2008 Express Edition</a><br>
+  <li>Python</li>
+    Distribution place : <a href="http://www.python.org" target="_blank">http://www.python.org/</a>
+  </ul><br>
+  or <br>
+  <ul>
+  <li>Visual C++ Compiler</li>
+    <a href="http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express" target="_blank">Visual C++ 2010 Express Edition </a><br>
+    Note: Express Edition cannot build 64 bits binary by default.
+  <li>OpenRTM</li>
+  <li>RTCBuilder-1.1.0</li>
+  <li>CMake(2.8.5 or above versions)</li>
+</ul>
+ 
+<p>
+The following software is also required to use a Jython script.
+</p>
+<ul>
+  <li>Jython</li>
+    Distribution place : <a href="http://www.jython.org" target="_blank">http://www.jython.org/</a>
+</ul>
+</p>
+
+<h3>Before you begin</h3>
+<p>
+Please confirm that if your "Computer Name" is not longer than 8 letters and contains alpha-numeric
+letters only. Unless the Nameserver will not be started normally. 
+Please refer <a href="./troubleshooting.html#ns_error">here</a> for more details.
+</p>
+
+<h3>Install</h3>
+<p>
+<ol>
+<li>When the old version is installed, please uninstall and delete the directory of an installation place.</li>
+<li>
+Please download <a href="./download.html">OpenHRPSDK</a> and start installer.</li>
+<p align="center">
+<img src="../img_new/sdk_inst_1.png">
+</p>
+
+<li>Please check "I accept the terms in the License Agreement" and click "next". </li>
+<p align="center">
+<img src="../img_new/sdk_inst_2.png">
+</p>
+
+<li>Specify an installation place and click next.</li>
+<span style="color: red"> 
+*If you use JDK1.7.0_21, please specify the directory which does not contain the space as an installation place. <br>
+</span>
+<p align="center">
+<img src="../img_new/sdk_inst_3.png">
+</p>
+<li>Please follow directions of a screen. </li>
+<p align="center">
+<img src="../img_new/sdk_inst_4.png">
+</p>
+<p align="center">
+<img src="../img_new/sdk_inst_5.png">
+</p>
+</ol>
+</p>
+
+<h3>Composition of a file</h3>
+<p>Files are installed in the specified directory as follows. 
+<pre>
+OpenHRPSDK/           # Install directory
+    +- bin/           # The executable file of OpenHRP, omniNames.exe, DLL
+    +- etc/           # The configuration file of vsprops required for controller creation
+    +- GrxUI/         # Eclipse RCP products of GrxUI
+        +- GrxUI.exe  # GrxUI Starting file 
+    +- include/       # OpenHRP, OpenRTM, OmniORB, The header of libraries
+    +- lib/           # OpenHRP, OpenRTM, OmniORB, libraries
+    +- License/       # License document
+    +- share/         # Sample
+    +- utils/         # The tool for RT component creation 
+    +- epl-v10.html   # Eclipse Public License v1.0 License document
+    +- license-en.txt # License document(English)
+    +- license-ja.txt # License document(Japanese)
+</pre>
+Environment variable OPENHRP_SDK_ROOT is added as an installation directory. 
+</p>
+
+<h3>Execution of a sample simulation </h3>
+<ol>
+<li>Please start (Install directory)/bin/GrxUI.bat.</li>
+
+<p align="center">
+<img src="../img_new/sdk_rcp_1.png">
+</p>
+<li> Select "Window"-"preferences" from menu, preferences dialog opens. Click "GRXUI" in the tree on the left-hand side of a dialog, and set up the displayed contents.</li>
+<p>
+<p align="center">
+<img src="../img_new/sdk_rcp_2.png">
+</p>
+<p>
+Please specify (Install directory)/bin as server install directory. 
+Please specify (Install directory)/share/OpenHRP-3.1/sample/project as project install directory. 
+<br>
+<strong>Please reboot GrxUI after a setup. </strong>
+</p>
+<li>To open a project, select 'GrxUI' -> 'Load Project' from menubar.</li>
+<p align="center">
+<img src="../img_new/sdk_rcp_3.png">
+</p>
+<p align="center">
+<img src="../img_new/sdk_rcp_4.png">
+</p>
+<p>
+First, let's choose SamplePD.xml. A robot is displayed on a lower left view.
+</p>
+<li>Select 'GrxUI' -> 'Start Simulation' or click simulation start button.</li>
+<p align="center">
+<img src="../img_new/sdk_rcp_5.png">
+</p>
+<p>
+It is a success when a robot begins to walk. Please try other sample projects. 
+</p>
+
+<h3>Controller creation </h3>
+<p>
+In Visual C++2008, please create the skeleton of a component using "%OPENHRP_SDK_ROOT %\utils\rtc-template\rtc-template.py". <br>
+In Visual C++2010, please refer a <a href="controller_pd.html"target="_blank">Controller Building Guide (Walking Pattern) </a>
+</p>
+
+<h3>Uninstall</h3>
+<p>
+Please delete this program from the [Add/Remove Programs] of the [control panel]. 
+</p>
+

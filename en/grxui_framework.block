@@ -1,0 +1,17 @@
+title = Overview
+base  = ..
+
+<h2> Plug-in Architecture </h2>
+  GrxUI has two types of Plug-in, one for storing data, and another for displaying and modifying them.
+
+  <p align="center">
+  <img src="../image/grxui/fig001.png"><br>
+  Fig.1: Plug-in Architecture
+  </p>
+
+<h2> Existing Plug-in </h2>
+  <p align="center">
+  <img src="../image/grxui/inheritance.png"><br>
+  Fig.2: Plug-in Inheritance
+  </p>
+

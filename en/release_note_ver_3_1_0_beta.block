@@ -1,0 +1,37 @@
+title = Release Note Ver.3.1.0(&beta;)
+base  = ..
+
+<h2>Release Note Ver.3.1.0(&beta;)</h2>
+<p>
+Basic changes and updates from version series 3.0 to 3.1.0(&beta;):
+
+<ul>
+  <li>Implemented GrxUI as an Eclipse plug-in.</li>
+  <li>
+   ModelLoader was rewritten in C++. Because of that, model reading speed was greatly improved the 
+   compared to the series 3.0 that written in Java.
+  </li>
+  <li>Added a feature that supports creating model files on GrxUI.</li>
+  <li>
+   Started using CMake to generate makefiles and project files. This helped to make the directory 
+   structure clear and eazy-to-use.
+  </li>
+  <li>
+   Server Management Panel (Server Manager View) was added to control the starting of CORBA servers 
+   on GrxUI.
+  </li>
+  <li>Bacame compatible with Ubuntu 8.10 .</li>
+  <li>
+   When a link has contact with another object, the contact-point and the contact-force of the simulator 
+   can now get through controller bridge.
+  </li>
+  <li>Simulating a robot mechanism that has a fixed joint other than "Root", is also supported now.</li>
+  <li>Prevented generating a new VirtualRobot, when simulation is restarted.</li>
+  <li>
+   Specifying multiple ID names for --in-port/--out-port options in ControllerBridge is now supported.
+  </li>
+  <li>ControllerBridge now supports with multiple RTC's.</li>
+  <li>"jointAxis" data type that used in sample models, was converted to "SfVec3f".</li>
+</ul>
+<div align="right">03-03-2009</div>
+</p>

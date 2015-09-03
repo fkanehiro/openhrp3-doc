@@ -1,0 +1,171 @@
+title = 関節のバネダンパモデル化の方法
+base = ..
+
+<h2>概要</h2>
+
+<p>
+OpenHRPには、モデル固有のプログラムを、動的に動力学計算ライブラリに組み込む仕組みとして、"BodyCustomizer"というプラグインを用意しています。<br>
+このプラグインを使用すると、あるモデルに対して解析的な逆運動学や関節のバネダンパモデルを組み込むことができます。<br>
+ここでは、サンプルプロジェクトspringJoint.xmlを用いて、関節をバネダンパモデル化する手順を説明します。<br>
+</p>
+
+<h2>モデルの作成</h2>
+<p>
+サンプルでは、2つの箱（リンク）の間に、バネダンパモデルの関節が定義されている、springJointという名前を付けたモデルを使用します。<br>
+ファイルは、(openHRP)/sample/model/springJoint.wrlです。<br>
+通常の関節と同様にバネダンパ化する関節を定義し、バネダンパの変位の方向を設定します。制御対象ではない関節なので、JointIDは設定しなくてもかまいません。<br>
+この関節には、SPRING_JOINTという名前を付けています。<br>
+</p>
+<div>
+<code>
+<pre>
+DEF springJoint Humanoid {
+  version "1.1"
+  humanoidBody [
+    DEF ROOT Joint {
+        :
+        :
+        DEF SPRING_JOINT Joint {
+            translation     0 0 0.05
+            jointType "slide"
+	        jointAxis 0 0 1
+                :
+                :
+</pre>
+</code>
+</div>
+
+<h2>プラグインの作成</h2>
+<h3>ソースコード</h3>
+<p>
+次に、作成したモデル用のプラグインを作成します。サンプルのソースコードは（OpenHRP)/sample/example/customizer/customizer.cppです。<br>
+</p>
+<div>
+<code>
+<pre>
+static const char** getTargetModelNames()
+{
+    static const char* names[] = { 
+        "springJoint",
+        0 };
+	
+    return names;
+}
+</pre>
+</code>
+</div>
+<p>
+このプラグインが、どのモデルに適用されるかを動力学ライブラリに知らせる関数です。モデル定義のファイル中に設定されている名前を羅列した配列を返します。<br>
+GrxUIで読み込んだモデルにつける名前ではありませんので注意してください。<br>
+（OpenHRPでは、同じロボットが複数台ある場合に、個々のロボットを識別するためにファイル中の名前とは別のモデル名を付けられるようになっています。<br>
+同じロボットの個々に、プラグインを指定したい場合は、モデルファイルから別に定義する必要があります。）<br>
+配列の最後には'0'を入れます。<br>
+</p>
+<div>
+<code>
+<pre>
+static BodyCustomizerHandle create(BodyHandle bodyHandle, const char* modelName)
+{
+    Customizer* customizer = 0;
+	
+    string name(modelName);
+    if(name == "springJoint"){
+        customizer = new Customizer;
+        customizer->bodyHandle = bodyHandle;
+        customizer->springT = 1.0e3;    
+        customizer->dampingT = 1.0e1;
+        int jointIndex = bodyInterface->getLinkIndexFromName(bodyHandle, "SPRING_JOINT");
+        if(jointIndex >=0 ){
+            JointValSet& jointValSet = customizer->jointValSet;
+            jointValSet.valuePtr = bodyInterface->getJointValuePtr(bodyHandle, jointIndex);
+            jointValSet.velocityPtr = bodyInterface->getJointVelocityPtr(bodyHandle, jointIndex);
+            jointValSet.torqueForcePtr = bodyInterface->getJointForcePtr(bodyHandle, jointIndex);
+        }
+    }
+
+    return static_cast&lt;BodyCustomizerHandle&gt;(customizer);
+}
+
+</pre>
+</code>
+</div>
+<p>
+createがプラグインの最初に呼び出される関数です。変数の初期化などを行います。<br>
+ここでは、プラグインから、動力学ライブラリの変数にアクセスする方法も記述されています。<br>
+動力学ライブラリからプラグインに対して提供される関数は以下の通りです。
+<table border="1" align="center">
+<tr><td>getLinkIndexFromName</td><td>関節の名前から、ライブラリ中での識別番号に変換します。</td></tr>
+<tr><td>getLinkName</td><td>識別番号から、関節の名前に変換します。</td></tr>
+<tr><td>getJointValuePtr</td><td>識別番号の示す関節の位置を表す変数のポインタを返します。</td></tr>
+<tr><td>getJointVelocityPtr</td><td>識別番号の示す関節の速度を表す変数のポインタを返します。</td></tr>
+<tr><td>getJointForcePtr</td><td>識別番号の示す関節のトルクを表す変数のポインタを返します。</td></tr>
+</table>
+</p>
+<div>
+<code>
+<pre>
+static void destroy(BodyCustomizerHandle customizerHandle)
+{
+    Customizer* customizer = static_cast&lt;Customizer*&gt;(customizerHandle);
+    if(customizer){
+        delete customizer;
+    }
+}
+</pre>
+</code>
+</div>
+<p>
+ destroyは、プラグインが破棄されるときに呼び出される関数です。後処理を行います。
+</p>
+<div>
+<code>
+<pre>
+extern "C" DLL_EXPORT
+NS_HRPMODEL::BodyCustomizerInterface* getHrpBodyCustomizerInterface(NS_HRPMODEL::BodyInterface* bodyInterface_)
+{
+    bodyInterface = bodyInterface_;
+
+    bodyCustomizerInterface.version = NS_HRPMODEL::BODY_CUSTOMIZER_INTERFACE_VERSION;
+    bodyCustomizerInterface.getTargetModelNames = getTargetModelNames;
+    bodyCustomizerInterface.create = create;
+    bodyCustomizerInterface.destroy = destroy;
+    bodyCustomizerInterface.initializeAnalyticIk = 0;
+    bodyCustomizerInterface.calcAnalyticIk = 0;
+    bodyCustomizerInterface.setVirtualJointForces = setVirtualJointForces;
+
+    return &bodyCustomizerInterface;
+}
+</pre>
+</code>
+</div>
+<p>
+このプラグインが提供する関数を動力学ライブラリに知らせるための関数です。実装している関数名を記述した構造体を返します。<br>
+実装していない関数には、'0'を代入してください。<br>
+<br>
+以上４つの関数は、プラグインのなかで必ず実装する必要があります。
+<div>
+<code>
+<pre>
+static void setVirtualJointForces(BodyCustomizerHandle customizerHandle)
+{
+    Customizer* customizer = static_cast&lt;Customizer*&gt;(customizerHandle);
+    JointValSet& trans = customizer->jointValSet;
+    *(trans.torqueForcePtr) = - customizer->springT * (*trans.valuePtr) - customizer->dampingT * (*trans.velocityPtr);
+}
+</pre>
+</code>
+</div>
+<p>
+動力学ライブラリの積分ループで1ステップ毎に呼び出されます。ここに、バネダンパ化のコードを実装します。<br>
+</p>
+<h3>インストール</h3>
+<p>
+作成したソースコードをコンパイルして、ライブラリを作成します。この時、ライブラリ名は、必ず***Customizer.so(dll)のようにします。<br>
+これを、(OpenHRP3インストール先）/share/OpenHRP-3.1/customizerの下にコピーします。<br>
+（サンプルは、OpenHRPのインストール時にインストールされます。）<br>
+動力学ライブラリは、このディレクトにある***Customizer.so(dll)という名前のプラグインをすべてロードします。<br>
+
+
+<h2>サンプルの実行</h2>
+GrxUIを起動し、プロジェクトspringJoint.xmlをloadします。<br>
+シミュレーションを開始すると、床の上に落ちた後、上の箱が上下に震動します。<br>

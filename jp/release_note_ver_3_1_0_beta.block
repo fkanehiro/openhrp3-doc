@@ -1,0 +1,23 @@
+title = リリースノートVer.3.1.0&beta;
+base  = ..
+
+<h2>リリースノートVer.3.1.0&beta;</h2>
+<p>
+Ver.3.0系列からのVer.3.1.0&beta;による主な変更点:
+
+<ul>
+  <li>GrxUIをEclipseプラグイン化しました。</li>
+  <li>モデルローダをC++で書き直しました。3.0のJavaによるものと比べてモデルの読み込み速度が大幅に改善されました。</li>
+  <li>GrxUI上でモデルファイル作成を支援する機能を追加しました。</li>
+  <li>OpenHRPのmakeファイル、プロジェクトファイル作成ツールとしてCMakeを導入し、ディレクトリ構造も扱いやすい形態へと見直しました。</li>
+  <li>GrxUI上で各CORBAサーバの起動をコントロールできるようにサーバー管理パネル(Server Manager View)を追加しました。</li>
+  <li>Ubuntu8.10に対応いたしました。</li>
+  <li>リンクが他の物体と接触しているときにシミュレータ内部における接触点と接触力をコントローラブリッジから取得できるようになりました。</li>
+  <li>Root以外に fixed ジョイントを持つ機構のシミュレーションも可能にしました。</li>
+  <li>シミュレーション再開時新たなVirtualRobotが生成されないようにしました。</li>
+  <li>ControllerBridgeの--in-port、--out-portオプションで複数の識別名を指定できるようにしました。</li>
+  <li>ControllerBridgeで複数のRTCを使えるようにしました。</li>
+  <li>サンプルモデルの jointAxis を SfVec3f 形式に対応しました。</li>
+</ul>
+<div align="right">2009/03/03</div>
+</p>

@@ -1,0 +1,17 @@
+title = Release Note Ver.3.0.6
+base  = ..
+
+<h2>Release Note Ver.3.0.6</h2>
+<p>
+Basic changes in Ver.3.0.6:
+
+<ul>
+  <li>Hence Ver.3.0.6 is now supported for OpenRTM-aist 1.0.0.</li>
+  <li>Fixed a bug that RobotState View is not updated when replay of the simulation.</li>
+  <li>Fixed a bug that the log file of the simulation is not closed.</li>
+  <li>The problem that the Collison vector is not displayed at the recorded movie's, was corrected.</li>
+  <li>Fixed a bug that the recorded movie's was wrong aspect ratio.</li>
+  <li>Temp directory of GrxUI was changed to TMPFS_DIR of config.sh.</li>
+</ul>
+<div align="right">22-06-2009</div>
+</p>

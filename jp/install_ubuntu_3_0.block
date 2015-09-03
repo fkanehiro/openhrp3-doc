@@ -1,0 +1,276 @@
+title = Ubuntu LinuxにおけるOpenHRP3のインストール(Ver.3.0.8)
+base  = ..
+
+<p>
+Ubuntu Linuxの場合、本ページの手順に従うことにより、
+OpenHRP3のインストールを比較的簡単にインストールすることができます。
+現在(OpenHRP Ver.3.0.7)のところ、Ubuntu Linux のバージョン8.04、8.10において、
+この方法を用いることができます。
+</p>
+
+<h2>インストール前確認</h2>
+
+<p>
+OpenHRP は3Dグラフィックを利用するアプリケーションなので、インストールを
+始める前に、お使いのパソコンで3Dグラフィックスを正常に動作できるかを確認する必要があります。
+端末を開いて次のコマンドを実行してください。
+</p>
+
+<pre>$ glxinfo | grep rendering</pre>
+<p> </p>
+
+<ul>
+  <li><p>
+  結果が "direct rendering: Yes"　であれば、<br>
+  　お使いのパソコンが3Dグラフィックをサポートしますので、次のステップへ進んでください。</p>
+  </li>
+  <li><p>
+  結果が "direct rendering: No"　となった場合、<br>
+  　3Dアクセレレーション機能をサポートするグラフィックドライバを導入する必要があります。</p>
+
+  <p>⇒　<a href="./g3d_support.html">グラフィックドライバの導入手法</a></p>
+
+  <p>（注）</p>
+  <ol>
+    <li><p>
+    グラフィックボードによって、上記の手法が適用できない場合もあります。
+    この場合でも、基本的には OpenHRP が動作します。ただし、3Dアクセレレーション機能が有効でないため、
+    OpenHRPの3D表示が遅くなり、効率よく動作しない可能性がありますので、ご了承ください。  </p>
+    </li>
+    <li><p>
+    グラフィックボードに関しては、Linuxにおける3Dアクセレレーション機能の対応度の点で、nVidiaのチップ
+    を積んだものが、お勧めとします。</p>
+    </li>
+  </ol>
+  </li>
+</ul>
+<br>
+
+
+<h2>OpenHRP3 ソースパッケージの展開</h2>
+
+<p>
+本ページの手順においては、OpenHRP3のパッケージに付属のスクリプトを利用します.
+このスクリプトを実行するため、まずはダウンロードしたOpenHRP-xxx.zip
+のソースパッケージを展開しておく必要があります.
+(xxxは3.0.7といったバージョンを示す文字列が入ります。
+ ダウンロードしたファイルのものと置き換えて読んでください。)
+
+</p>
+
+<p>
+OpenHRP3ソースの展開先はどこでも構いませんが、ここではホームディレクトリの
+OpenHRPディレクトリ以下に展開する例を示します。
+端末ウィンドウを起動して、以下のコマンドを入力してください.
+なお、端末ウィンドウは
+Ubuntuメニューの「アプリケーション」-「アクセサリ」-「端末」などから起動できます。
+</p>
+
+<p>
+<pre>
+$ cd 
+$ mkdir OpenHRP
+$ cd OpenHRP
+$ unzip (ソースパッケージダウンロード先)/OpenHRP-xxx.zip 
+</pre>
+
+<p>
+以上の操作でホームディレクトリのOpenHRPディレクトリ以下に、
+OpenHRP3のソースが展開されたOpenHRP-xxxというディレクトリができます。
+</p>
+
+<h2 id="install_script">パッケージ導入スクリプトの実行</h2>
+
+<p>
+OpenHRP3のソースディレクトリ内に、util というディレクトリがあります。
+この中に入っている installPackages.sh に以下の引数を与えて実行します。
+</p>
+<pre>
+$ cd ~/OpenHRP/OpenHRP-xxx/util
+$ ./installPackages.sh packages.list.ubuntu.8.04
+</pre>
+
+<p>
+例ではUbuntu 8.04のケースですが、Ubuntu 8.10の場合 packages.list.ubuntu.8.10 を引数として与えてください。<br>
+途中ライセンス同意を求められたら、全ての項目に対して同意して下さい。<br>
+また全ての確認に対してY(Yes)を選択してください。<br>
+</p>
+
+<p>
+この操作により、
+<a href="./required_programs_3_0.html">OpenHRPのコンパイル/実行に必要なソフトウェア</a>
+の大部分がインストールされます。
+</p>
+
+<p>
+<font color="red">なお、インストールする OpenRTM-aist は OpenRTM-aist-1.0.0-RELEASEです。</font>
+</p>
+<br>
+
+<h2 id="switch_java">Javaの切り替え</h2> 
+
+<p>
+UbuntuではgcjというJava環境も利用可能となっていますが、
+OpenHRPの使用においてはSunによるJava環境を推奨します。
+（これは上述の<a href="#install_script">パッケージ導入スクリプト</a>によりインストールされます。）
+</p>
+
+<p>
+OpenHRP側で使用するJavaを設定することも可能ですが、
+ここではシステムの標準Java環境を切り替えることとします。
+</p>
+
+切り替えは、以下のコマンドで行います。
+<pre>
+$ sudo update-java-alternatives -s java-6-sun
+</pre>
+
+以下のコマンドで、java のバージョンが java-gcj から
+1.6 に切り替わっている事を確認してください。
+
+<pre>
+$ java -version
+java version "1.6.0"
+Java(TM) SE Runtime Environment (build 1.6.0-b105)
+Java HotSpot(TM) Server VM (build 1.6.0-b105, mixed mode)
+</pre>
+
+
+<p><font color="red">注 １</font>
+<ul>
+  ただし、Ubuntu 8.04でjdk1.6をお使いの場合、突然シミュレーションを実行できなくなる事がありますので、 
+  しばらくの間はjdk1.5をご利用ください。
+  <pre>
+  [javaの変更]
+  $ sudo apt-get install sun-java5-jdk
+  $ sudo update-java-alternatives -s java-1.5.0-sun
+  
+  [元に戻す時]
+  $ sudo update-java-alternatives -s java-6-sun
+  
+  [既存のjavaをリスト表示する]
+  $ sudo update-java-alternatives -l
+  </pre>
+  
+  現象としては、何らかのモデルをロードしてから１〜２分程度経過すると、
+  ModelLoader(VRMLモデルパーズサーバ)と他のサーバ間の通信ができなくなるというもので、
+  GUIを立ち上げ直すと元に戻りますが、JDKを1.5にしない限り改善する事はありません。
+</ul>
+</p>
+<br>
+<p><font color="red">注 ２</font>
+<ul>
+  <a href="./troubleshooting_3_0.html#gcj_sun_error">「Ubuntuでアップデートを行うとコンパイルエラー、またはGrxUIの起動時に例外が発生して起動できない」</a><br>
+  不具合が発生することがあります。gcjを使用する予定が無い場合はgcjをアンインストールすることも検討してください。
+</ul>
+</p>
+<br>
+
+
+<h2>コンパイルの準備</h2>
+
+<p>
+OpenHRP3では、コンパイルのための設定を
+ソースディレクトリ中の "Make.vars" というファイルで行います。
+このファイルの設定に関する詳しい説明は
+<a href="./howtomake_3_0.html#make_vars">「MakeコマンドによるOpenHRPのコンパイル」</a>ページにありますが、
+ここでは本ページのインストール手順に合わせてあらかじめ設定されたファイルを用いることとします。
+</p>
+
+<p>
+まず、コマンドライン上でOpenHRP3のソースディレクトリへ移動します。
+</p>
+<pre>
+$ cd ~/OpenHRP/OpenHRP-xxx
+</pre>
+<p>
+ここで、以下のコピー操作により、設定ファイル"Make.vars"を作成します。
+</p>
+<pre>
+$ cp Make.vars.ubuntu.8.10 Make.vars
+</pre>
+<p>
+ここまでデフォルトな選択でインストールを終えた場合、設定ファイル"Make.vars"への修正は不要となります。
+</p>
+<br>
+
+
+<h2>OpenHRP3 のコンパイル</h2>
+
+OpenHRP3 のソースディレクトリより、make コマンドを実行します。
+
+<pre>
+$ make
+</pre>
+
+<p>
+本ページの手順により、必要なソフトウェアのインストールとMake.varsの設定が正しく行われていれば、
+(展開したディレクトリ)/bin 以下にOpenHRP3 の実行ファイル・スクリプトが生成されます。
+</p>
+
+<p>
+コンパイルが終了したら、<a href="./simulate_sample_3_0.html">
+サンプルシミュレーションの実行</a>を行って、正常にコンパイルできていることを確認して
+ください.
+</p>
+<font color=red ><b>！ＮＯＴＩＣＥ！</b></font><br>
+<h3>9.04以降で動作させる場合の注意点</h3>
+<a href="./troubleshooting.html#error_ipv6_localhost">ubuntu9.04以降の環境でGrxUI on EclipseからRTCが動作しない（Linux 対象）</a>にありますとおり<br>
+ipv6が無効な環境の場合、/etc/hostsの
+<pre>::1        localhost ip6-localhost ip6-loopback</pre>
+ipv6のlocalhost設定の行をコメントアウトしてください。
+
+<h2>個別にインストールする必要がなくなったソフトウェア</h2>
+<p>
+この項目はOpenHRP 以前のユーザーに向けた情報です。初めてOpenHRPを使用する
+ユーザーは<a href="#switch_java">「Javaの切り替え」</a>へ読み進めてください。<br
+</p>
+
+<h3>Java 3D</h3>
+
+<p>
+この項目はOpenHRP Ver.3.0.1以前のユーザーに向けた情報です。<br>
+OpenHRP Ver.3.0.1以前では lg3d配布のJava3Dライブラリを使用していましたが、
+
+<ul>
+ <li>JDKも包含するためSUNオフィシャルのJDKと重複して冗長である。</li>
+ <li>lg3dを配布するサーバーがダウンすることがあり、インストール、アップデート時にトラブルを起こすことがある。</li>
+ <li>1.5系バージョンでは深度バッファの取得に不具合がある。(2008/9/19 現在)</li>
+</ul>
+
+などの Java 由来のトラブルを防ぐため、OpenHRP Ver.3.0.2 より SUNオフィシャルの Java3D1.4.1 を
+パッケージに含めて配布することにしましたので、個別に Java 3D をインストールする必要はなくなりました。
+</p>
+
+<p>
+<font color=red ><b>！ＮＯＴＩＣＥ！</b></font><br>
+<h4>lg3d削除</h4>
+lg3dをシステムから削除したい場合は、以下の操作を行ってください。ただし、Ver.3.0.1以前のOpenHRP3をシステムに共存させたい場合は削除しないでください。
+<pre>
+$ sudo aptitude remove lg3d-java3d lg3d-jdk
+</pre>
+そして、Ver.3.0.1以前の<a href="./add_lg3d.html">「パッケージダウンロード先の追加」</a>
+の操作で登録した、
+<pre>
+deb http://javadesktop.org/lg3d/debian stable contrib
+</pre>
+をソフトウェアソースから削除してください。
+</p>
+
+<h3>Java Media Framework (JMF)</h3>
+<p>
+この項目はOpenHRP Ver.3.0.1以前のユーザーに向けた情報です。<br>
+OpenHRP Ver.3.0.1以前では JMF を個別にインストールする必要がありましたが、上記「Java 3D」
+同様の理由よりパッケージに含めて配布することにしました。
+</p>
+
+<h3>OpenRTM-aist</h3>
+<p>
+OpenHRP Ver.3.0.2以前では OpenRTM-aist を個別にインストールする必要がありましたが、Ver.3.0.3から
+パッケージ導入スクリプトでインストールできるようになりました。
+</p>
+
+<h3>tvmet</h3>
+<p>
+Ver.3.0.6から、パッケージ導入スクリプトでインストールできるようになりました。
+</p>

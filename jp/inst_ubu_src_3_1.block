@@ -1,0 +1,321 @@
+title = Ubuntu ソースインストール
+base  = ..
+
+<h2>目次</h2>
+<ul type="1">
+ <li><a href="#check_env">インストール前確認</a></li>
+ <li><a href="#prepare">コンパイル環境の準備</a></li>
+  <ol type="I">
+   <li><a href="#extract">OpenHRP3 ソースパッケージの展開</a></li>
+   <li><a href="#install_script">パッケージ導入スクリプトの実行</a></li>
+  </ol>
+ <li><a href="#compile">コンパイル</a></li>
+  <ol type="I">
+   <li><a href="#cmake">CMakeの実行</a></li>
+   <li><a href="#main_compile">OpenHRP3本体のコンパイル</a></li>
+  </ol>
+ <li><a href="#install_grxui">Eclipse および GrxUI on Eclipseプラグインのインストール</a></li>
+   <ol type="I">
+    <li><a href="#install_eclipse">Eclipseのインストール</a></li>
+    <li><a href="#install_eclipse">GrxUI on Eclipseプラグインのインストール</a></li>
+  <ul type="disc">
+   <li><a href="#install_grxui_jar">コンパイル済みのGrxUIプラグインのインストール</a></li>
+   <li><a href="#install_grxui_build">ソースからGrxUIプラグインを作成してインストール</a></li>
+    <ol type="A">
+     <li><a href="#config_eclipse">Eclipseの設定</a></li>
+     <li><a href="#install_grxui_src">GrxUIプラグインのインポート・コンパイル・エクスポート・インストール</a></li>
+      <ol type="i">
+       <li><a href="#install_grxui_import">インポート</a></li>
+       <li><a href="#install_grxui_compile">コンパイル</a></li>
+       <li><a href="#install_grxui_export">エクスポート</a></li>
+       <li><a href="#install_grxui_install">インストール</a></li>
+      </ol>
+    </ol>
+  </ul>
+</ul>
+
+<ul  type="disc">
+ <li><a href="#note">備考</a></li>
+ <ul  type="disc">
+  <li><a href="#bin_unix">OpenHRP3.1.0&beta;2からの移行</a></li>
+  <li><a href="#java_level">Java 準拠レベル</a></li>
+ </ul>
+</ul>
+
+<h2 id="check_env">1. インストール前確認</h2>
+<p>
+OpenHRP は3Dグラフィックを利用するアプリケーションなので、インストールを
+始める前に、お使いのパソコンで3Dグラフィックスを正常に動作できるかを確認する必要があります。
+端末を開いて次のコマンドを実行してください。
+なお、端末ウィンドウは
+Ubuntuメニューの"アプリケーション"-"アクセサリ"-"端末"などから起動できます。
+</p>
+
+<pre>$ glxinfo | grep rendering</pre>
+<p> </p>
+
+<ul>
+  <li><p>
+  結果が "direct rendering: Yes"　であれば、<br>
+  　お使いのパソコンが3Dグラフィックをサポートしますので、次のステップへ進んでください。</p>
+  </li>
+  <li><p>
+  結果が "direct rendering: No"　となった場合、<br>
+  　3Dアクセレレーション機能をサポートするグラフィックドライバを導入する必要があります。</p>
+
+  <p>⇒　<a href="./g3d_support.html">グラフィックドライバの導入手法</a></p>
+
+  <p>（注）</p>
+  <ul>
+    <li><p>
+    グラフィックボードによって、上記の手法が適用できない場合もあります。
+    この場合でも、基本的には OpenHRP が動作します。ただし、3Dアクセレレーション機能が有効でないため、
+    OpenHRPの3D表示が遅くなり、効率よく動作しない可能性がありますので、ご了承ください。  </p>
+    </li>
+    <li><p>
+    グラフィックボードに関しては、Linuxにおける3Dアクセラレーション機能の対応度の点で、nVidiaのチップ
+    を積んだものがお勧めです。</p>
+    </li>
+    <li><p>
+    VMware等の仮想マシン上ではグラフィックドライバの導入は必要ございませんが、仮想マシンの持つグラフィックドライバにより動作しない可能性がございます。</p>
+    </li>
+  </ul>
+  </li>
+</ul>
+<br>
+
+<h2 id="prepare">2. コンパイル環境の準備</h2>
+<h4 id="extract">OpenHRP3 ソースパッケージの展開</h4>
+<p>
+当サイトの<a href="./download.html#download_openhrp3">「OpenHRP3 本体のダウンロード」</a>
+で承諾ボタンを押下していただいて、OpenHRP3のソースアーカイブをダウンロードし適当なディレクトリ
+に展開してください。<br>
+OpenHRP3ソースの展開先はどこでも構いませんが、ここではホームディレクトリの
+OpenHRPディレクトリ以下に展開する例を示します。<br>
+端末ウィンドウを起動して、以下のコマンドを入力してください。<br>
+</p>
+<pre>
+$ cd 
+$ mkdir OpenHRP
+$ cd OpenHRP
+$ unzip (ソースパッケージダウンロード先)/OpenHRP-xxx.zip 
+</pre>
+<p>
+以上の操作でホームディレクトリのOpenHRPディレクトリ以下に、
+OpenHRP3のソースが展開されたOpenHRP-xxxというディレクトリができます。
+</p>
+<br>
+
+<h4 id="install_script">パッケージ導入スクリプトの実行</h4>
+
+<p>
+OpenHRP3のソースディレクトリ内に、util というディレクトリがあります。
+この中に入っている installPackages.sh に以下のように引数を与えて実行します。
+</p>
+<pre>
+$ cd ~/OpenHRP/OpenHRP-xxx/util
+$ ./installPackages.sh packages.list.ubuntu.10.04
+</pre>
+ubuntu 10.04の場合はpakages.list.ubuntu.10.04、ubuntu 9.10の場合はpakages.list.ubuntu.9.10を引数に与えます
+<p>
+途中ライセンス同意を求められたら、全ての項目に対して同意して下さい。<br>
+また全ての確認に対してY(Yes)を選択してください。<br>
+</p>
+
+<p>
+この操作により、
+<a href="./required_programs.html">OpenHRPのコンパイル/実行に必要なソフトウェア</a>
+の大部分がインストールされます。
+</p>
+
+<p>
+※　OpenRTM1.1.0-RC3を既にインストールしている場合は、以下の操作により削除した後に実行してください。
+</p>
+<pre>
+$ sudo dpkg -r openrtm-aist-doc openrtm-aist-example openrtm-aist-dev openrtm-aist
+$ sudo apt-get clean
+$ sudo apt-get update
+</pre>
+※　既に OpenRTM がソースからインストールされていて、導入スクリプトで指定のパッケージをインストールしたくない場合は packages.list.ubuntu.XX.XX ファイルの指定のパッケージをコメントアウトしてください。
+</p>
+<br>
+
+<h2 id="compile">3. コンパイル</h3>
+<h4 id="cmake">CMakeの実行</h4>
+
+<p>
+OpenHRP3では、コンパイルのための設定をcmakeで行います。
+</p>
+
+<p>
+まず、コマンドライン上でOpenHRP3のソースディレクトリへ移動します。
+</p>
+<pre>
+$ cd ~/OpenHRP/OpenHRP-xxx
+</pre>
+<p>
+ここで、以下の操作によりcmakeを起動します。
+</p>
+<pre>
+$ cmake .
+</pre>
+<p>
+<span style="color: red">※ OpenRTMが複数インストールされている場合、どのOpenRTMに依存するかは検索順で決まるため、明示的にOPENRTM_DIRを指定する必要があります。その場合は下記の ccmake で設定してください。</span>
+</p>
+<p>
+デフォルトな導入の場合、マクロの設定は特に必要ありません。<br>
+インストール先のCMAKE_INSTALL_PREFIX や OpenRTMのディレクトリのOPENRTM_DIR、また、他の依存ファイル、他の依存ライブラリの位置を変更する場合
+</p>
+<pre>
+$ ccmake .
+</pre>
+<p>
+コマンドでマクロの値を適宜設定してください。<br>
+ccmake画面でマクロの値を変更した場合は、
+"c"を入力し、"g"を入力してMakefileを再作成します。
+</p>
+<h4 id="main_compile">OpenHRP3本体のコンパイル</h4>
+
+OpenHRP3 のソースディレクトリより、make コマンドを実行します。
+
+<pre>
+$ make
+$ sudo make install
+$ sudo ldconfig
+</pre>
+
+<p>
+本ページの手順により、必要なソフトウェアのインストールと設定が正しく行われていれば、
+OpenHRP3本体の実行ファイル・スクリプトが生成されます。
+</p>
+
+<h2 id="install_grxui">4. Eclipse、および、GrxUIプラグインのインストール</h3>
+<h3 id="install_eclipse">Eclipseのインストール</h3>
+<p>
+GrxUIはEclipseのプラグインです。現在のバージョンはEclipse3.4に対応しています。<br>
+Eclipseの実行とコンパイルに必須のプラグインをあらかじめ導入した全部入りパッケージを用意しています。<br>
+本サイトの<a href="./download.html">「ダウンロード」</a>ページから、OpenRTMのバージョンにったEclipse 全部入りパッケージを
+ダウンロードして、解凍してください。<br>
+<pre>
+tar xzvf peclipse342_hrpdependencies_linux_ja_20120220.tar.gz
+</pre>
+
+なお、eclipseのSDKパッケージから各個プラグインを導入する場合は、
+OpenHRPのコンパイル/実行に必要なソフトウェアページの<a href="./required_programs.html#eclipse">Eclipse関連</a>を参考にしてください。<br>
+</p>
+
+<h3 id="install_grxui_plugin">GrxUIプラグインのインストール</h3>
+<p>
+GrxUI on Eclipseプラグインのインストールは、コンパイル済みのGrxUIプラグインをインストールする方法とEclipseでソースからコンパイルしてインストールする方法がございます。
+<ul>
+ <li><a href="#install_grxui_jar">コンパイル済みのGrxUIプラグインをインストール</a>
+ </li>
+ <li><a href="#install_grxui_build">ソースからGrxUIプラグインを作成してインストール</a>
+ </li>
+</ul>
+</p>
+<h4 id="install_grxui_jar">コンパイル済みのGrxUIプラグインのインストール</h4>
+<p>
+コンパイル済みのjarファイルをEclipseにインストールする方法です。<br>
+OpenHRPの解凍先から、GrxUIonEclipse-project-0.9.8/plugins/Eclipse3.4_RTM1.1_LINUXに移動します。<br>
+OpenRTM-aist-1.0.0を使用している場合は、Eclipse3.4_RTM1.0に移動します。(パッケージ導入スクリプトを使用した場合は1.1.0がインストールされます。）<br>
+com.generalrobotix.ui.grxui_0.9.8.jarを、インストールしたEclipseのpluginsディレクトリにコピーしてください。<br>
+<br>
+これでインストールは完了です。<a href="./init_grxui.html">GrxUIの起動・初期設定</a>に進み、GrxUIの起動してください。
+</p>
+<br>
+
+<h4 id="install_grxui_build">ソースからGrxUIプラグインを作成してインストール</h4>
+
+<p>
+<span style="color: red">※ ubuntu12.04以上で、Pythonスクリプトを使用される方は、ここでJython2.2.1をインストールする必要があります。以下の手順に従って下さい。該当しない方は、<a href="#config_eclipse">Eclipseの起動</a>へ進んでください。</span>
+</p>
+<h5>Jython2.2.1のインストール</h5>
+<ul type="1">
+<li><a href="http://www.jython.org/downloads.html">Jythonのダウンロードページ</a>からjython_installer-2.2.1.jarをダウンロードしてください。</li>
+<li>ファイルを保存したディレクトリに移動して、以下のように実行します。
+<pre>
+$ java -jar jython_installer-2.2.1.jar
+</pre>
+</li>
+<li>インストール画面の表示に従ってください。installation type では standard を選択し、target directory では、インストール先のディレクトリを指定してください。</li>
+<li>インストールが終了しましたら、OpenHRP3のソースを展開したディレクトリに移動して、CMakeを起動します。
+<pre>
+$ ccmake .
+</pre>
+<li>Jytonの設定を以下のように変更します。
+<pre>
+ JYTHON        (jython2.2.1インストール先)/bin/jython
+ JYTHON_HOME   (jython2.2.1インストール先)
+ JYTHON_JAR    (jython2.2.1インストール先)/jython.jar
+</pre>
+</li>
+<li>"c"、"g"と入力してCMakeを終了します。</li>
+</ul>
+
+<h5 id="config_eclipse">Eclipse の起動</h5>
+<a href="./init_grxui.html">GrxUIの起動・初期設定</a>に従って、Eclipseを起動してください。
+
+<h5 id="config_eclipse">Eclipse の設定</h5>
+<p>
+ワークスペースのエンコーディング設定を行います。<br>
+"一般"→"ワークスペース"を選択し、"テキスト・ファイル・エンコード"という枠から"その他"
+をクリックします。<br>
+すると手前のメニューが有効になりますので、そこから"UTF-8"を選択します。<br>
+"適用"ボタンで設定を保存し、"OK"を押しウィンドウを閉じます。
+</p>
+
+<h5 id="install_grxui_src">GrxUIプラグインのインポート・コンパイル・エクスポート・インストール</h5>
+
+<h5 id="install_grxui_import">インポート</h6>
+<p>
+メニューから"ウインドウ"→"パースペクティブを開く"→"その他"を選択します。<br>
+"プラグイン開発"を選択し、"OK"ボタンで閉じます。<br>
+右上に示すパースペクティブは"Java"から"プラグイン開発"へと変更したことが確認できます。
+</p>
+<p>
+メニューから"ファイル"→"インポート"を選択してダイアログを開き、"一般"の"既存プロジェクトをワークスペースへ"を選択し、"次へ"ボタンを押します。<br>
+"ルートディレクトリーの選択"の"参照"ボタンを押し、OpenHRP3ディレクトリ中の"GrxUIonEclipse-project-0.9.8"を選択します。<br>
+"プロジェクト"の一覧で"com.generalrobotix.ui.grxui"がチェックされた状態になったことを確認し"終了"ボタンを押します。<br>
+
+<h5 id="install_grxui_compile">コンパイル</h6>
+<p>
+このあとプロジェクトは自動的にビルドされます。ステータスバーの右下にインジケータが表示され、ビルドが終了すると、表示が消えます。<br>
+この時、コンパイルエラーが発生する場合、Java 準拠レベルの問題の可能性がございますので<a href="#java_level">こちら</a>を参照してください。
+</p>
+<h5 id="install_grxui_export">エクスポート</h6>
+<p>
+メニューから"ファイル"→"エクスポート"を選択してダイアログを開き、"プラグイン開発"の"デプロイ可能なプラグインおよびフラグメント"を選択し、"次へ"ボタンを押します。<br>
+"使用可能なプラグインおよびフラグメント"の中から"com.generalrobotix.ui.grxui(0.9.8)"にチェックをいれ、次に"宛先"タブを選択し、適当なディレクトリを設定して"終了"ボタンを押します。<br>
+これで指定したディレクトリにpluginsディレクトリが作成され、その中にcom.generalrobotix.ui.grxui_0.9.8.jarが作成されます。これがGrxUIのプラグインとなります。<br>
+</p>
+<h5 id="install_grxui_install">インストール</h6>
+<p>
+Eclipseを一旦終了し、出来上がったGrxUIのプラグインをEclipseのpluginsディレクトリにコピーします。<br><br>
+これでインストールは完了です。<a href="./init_grxui.html">GrxUIの起動・初期設定</a>に進み、GrxUIの起動してください。
+</p>
+<br><br>
+
+<h3 id="note">備考</h3>
+<h4 id="bin_unix">OpenHRP3.1.0&beta;2からの移行</h4>
+<p>
+OpenHRP3.1.0&beta;2からbin/unixディレクトリの使用を廃止することになりましたので、
+OpenHRP3.1.0&beta;から更新されたユーザはCMAKE_INSTALL_PREFIXで
+設定したディレクトリ下のbin/unixが削除可能です。<br>
+$ make clean<br>
+では削除しませんのでマニュアルによる削除となります。<br>
+デフォルトの場合、/usr/local/bin/unixとなります。<br>
+</p>
+<h4 id="java_level">Java 準拠レベル</h4>
+<p>
+Javaのコンパイルエラーが発生する場合、Java 準拠レベルがあっていない可能性がございます。<br>
+eclipseを起動し、メニューから"ウインドウ"→"設定"を選択します。<br>
+"Java"→"コンパイラー"を選択し、"コンパイラー準拠レベル"を"1.6"以上に設定し、"適用"ボタンを押して設定を保存します。<br>
+ここで再度フルビルドするかと質問されますので、「はい」と答えてください。
+</p>
+<h4 id="Java_level">SSE拡張命令</h4>
+<p>
+CMake時にCPUの情報を参考にSSE拡張命令が使用できる場合には、SSE拡張命令を有効にするコンパイルオプションを追加しております。<br>
+このコンパイルオプションを無効にしたい場合には、ccmake 時に"t"キーで advanced mode にして、OPTIMIZE_SSE_ENABLE などの値を設定してください。<br>
+</p>
+<br><br>

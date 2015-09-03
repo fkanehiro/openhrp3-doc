@@ -1,0 +1,223 @@
+title = ハイゲインモードとトルク制御モードの混在したシミュレーションを行うチュートリアル
+base = ..
+
+<h2>概要</h2>
+
+<p>
+ここではサンプルとして付属しているPD_HGtestを用いて、関節タイプがfreeのルート関節をハイゲインモードで、他の関節をトルク制御モードでシミュレーションする手順を説明します。
+サンプルに使用しているモデルは、ROOT関節と2つのリンクから構成される単純なものです。ROOT関節はコントローラから位置と姿勢を、他の関節は関節トルクを与えます。
+主な手順は以下のようになります。
+</p>
+
+<ol>
+<li>シミュレーションプロジェクトの設定
+<li>コントローラの作成
+<li>コントローラブリッジの設定
+</ol>
+
+<p>
+以下これらの手順について詳細に説明します。
+</p>
+
+<h3>シミュレーションプロジェクトの設定</h3>
+
+<p>
+PD_HGtest.xmlにシミュレーションプロジェクトの設定が記述されています。</p>
+<p>
+モデルの各関節の制御モードは何も指定しなければ、トルク制御モードになります。ハイゲインモードにしたい関節ROOTに"HighGain"の設定をします。下の赤字の部分です。</p>
+PD_HGtest.xml
+<div>
+<code>
+<pre>
+     :
+     :
+     &lt;item class="com.generalrobotix.ui.item.GrxModelItem" name="testRobot" select="true" url="$(PROJECT_DIR)/../model/PD_HGtest.wrl"&gt;
+            &lt;property name="isRobot" value="true"/&gt;
+            &lt;property name="controller" value="PD_HGtestController"/&gt;
+            &lt;property name="controlTime" value="0.002"/&gt;
+            &lt;property name="setupDirectory" value="$(PROJECT_DIR)/../controller/PD_HGtest"/&gt;
+            &lt;property name="setupCommand" value="PD_HGtest$(BIN_SFX)"/&gt;
+            <span style="color: red">&lt;property name="ROOT.mode" value="HighGain"/&gt;</span>
+            &lt;property name="ROOT.translation" value="0.0 0.0 1.0 "/&gt;
+     &lt;/item&gt;
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+    
+<br>
+
+<h3>コントローラの作成</h3>
+
+<p>
+コントローラのソースファイルはsample/controller/PD_HGtest/PD_HGtest.{h, cpp}です。</p>
+
+<p>
+コントローラはROOT関節をX方向に動かし、他の関節には関節トルク(=0)を出力するという単純なものです。X方向の軌道（位置、速度、加速度）はあらかじめ適当に作成し、sample/controller/PD_HGtest/etc/root.datに保存しておきます。</p>
+
+
+<p>
+まず最初に各関節に値を出力するポートを設定します。ROOT関節には位置、速度、加速度用のポートを用意し、データの長さを12,6,6と設定します。</p>
+
+PD_HGtest.h
+<div>
+<code>
+<pre>
+     :
+     :
+  // DataOutPort declaration
+  // &lt;rtc-template block="outport_declare"&gt;
+  TimedDoubleSeq m_torque0;
+  OutPort&lt;TimedDoubleSeq&gt; m_torque0Out;
+  TimedDoubleSeq m_torque1;
+  OutPort&lt;TimedDoubleSeq&gt; m_torque1Out;
+  <span style="color: red">
+  TimedDoubleSeq m_root_trans;
+  OutPort&lt;TimedDoubleSeq&gt; m_root_transOut;
+  TimedDoubleSeq m_root_vel;
+  OutPort&lt;TimedDoubleSeq&gt; m_root_velOut;
+  TimedDoubleSeq m_root_acc;
+  OutPort&lt;TimedDoubleSeq&gt; m_root_accOut;</span>
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+PD_HGtest.cpp
+<div>
+<code>
+<pre>
+     :
+     :
+PD_HGtest::PD_HGtest(RTC::Manager* manager)
+  : RTC::DataFlowComponentBase(manager),
+    // &lt;rtc-template block="initializer"&gt;
+    m_torque0Out("torque0", m_torque0),
+    m_torque1Out("torque1", m_torque1),
+    <span style="color: red">m_root_transOut("root_trans", m_root_trans),
+    m_root_velOut("root_vel", m_root_vel),
+    m_root_accOut("root_acc", m_root_acc)</span>
+     :
+     :
+  // Registration: InPort/OutPort/Service
+  // &lt;rtc-template block="registration"&gt;
+  // Set OutPort buffer
+  registerOutPort("torque0", m_torque0Out);
+  registerOutPort("torque1", m_torque1Out);
+  <span style="color: red">registerOutPort("root_trans", m_root_transOut);
+  registerOutPort("root_vel", m_root_velOut);
+  registerOutPort("root_acc", m_root_accOut);</span>
+  
+  m_torque0.data.length(1);
+  m_torque1.data.length(1);
+  <span style="color: red">m_root_trans.data.length(12);
+  m_root_vel.data.length(6);
+  m_root_acc.data.length(6);</span>
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+<p>
+次に実際に値を出力する処理を記述します。
+</p>
+<p>まず、ファイルからROOT関節への出力値を読み込みます(1)。
+</p>
+<p>ROOT関節以外の出力値を設定します(2)。</p>
+<p>
+ROOT関節の位置を設定します(3)。データは順に、位置ベクトル、3x3の姿勢行列になります。
+</p>
+<p>
+ROOT関節の速度（加速度）を設定します(4)。データは順に、速度（加速度）ベクトル、角速度（角加速度）ベクトルになります。
+</p>
+<p>
+データを出力します(5)。
+</p>
+
+PD_HGtest.cpp
+<div>
+<code>
+<pre>
+     :
+     :
+RTC::ReturnCode_t PD_HGtest::onExecute(RTC::UniqueId ec_id)
+{
+     :
+     :
+  static double root_x_p, root_x_v, root_x_a;           （１）
+  if(!waist.eof()){
+    waist >> root_x_p;  //skip time
+    waist >> root_x_a;
+    waist >> root_x_v;
+    waist >> root_x_p;
+  }
+
+  m_torque0.data[0] = 0.0;                                （２）
+  m_torque1.data[0] = 0.0;
+  
+  for(int i=0; i<12; i++)                                （３）
+    m_root_trans.data[i] = 0;
+  m_root_trans.data[0] = root_x_p;    //x
+  m_root_trans.data[2] = 1.0;          //z
+  m_root_trans.data[3] = 1.0;
+  m_root_trans.data[7] = 1.0;
+  m_root_trans.data[11] = 1.0;
+  for(int i=0; i<6; i++)                                   （４）
+      m_root_vel.data[i] = 0.0;
+  m_root_vel.data[0] = root_x_v;
+  for(int i=0; i<6; i++)                                    
+      m_root_acc.data[i] = 0.0;
+  m_root_acc.data[0] = root_x_a;
+
+  m_torque0Out.write();                                     （５）
+  m_torque1Out.write();
+  m_root_transOut.write();
+  m_root_velOut.write();
+  m_root_accOut.write();
+
+  return RTC::RTC_OK;
+  }
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+<br>
+	
+<h3>コントローラブリッジの設定</h3>
+
+<p>
+次にコントローラブリッジの設定を行います。コントローラブリッジの設定はsample/controller/PD_HGtest/bridge.confに記述しています。</p>
+<div>
+<code>
+<pre>
+in-port= torque0:J0:JOINT_TORQUE
+in-port= torque1:J1:JOINT_TORQUE
+<span style="color: red">
+in-port= root_trans:ROOT:ABS_TRANSFORM
+in-port= root_vel:ROOT:ABS_VELOCITY
+in-port= root_acc:ROOT:ABS_ACCELERATION
+</span> 
+connection= torque0:torque0
+connection= torque1:torque1
+<span style="color: red">
+connection= root_trans:root_trans
+connection= root_vel:root_vel
+connection= root_acc:root_acc
+</span> 
+server-name= PD_HGtestController
+</pre>
+</code>
+</div>
+
+<p>
+以上で、シミュレーションの準備が整いました。シミュレーションを実行してください。
+</p>

@@ -1,0 +1,87 @@
+title = OpenHRP3 に関連する発表論文
+base  = ..
+
+<h2>国際学会</h2>
+
+<ol>
+
+ <li>
+  Shin’ichiro NAKAOKA, Shizuko HATTORI, Fumio KANEHIRO, Shuuji KAJITA and Hirohisa HIRUKAWA:
+  "Constraint-based Dynamics Simulator for Humanoid Robots with Shock Absorbing Mechanisms,"
+  The 2007 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS2007),
+  2007 (accepted).
+ </li>
+
+ <li>
+  Katsu Yamane, Yoshihiko Nakamura: “Parallel O(logN) Algorithm for
+  Dynamics Simulation of Humanoid Robots,” IEEE-RAS International Conference
+  on Humanoid Robotics, pp. 554-559, Genoa, Italy, 2006.
+ </li>
+
+ <li>
+  Fumio Kanehiro, Hirohisa Hirukawa, and Shuuji Kajita,
+  "OpenHRP: Open Architecture Humanoid Robotics Platform,"
+  International Journal of Robotics Research, vol.23, no.2, pp.155-165, 2004.
+ </li>
+</ol>
+
+<h2>国内学会</h2>
+
+<ol>
+
+ <li>
+  山根克, 中村仁彦,
+  "ピボット法に基づくLCPの解法とその衝突・接触シミュレーションへの応用",
+  第２４回日本ロボット学会学術講演会, 2007年9月
+ </li>
+
+ <li>
+  中岡慎一郎, 服部静子, 金広文男, 梶田秀司, 比留川博久,
+  "Projected Gauss-Seidel法の拡張による剛体関節機構の接触力計算",
+  第25回日本ロボット学会学術講演会, 2007年9月
+ </li>
+
+ <li>
+ 比留川博久, 金広文男, 中岡慎一郎, 末廣尚士, 神徳徹雄, 安藤慶昭, 中村仁彦, 山根克, 齋藤元, 川角祐一郎,
+ "分散コンポーネント型ロボットシミュレータ OpenHRP3",
+ 第25回日本ロボット学会学術講演会, 2007年9月
+ </li>
+
+ <li>
+ 安藤慶昭, 金広文男, 中岡慎一郎, 神徳徹雄, 末廣尚士, 比留川博久,
+ "分散コンポーネント型ロボットシミュレータ OpenHRP3 -RTコンポーネントを用いた実機と可換な制御ソフトウェア開発機能",
+ 第25回日本ロボット学会学術講演会, 2007年9月
+ </li>
+
+ <li>
+ 川角祐一郎, 齋藤元,
+ "ロボットシミュレータのプラグイン拡張可能なGUIフレームワークの開発",
+  第２４回日本ロボット学会学術講演会, 2007年9月
+ </li>
+
+ <li>
+  中岡慎一郎, 服部静子, 金広文男, 梶田秀司, 比留川博久,
+  "LCPに基づく接触力計算を用いたヒューマノイドロボットの力学シミュレーション",
+  ロボティクス・メカトロニクス講演会 ROBOMEC'07, 2007年5月
+ </li>
+
+ <li>
+  山根克, 中村仁彦, "分散コンポーネント型ロボットシミュレータにおける順動力学エンジンの計算効率",
+  第２４回日本ロボット学会学術講演会, 2N23, 2006年9月
+ </li>
+
+ <li>
+  比留川博久, 金広文男, 中岡慎一郎, 末廣尚士, 神徳徹雄, 安藤慶昭,
+  中村仁彦, 山根克, 齋藤元, 川角祐一郎,
+  "分散コンポーネント型ロボットシミュレータ",
+  第２４回日本ロボット学会学術講演会, 2006年9月
+ </li>
+
+ <li>
+  金広文男, 藤原清司, 梶田秀司, 横井一仁, 金子健二, 比留川博久、中村仁彦, 山根克,
+  "ヒューマノイドロボットソフトウェアプラットフォーム OpenHRP",
+  日本ロボット学会誌, 21, 7, pp.785--793 (2003)
+ </li>
+
+
+</ol>

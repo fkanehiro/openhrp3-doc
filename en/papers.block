@@ -1,0 +1,25 @@
+title = Research Papers related to OpenHRP
+base  = ..
+
+<h2>International Journals and Conferences</h2>
+
+<ol>
+ <li>
+  Shin'ichiro NAKAOKA, Shizuko HATTORI, Fumio KANEHIRO, Shuuji KAJITA and Hirohisa HIRUKAWA:
+  "Constraint-based Dynamics Simulator for Humanoid Robots with Shock Absorbing Mechanisms,"
+  The 2007 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS2007),
+  2007 (accepted).
+ </li>
+
+ <li>
+  Katsu Yamane, Yoshihiko Nakamura: "Parallel O(logN) Algorithm for
+  Dynamics Simulation of Humanoid Robots," IEEE-RAS International Conference
+  on Humanoid Robotics, pp. 554-559, Genoa, Italy, 2006.
+ </li>
+
+ <li>
+  Fumio Kanehiro, Hirohisa Hirukawa, and Shuuji Kajita,
+  "OpenHRP: Open Architecture Humanoid Robotics Platform,"
+  International Journal of Robotics Research, vol.23, no.2, pp.155-165, 2004.
+ </li>
+</ol>

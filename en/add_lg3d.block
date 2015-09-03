@@ -1,0 +1,18 @@
+title = Adding source package download path
+base  = ..
+
+
+<h2>Adding source package download path</h2>
+
+<p>
+Please select "System" > "Administration" > "Software Sources" from the menu. Select "Third 
+Party Software" tab and add the following line;
+</p>
+
+<blockquote>
+deb http://javadesktop.org/lg3d/debian stable contrib
+</blockquote>
+<br>
+
+<img src="../img_new/install/fig001.png"><br>
+<br>

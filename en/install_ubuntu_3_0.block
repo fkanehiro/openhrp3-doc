@@ -1,0 +1,340 @@
+title = Install OpenHRP3 on Ubuntu Linux(Ver.3.0.8)
+base  = ..
+
+<p>
+As for Ubuntu Linux, installing OpenHRP3 would become relatively easier, by following the 
+procedures described in this page. We have confirmed successful install of OpenHRP Ver.3.0.8, on 
+Ubuntu Linux 8.04 and 8.10.
+</p>
+
+<h2>Before you begin</h2>
+
+<p>
+Since OpenHRP is an application based on 3D Graphics, it is necessary to confirm whether 
+your pc is aware of handling 3D Graphics properly, before you begin installation. To 
+confirm that, open a Terminal window and run following command;
+</p>
+
+<pre>
+$ glxinfo | grep rendering
+</pre>
+<p> </p>
+
+<ul>
+  <li><p>
+  If the result is: "direct rendering: Yes"<br>
+  Your system is capable of handling 3D graphics. Please proceed to the next section.</p>
+  </li>
+  <li><p>
+  If the result is: "direct rendering: No"<br>
+  You have to install a graphics driver, that supports 3D acceleration feature.</p>
+  
+  <ul>
+    <li><a href="./g3d_support.html">How to install graphics driver</a></li>
+  </ul>
+  
+  <p>Note:</p>
+  <ol>
+    <li>
+     <p>
+     Depending on the graphics board, sometimes the above procedure may not be applicable for your 
+     system.Even in this case, basically OpenHRP itself is working.But the 3D visualizations 
+     may become slower and would not perform effectively, due to the inactivity of 3D acceleration. 
+     </p>
+    </li>
+    <li>
+     <p>
+     Regarding the graphics board, we can assure that the boards having nVidia chipsets, 
+     would support 3D acceleration feature well in Linux platfoems.
+     </p>
+    </li>
+  </ol>
+  </li>
+</ul>
+<br>
+
+
+<h2>Extracting OpenHRP3 source package</h2>
+
+<p>
+To install OpenHRP3, we use a script included in source package. To run the script, first 
+you have to extract the downloaded source package(OpenHRP-xxx.zip).
+</p>
+<p>
+Note:<br>
+Here, the phrase 'xxx' stands for the version of OpenHRP3, such as '3.0.5'. 
+When you read, please substitute the version of the file you downloaded, with 'xxx'.
+</p>
+
+<p>
+You may extract OpenHRP3 source, to a directory at anywhere you want. In this example, 
+we extract to the 'OpenHRP' directory in our home directory. Open a Terminal window, and 
+run the following commands, to extract source package.
+</p>
+
+<p>
+<pre>
+$ cd 
+$ mkdir OpenHRP
+$ cd OpenHRP
+$ unzip (The directory where source package downloaded)/OpenHRP-xxx.zip 
+</pre>
+<p>
+With these operations you will have OpenHRP3 source extracted to a new directory called 
+'OpenHRP-xxx' under 'OpenHRP' directory in your users home directory.<br>
+</p>
+
+<br>
+
+
+<h2 id="install_script">Running Package Installation Script</h2>
+
+<p>
+There is a directory called 'util', in OpenHRP3 source directory.
+Run 'installPackages.sh' script in this directory, with the parameters described below.
+</p>
+
+<pre>
+$ cd ~/OpenHRP/OpenHRP-xxx/util
+$ ./installPackages.sh packages.list.ubuntu.8.04
+</pre>
+
+<p>
+The above sample shows the argument for Ubuntu-8.04. However, if you are on Ubuntu-8.10 
+change the argument to 'packages.list.ubuntu.8.10'.
+</p>
+
+<p>
+If you are asked for license agreement during the installation,
+please do agree at all time you are asked.<br>
+Select 'Y'(Yes) for every confirmations.
+</p>
+
+<p>
+This operation installs most of the 
+<a href="./required_programs_3_0.html">required softwares to compile/run OpenHRP</a>.
+</p>
+<br>
+
+<h2 id="switch_java">Switching standard Java environment</h2> 
+
+<p>
+On Ubuntu, a package called "gcj" is also available as a Java environment.
+However, we recommend "Sun Java environment" for the use of OpenHRP, which was 
+already installed on your system by the above 
+<a href="#install_script">"package installation script"</a>.
+</p>
+
+<p>
+Though you can select which Java to be used, when configuring OpenHRP, 
+we recommend switching system standard Java environment.
+</p>
+
+<p>
+You can switch Java environment and set the new one as default, with this command.
+</p>
+
+<pre>
+$ sudo update-java-alternatives -s java-6-sun
+</pre>
+
+<p>
+Confirm the switching from 'Java-gcj' to 'Java 1.6.xx' by running following command.
+</p>
+
+<pre>
+$ java -version
+java version "1.6.0"
+Java(TM) SE Runtime Environment (build 1.6.0-b105)
+Java HotSpot(TM) Server VM (build 1.6.0-b105, mixed mode)
+</pre>
+
+<p><font color="red">Note 1:</font></p>
+<ul>
+  <p>
+  we have noticed a sudden failure of simulation execution when using jdk-1.6.xx on 
+  Ubuntu 8.04. So please use jdk-1.5.xx, until we fix this issue.
+  </p>
+
+  <pre>
+  [altering java]
+  $ sudo apt-get install sun-java5-jdk
+  $ sudo update-java-alternatives -s java-1.5.0-sun
+
+  [rollback]
+  $ sudo update-java-alternatives -s java-6-sun
+
+  [view existing java environments]
+  $ sudo update-java-alternatives -l
+  </pre>
+  
+  <p>
+  Detailed symptom is as follows; After loading a model and 1-2 minutes later, the connection 
+  between ModelLoader(VRML model parse server) and the other servers suddenly drops. The 
+  system get back to normal by re-starting GrxUI, but the problem will still exist until you 
+  switch to jdk-1.5.
+  </p>
+</ul>
+
+<p><font color="red">Note 2:</font></p>
+<ul>
+  <p>
+  We have noticed that, when applying Ubuntu regular system updates, it automatically switches 
+  the system back to 'Java-gcj' environment, which may cause to compile error or Java exceptions.
+  If you are not willing to use 'Java-gcj' for any other applications, we recommand you to uninstall 
+  'Java-gcj', so that the problem will be resolved. (Refer 
+  <a href="./troubleshooting.html#gcj_sun_error">troubleshooting</a> for more details.)
+  </p>
+</ul>
+<br>
+
+<h2>Preparing to Compile</h2>
+
+<p>
+There is a file named 'Make.vars' in source directory, that defines configuaration settings 
+to compile OpenHRP. Usually this file needs to be re-configured before compiling OpenHRP 
+according to the description '<a href="howtomake_3_0.html#make_vars">About Make.vars</a>'. 
+However, to ease the process, here we use a pre-configured file that suit with the install 
+instructions of this page.
+</p>
+
+<p>
+First, move to the source directory of OpenHRP3, in command line.
+</p>
+
+<pre>
+$ cd ~/OpenHRP/OpenHRP-xxx
+</pre>
+
+<p>
+Then create the configuration file "Make.vars", using following copy operation.
+</p>
+
+<pre>
+$ cp Make.vars.ubuntu.8.10 Make.vars
+</pre>
+
+<p>
+After completing upto this stage with default installation, there will be no need to edit the 
+configuaration file "Make.vars".
+</p>
+<br>
+
+
+<h2>Compiling OpenHRP3</h2>
+
+<p>
+Within the source directory of OpenHRP3, run 'make' command.
+</p>
+
+<pre>
+$ make
+</pre>
+
+<p>
+If the required softwares have been installed properly and the configuration of Make.vars 
+has been done correctly according to the instructions of this page, OpenHRP3 execution files 
+and scripts will be generated by soon.
+</p>
+
+<p>
+Once you have completed compilation, run a <a href="./simulate_sample_3_0.html">
+Sample Simulation</a>, and confirm whether the compilation is successful.
+</p>
+
+<font color=red ><b>!NOTICE!</b></font><br>
+<h3>In the case of after ubuntu-9.04</h3>
+<p>
+If you install OpenHRP on the environment after Ubuntu-9.04, sample project may not work. In such case, open terminal window and run,
+<pre>
+$ openhrp-aist-dynamics-simulator -ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService
+</pre>
+if you get the output as follows,
+<pre>
+IDL:omg.org/CORBA/TRANSIENT:1.0
+</pre>
+the problem has occured because ipv6 on Ubuntu-9.04 has not been enabled by default.<br>
+<br>
+To resolve this problem, locate <i>"/etc/hosts"</i> file and comment-out the line 
+<i>"::1        localhost ip6-localhost ip6-loopback"</i> where keeps localhost settings of IPv6.
+</p>
+
+<h2>Softwares that no more require Individual Install</h2>
+
+<p>
+This section is for users of OpenHRP previous versions. If you are using 
+OpenHRP Ver3.0.3 for the first time, please skip this section and continue with 
+<a href="#switch_java">"Switching standard Java environment"</a>.
+</p>
+
+<h3>Java 3D</h3>
+
+<p>
+This section is for OpenHRP Ver.3.0.1 or previous version users. 
+In previous versions of OpenHRP3, we used "lg3d" as our Java3D library. But;
+
+<ul>
+ <li>
+  It makes duplicate package of JDK, with SUNs' official JDK package, and become redundant.
+ </li>
+ <li>
+  "lg3d" hosting servers goes down at times, and it cause to fail installing/updating packages.
+ </li>
+ <li>
+  Java3D Ver.1.5.x series has a trouble when acquisitioning depth buffer.(As of 19/09/2008)
+ </li>
+</ul>
+
+To avoid these troublesome situations regarding with Java environment, we decided to include SUN's 
+official Java3D(Ver1.4.1) package in OpenHRP3 source it self. Therefore Java 3D became not necessary 
+to install individually, starting with Ver.3.0.2 .
+</p>
+
+
+<p>
+<font color=red >! NOTICE !</font><br>
+</p>
+
+
+<h4>Uninstalling lg3d</h4>
+
+<p>
+If you want to uninstall lg3d from your system, run following command;
+</p>
+
+<p>
+Note:<br>
+Do not uninstall lg3d, if you hope to use Ver3.0.1 or previous versions together with new 
+version.
+</p>
+
+<pre>
+$ sudo aptitude remove lg3d-java3d lg3d-jdk
+</pre>
+
+Now delete <a href="./add_lg3d.html">"Source package download path"</a> from 
+"Software source", which you added when installing Ver 3.0.1 or previous OpenHRP versions.
+
+<pre>
+deb http://javadesktop.org/lg3d/debian stable contrib
+</pre>
+
+
+<h3>Java Media Framework (JMF)</h3>
+
+<p>
+This section is for OpenHRP Ver.3.0.1 or previous version users. 
+Due to the same reason like Java3D, JMF-2.1.1e has also been included in OpenHRP3 package it self, 
+so it is also no need to install separately.
+</p>
+
+<h3>OpenRTM-aist</h3>
+
+<p>
+In OpenHRP Ver.3.0.2 or previous versions, OpenRTM-aist-0.4.2 had to be installed separately. But 
+starting with Ver.3.0.3, it came to be able to install by the install-script automatically.
+</p>
+<br>
+
+<h3>tvmet</h3>
+Starting with Ver.3.0.6, tvmet came to be able to install by the install-script automatically.

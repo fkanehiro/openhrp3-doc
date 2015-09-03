@@ -1,0 +1,203 @@
+title=センサ利用マニュアル
+base=..
+
+<h2> 概要 </h2>
+<p>
+ここでは、Controllerでの各種センサの取扱いかたとそのデータ形式について説明します。
+</p>
+<p>
+センサ情報には大きくわけて三種類あり、DynamicsSimulatorから取得できる関節情報・センサ情報とViewSimulatorから取得するカメラ情報があります。
+各種情報はController::inputメソッドで取得します。
+</p>
+<h2> DynamicsSimulator </h2>
+<h3> 関節情報 </h3>
+<p>
+関節情報には以下の種類があります。
+</p>
+<table border="1" align="center">
+<tr><td>関節情報種別</td><td>関節情報形式</td><td>説明</td></tr>
+<tr><td>POSITION_GIVEN</td><td>boolean</td><td></td></tr>
+<tr><td>JOINT_VALUE</td><td>double</td><td>関節角度または関節位置</td></tr>
+<tr><td>JOINT_VELOCITY</td><td>double</td><td>同微分</td></tr>
+<tr><td>JOINT_ACCELERATION</td><td>double</td><td>同２階微分</td></tr>
+<tr><td>JOINT_TORQUE</td><td>double</td><td>関節トルク</td></tr>
+<tr><td>ABS_TRANSFORM</td><td>double*12</td><td>関節位置(最初の3要素が位置ベクトル、9要素が姿勢)</td></tr>
+<tr><td>ABS_VELOCITY</td><td>double*6</td><td>関節速度(速度ベクトル、角速度ベクトル)</td></tr>
+<tr><td>EXTERNAL_FORCE</td><td>double*6</td><td>力, トルク</td></tr>
+</table>
+<p>
+取得方法はDynamicsSimulatorのgetCharacterLinkData, getCharacterAllLinkDataメソッドを使用します。
+</p>
+<p>
+getCharacterLinkData:
+</p>
+<pre>
+dynamicsSimulator->getCharacterLinkData(キャラクタ名, リンク名, 関節情報種別, データ);
+</pre>
+<p>
+このように、キャラクタとリンクを指定してひとつデータを受け取ります。
+</p>
+<p>
+getCharacterAllLinkData:
+</p>
+<pre>
+dynamicsSimulator->getCharacterAllLinkData(キャラクタ名, 関節種別, データ);
+</pre>
+<p>
+getCharacterAllLinkDataはキャラクタの関節のうち、jointIdがつけられているもの全てをjointId順に渡します。
+以下にPDcontrollerでの例をあげます。
+</p>
+<pre>
+dynamicsSimulator->getCharacterAllLinkData(characterName, DynamicsSimulator::JOINT_VALUE, q);
+</pre>
+<p>
+ここでは、キャラクタ名characterNameのjointIdのついている全ての関節角度をDblSequence_var型の変数qに渡しています。
+</p>
+<h3> センサ情報 </h3>
+<p>
+OpenHRPで扱えるセンサは以下のとおりです。
+</p>
+<table border="1" align="center">
+<tr><td>センサ種別</td><td>データ</td></tr>
+<tr><td>力センサ</td><td>DblSequence6</td></tr>
+<tr><td>ジャイロセンサ</td><td>DblSequence3</td></tr>
+<tr><td>加速度センサ</td><td>DblSequence3</td></tr>
+</table>
+<p>
+それぞれのセンサはモデルにVRMLで記述されており、その方法は<a href="./create_model.html">モデル作成法</a>を参照してください。
+</p>
+<p>
+実際の取得はDynamicsSimulator::getCharacterSensorValuesもしくはDynamicsSimulator::getCharacterSensorStateで行います。
+DynamicsSimulator::getCharacterSensorValuesはセンサ名を指定し、ひとつのセンサ情報を取得します。
+DynamicsSimulator::getCharacterSensorStateはひとつのキャラクタのセンサ情報全てを取得します。
+</p>
+<p>
+具体的には以下のようにします。
+</p>
+<p>
+getCharacterSensorValues: 
+</p>
+<pre>
+dynamicsSimulator->getCharcterSensorValue(キャラクタ名, センサ名, データ);
+</pre>
+<p>
+データの受け取りはDblSequence_var型を使用します。
+</p>
+<p>
+getCharacterSensorState:
+</p>
+<pre>
+dynamicsSimulator->getSensorState(キャラクタ名, データ);
+</pre>
+<p>
+こちらはデータの受け取りにはSensorState_varを使用します。以下に全てのセンサデータを取得し表示するコードを示します。
+</p>
+<p>
+まず、メンバ変数としてSensorState_varを宣言します。
+</p>
+<pre>
+SensorState_var sensors;
+</pre>
+<p>
+Controller::inputメソッド中にDynamicsSimulatorにアクセスし、センサデータを取得する命令を記述します。
+</p>
+<pre>
+dynamicsSimulator->getCharacterSensorState(characterName, sensors);
+</pre>
+Controller::controlメソッドで実際に表示します。
+<pre>
+// 力センサ一覧
+cout &lt;&lt; "force:" &lt;&lt; endl;
+for (unsigned int i=0; i&lt;sensors->force.length(); i++) {
+  cout &lt;&lt; i &lt;&lt; " : " &lt;&lt; endl;;
+  for (int j=0; j&lt;6; j++) {
+    cout &lt;&lt; sensors->force[i][j] &lt;&lt; " , ";
+  }
+  cout &lt;&lt; endl;
+}
+
+// ジャイロセンサ一覧
+cout &lt;&lt; "rate gyro:" &lt;&lt; endl;
+for (unsigned int i=0; i&lt;sensors->rateGyro.length(); i++) {
+  cout &lt;&lt; i &lt;&lt; " : " &lt;&lt; endl;
+  for (int j=0; j&lt;3; j++) {
+    cout &lt;&lt; sensors->rateGyro[i][j] &lt;&lt; " , ";
+  }
+  cout &lt;&lt; endl;
+}
+
+// 加速度センサ一覧
+cout &lt;&lt; "accel:" &lt;&lt; endl;
+for (unsigned int i=0; i&lt;sensors->accel.length(); i++) {
+  cout &lt;&lt; i &lt;&lt; " : " &lt;&lt; endl;
+  for (int j=0; j&lt;3; j++) {
+    cout &lt;&lt; sensors->accel[i][j] &lt;&lt; " , ";
+  }
+  cout &lt;&lt; endl;
+}
+</pre>
+<p>
+このようにSensorStateの中に各種センサ情報が含まれています。
+</p>
+
+<h2> ViewSimulator </h2>
+<p>
+コントローラにセットされるViewSimulatorクラスのインスタンスviewSimulatorに対して操作を行います。
+</p>
+<p>
+流れとしてはキャラクタのカメラ一覧をViewSimulator::getCameraSequenceOfを使用して取得した後、カメラごとにパラメタと画像を取得することになります。
+</p>
+<p>
+VScontrollerを例にして説明します。
+</p>
+<p>
+まず、各種情報を格納するメンバを用意します。
+</p>
+<pre>
+private: 
+  CameraSequence_var cameras;
+  Camera::CameraParameter_var cparam;
+  ImageData_var image;
+protected:
+  OpenHRP::ViewSimulator_var visionsensor_;
+</pre>
+ViewSimulatorへの参照をセットするメソッドをオーバライドし、セットとカメラの取得を行います。
+<pre>
+void VSController::setViewSimulator(ViewSimulator_ptr pvisionsensor) 
+{
+  visionsensor_ = pvisionsensor;	
+  visionsensor_-&gt;getCameraSequenceOf(characterName, cameras);
+  if (cameras-&gt;length() > 0) {
+    cout &lt;&lt; cameras->length() &lt;&lt; endl;
+    cparam = cameras[0]-&gt;getCameraParameter();
+  }
+}
+</pre>
+Controller::inputで画像の取得を行います。
+<pre>
+image = cameras[0]-&gt;getImageData();
+</pre>
+<p>
+このようにデータを取得することでController::controlにおいて様々な処理を行うことができます。
+</p>
+
+<p>
+ここでは、処理の一例としてバイナリファイルに画像を書き出すコードを示します。
+</p>
+<p>
+前提として、配列camerasにカメラが格納されており、カメラのデータはlongであるものとします。
+</p>
+<p>
+ImageDataに含まれるメンバlongDataをバイナリ形式で保存します。
+</p>
+<pre>
+ImageData_var image = cameras[0]-&gt;getImageData();
+ofstream fout;
+fout.open("test.out", ios::out|ios::binary|ios::trunc);
+
+fout.write((char*)image-&gt;longData.get_buffer(), sizeof(long)*image-&gt;width*image->height*3);
+fout.close();
+</pre>
+<p>
+これにより、このコントローラと同じディレクトリにtest.outというバイナリファイルが出力されます。
+</p>

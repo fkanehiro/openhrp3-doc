@@ -1,0 +1,44 @@
+title = Series Version.3.0 Documentations Log
+base  = ..
+
+<h2>Series Version.3.0 Documentations</h2>
+<h3>Version 3.0.7</h3>
+<ul>
+ <li><p>
+  <a href="../3.0.7/en/index.html"><b>Version 3.0.7 Documentation</b></a><br>
+  Please refer <a href="./release_note_ver_3_0_7.html">Release Note Ver.3.0.7</a> to view changes 
+  from 3.0.5 to 3.0.7.
+  </p></li>
+</ul>
+<h3>Version 3.0.5</h3>
+<ul>
+ <li><p>
+  <a href="../3.0.5/en/index.html"><b>Version 3.0.5 Documentation</b></a><br>
+  Please refer <a href="./release_note_ver_3_0_5.html">Release Note Ver.3.0.5</a> to view changes 
+  from 3.0.3 to 3.0.5.
+  </p></li>
+</ul>
+<h3>Version 3.0.3</h3>
+<ul>
+ <li><p>
+  <a href="../3.0.3/en/index.html"><b>Version 3.0.3 Documentation</b></a><br>
+  Please refer <a href="./release_note_ver_3_0_3.html">Release Note Ver.3.0.3</a> to view changes 
+  from 3.0.2 to 3.0.3.
+  </p></li>
+</ul>
+<h3>Version 3.0.2</h3>
+<ul>
+ <li><p>
+  <a href="../3.0.2/en/index.html"><b>Version 3.0.2 Documentation</b></a><br>
+  Please refer <a href="./release_note_ver_3_0_2.html">Release Note Ver.3.0.2</a> to view changes 
+  from 3.0.1 to 3.0.2.
+  </p></li>
+</ul>
+
+<!--
+<h3>Version 3.0.1</h3>
+<p>
+<a href="../3.0.1/jp/index.html">3.0.1ドキュメンテーショントップ</a>。<br>
+3.0.0-RC4から3.0.1までの変更は<a href="./release_note_ver_3_0_1.html">リリースノートVer.3.0.1</a>をご覧ください。
+</p>
+-->

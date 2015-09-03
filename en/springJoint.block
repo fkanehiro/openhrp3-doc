@@ -1,0 +1,177 @@
+title = The method of spring damper modeling of a joint
+base = ..
+
+<h2>Overview</h2>
+
+<p>
+OpenHRP has plug-in called "BodyCustomizer" as structure which includes the program depending on a model in a dynamics calculation library dynamically.<br>
+If you use this plug-in, You can incorporate the spring damper model or analytical inverse kinematics of a joint to a model. <br>
+In this section we describe the method of spring damper modeling of a joint using sample project "springJoint.xml". <br>
+</p>
+
+<h2>Creation of a model </h2>
+<p>
+With a sample, the model by which the joint of the spring damper model is defined between two boxes (link) is used. <br>
+The model file of the sample is (openHRP)/sample/model/springJoint.wrl.<br>
+You define a joint as usual similarly and set up the direction of displacement of a spring damper. 
+Since it is a joint which is not controlled, JointID does not need to set up. <br>
+The name of SPRING_JOINT is attached to this joint.<br>
+</p>
+<div>
+<code>
+<pre>
+DEF springJoint Humanoid {
+  version "1.1"
+  humanoidBody [
+    DEF ROOT Joint {
+        :
+        :
+        DEF SPRING_JOINT Joint {
+            translation     0 0 0.05
+            jointType "slide"
+	        jointAxis 0 0 1
+                :
+                :
+</pre>
+</code>
+</div>
+
+<h2>Creation of plug-in </h2>
+<h3>Source code</h3>
+<p>
+Next, let's create plug-in for the upper models. 
+The source code of a sample is (OpenHRP)/sample/example/customizer/customizer.cpp. <br>
+</p>
+<div>
+<code>
+<pre>
+static const char** getTargetModelNames()
+{
+    static const char* names[] = { 
+        "springJoint",
+        0 };
+	
+    return names;
+}
+</pre>
+</code>
+</div>
+<p>
+This function tells a dynamics calculation library about to which model plug-in is applied. 
+It returns the arrangement which enumerated the names set up into the model file. <br>
+Note that it is not a name of the model loaded by GrxUI.<br>
+(In OpenHRP, you can attach a model name different from the name in a file, in order to identify the robot loaded from the same file. <br>
+When you want to specify plug-in as each of the same robot, you have to define a model file independently.）<br>
+Please put '0' into the end of arrangement. <br>
+</p>
+<div>
+<code>
+<pre>
+static BodyCustomizerHandle create(BodyHandle bodyHandle, const char* modelName)
+{
+    Customizer* customizer = 0;
+	
+    string name(modelName);
+    if(name == "springJoint"){
+        customizer = new Customizer;
+        customizer->bodyHandle = bodyHandle;
+        customizer->springT = 1.0e3;    
+        customizer->dampingT = 1.0e1;
+        int jointIndex = bodyInterface->getLinkIndexFromName(bodyHandle, "SPRING_JOINT");
+        if(jointIndex >=0 ){
+            JointValSet& jointValSet = customizer->jointValSet;
+            jointValSet.valuePtr = bodyInterface->getJointValuePtr(bodyHandle, jointIndex);
+            jointValSet.velocityPtr = bodyInterface->getJointVelocityPtr(bodyHandle, jointIndex);
+            jointValSet.torqueForcePtr = bodyInterface->getJointForcePtr(bodyHandle, jointIndex);
+        }
+    }
+
+    return static_cast&lt;BodyCustomizerHandle&gt;(customizer);
+}
+
+</pre>
+</code>
+</div>
+<p>
+This function is called to the beginning of plug-in. This performs initialization of a variable, etc. Please carry out initialization of a variable, etc. <br>
+How to access the variable of a dynamics calculation library from plug-in is also described. <br>
+The function offered from a dynamics calculation library to plug-in is as follows. 
+<table border="1" align="center">
+<tr><td>getLinkIndexFromName</td><td>The name of a joint is changed into the identification number of a library. </td></tr>
+<tr><td>getLinkName</td><td>The identification number of a library is changed into the name of a joint. </td></tr>
+<tr><td>getJointValuePtr</td><td>The pointer of the variable of the position of a joint with an identification number is returned. </td></tr>
+<tr><td>getJointVelocityPtr</td><td>The pointer of the variable of the velocity of a joint with an identification number is returned. </td></tr>
+<tr><td>getJointForcePtr</td><td>The pointer of the variable of the torque of a joint with an identification number is returned. </td></tr>
+</table>
+</p>
+<div>
+<code>
+<pre>
+static void destroy(BodyCustomizerHandle customizerHandle)
+{
+    Customizer* customizer = static_cast&lt;Customizer*&gt;(customizerHandle);
+    if(customizer){
+        delete customizer;
+    }
+}
+</pre>
+</code>
+</div>
+<p>
+This function is called when plug-in is destroyed. 
+Post-processing is performed. 
+</p>
+<div>
+<code>
+<pre>
+extern "C" DLL_EXPORT
+NS_HRPMODEL::BodyCustomizerInterface* getHrpBodyCustomizerInterface(NS_HRPMODEL::BodyInterface* bodyInterface_)
+{
+    bodyInterface = bodyInterface_;
+
+    bodyCustomizerInterface.version = NS_HRPMODEL::BODY_CUSTOMIZER_INTERFACE_VERSION;
+    bodyCustomizerInterface.getTargetModelNames = getTargetModelNames;
+    bodyCustomizerInterface.create = create;
+    bodyCustomizerInterface.destroy = destroy;
+    bodyCustomizerInterface.initializeAnalyticIk = 0;
+    bodyCustomizerInterface.calcAnalyticIk = 0;
+    bodyCustomizerInterface.setVirtualJointForces = setVirtualJointForces;
+
+    return &bodyCustomizerInterface;
+}
+</pre>
+</code>
+</div>
+<p>
+This function tells a dynamics calculation library about the function which plug-in offers. It returns the structure which described the mounted function name.<br>
+Please input '0' into the function which is not mounted. <br>
+<br>
+These four functions certainly need to be mounted in plug-in. 
+<div>
+<code>
+<pre>
+static void setVirtualJointForces(BodyCustomizerHandle customizerHandle)
+{
+    Customizer* customizer = static_cast&lt;Customizer*&gt;(customizerHandle);
+    JointValSet& trans = customizer->jointValSet;
+    *(trans.torqueForcePtr) = - customizer->springT * (*trans.valuePtr) - customizer->dampingT * (*trans.velocityPtr);
+}
+</pre>
+</code>
+</div>
+<p>
+This function is called for every step by the integration loop of a dynamics calculation library. Please describe the code of formation of a spring damper in this function. <br>
+</p>
+<h3>Installation</h3>
+<p>
+Please compile the created source code to create a library. 
+Please be sure to attach a library name like ***Customizer.so(dll). <br>
+Please copy it to (OpenHRP3) / share/OpenHRP-3.1-/customizer. <br>
+(A sample is installed at the time of installation of OpenHRP.) <br>
+A dynamics calculation library loads all plug-in of the name of ***Customizer.so (dll) in this directory. 
+<br>
+
+
+<h2>Execution of a sample </h2>
+Please start GrxUI and load project springJoint.xml. <br>
+If you start a simulation, after a box falls on a floor, the upper box will shake up and down. <br>

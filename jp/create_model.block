@@ -1,0 +1,757 @@
+title = ロボット・環境モデル記述形式
+base  = ..
+
+<h2> VRMLモデルの概要 </h2>
+<p>
+OpenHRPでは、ロボットや環境を構成する物体のモデルを、3次元モデルを記述するための言語<a href="http://www.web3d.org/" target="_blank">VRML2.0(Virtual Reality Markup Language)</a>を用いて定義します。環境に存在する個体一つに対してファイルを一つ作成します。したがって、ある床面の上にロボットが立っている状況を表現したサンプルファイルの場合は、床とロボットそれぞれに対し１つずつ、合計２つのVRMLファイル（<I>***.wrl</I>）を作成することになります。
+</p>
+
+<p>
+それぞれのVRMLファイルの基本的な構成は、
+</p>
+
+<dl>
+<dt>冒頭 :</dt>
+<dd>PROTO宣言部（構造体宣言部）</dd>
+<dt>残り :</dt>
+<dd>実モデル定義部（PROTOを用いたインスタンス表記部）</dd>
+</dl>
+
+<p>
+となります。<br>
+PROTO宣言部ではVRML97では定義されていない新たなノードを定義するため，C言語における構造体にあたる「PROTO」と呼ばれるノードを使います（詳しくは<a href="#PROTO">「PROTOノード」</a>を参照）。<br>
+実モデル定義部は例えば人間型ロボットの場合，
+</p>
+
+<div>
+<pre>
+    Humanoid sample（一塊のモデルのルート）
+     + Joint 腰部 (ヒューマノイドの中心。空中に浮遊する非固定点)
+     |　････
+     |  + Joint 胸部
+     |    + Joint 頭部
+     |    + Joint 左腕部
+     |    + Joint 右腕部
+     |
+     + Joint 左脚部
+     |
+     + Joint 右脚部
+</pre>
+</div>
+<p>
+となります。つまり、空中に浮いた”腰部”に”左脚”、”右脚”に対応する鎖と”胸部”へと繋がる鎖がつながっており、さらに”胸部”から、”頭”、”左腕”、”右腕”の鎖がつながっている、という構成です。
+</p>
+
+</div>
+<a name="PROTO"></a>
+<h3> PROTOノード </h3>
+
+<div>
+OpenHRPでは、以下のようなPROTOノードの
+インスタンスを組み上げていくことにより、モデルを作成します。PROTOノー
+ドは、ヒューマンフィギュアを記述するためのフォーマット
+<a href="http://ece.uwaterloo.ca/~h-anim/" target="_blank">h-anim1.1</a>
+で制定されているPROTOノードをOpenHRPモデル記述用に拡張/変更したものです。こ
+れらのノードのインスタンスを組み合わせて階層構造を作ることで、モデルを
+作成していきます。</div>
+
+<div>
+また、上記3つのPROTOノードの他に、各種センサを定義するためのPROTOノードも用意されています。カメラ，6軸力センサ、ジャイロセンサ、加速度センサ，距離センサを階層中に埋め込むことにより、各種センサのシミュレーションを行うことが可能です。
+</div>
+
+<p>
+以下、各ノードで定義する項目について説明していきます。
+</p>
+
+<ul>
+<li style="list-style-type: none">
+リンク構造、動力学/機構パラメータを定義するノード<br>
+<ol>
+
+<li><a href="#HUMANOID">Humanoidノード</a>
+<li><a href="#JOINT">Jointノード</a>
+<li><a href="#SEGMENT">Segmentノード</a>
+<li><a href="#EXTRAJOINT">ExtraJointノード</a>
+</ol>
+<li style="list-style-type: none">
+各種センサを定義するノード<br>
+<ol>
+<li><a href="#ACCELERATIONSENSOR">AccelerationSensorノード</a>
+<li><a href="#GYROSENSOR">GyroSensorノード</a>
+<li><a href="#VISIONSENSOR">VisionSensorノード</a>
+<li><a href="#FORCESENSOR">ForceSensorノード</a>
+<li><a href="#RANGESENSOR">RangeSensorノード</a>
+</ol>
+</ul>
+
+<p>
+なお、各項目に対しユーザー値を陽に定義しなかった場合、下記の4列目に示されるデフォルト値が読み込まれることになります。
+</p>
+
+<!-- Humanoid ノード -->
+<a name="HUMANOID"></a>
+<h4> Humanoid </h4>
+
+<p>
+Humanoidノードは、モデルのルートノードです。
+</p>
+
+<div>
+<code>
+<pre>
+PROTO Humanoid [
+  field         SFVec3f     bboxCenter        0 0 0
+  field         SFVec3f     bboxSize          -1 -1 -1
+  exposedField  SFVec3f     center            0 0 0
+  exposedField  MFNode      humanoidBody      [ ]
+  exposedField  MFString    info              [ ]
+  exposedField  MFNode      joints            [ ]
+  exposedField  SFString    name              ""
+  exposedField  SFRotation  rotation          0 0 1 0
+  exposedField  SFVec3f     scale             1 1 1
+  exposedField  SFRotation  scaleOrientation  0 0 1 0
+  exposedField  MFNode      segments          [ ]
+  exposedField  MFNode      sites             [ ]
+  exposedField  SFVec3f     translation       0 0 0
+  exposedField  SFString    version           "1.1"
+  exposedField  MFNode      viewpoints        [ ]
+]
+{
+  Transform {
+    bboxCenter       IS bboxCenter
+    bboxSize         IS bboxSize
+    center           IS center
+    rotation         IS rotation
+    scale            IS scale
+    scaleOrientation IS scaleOrientation
+    translation      IS translation
+    children [
+      Group {
+        children IS viewpoints
+      }
+      Group {
+        children IS humanoidBody 
+      }
+    ]
+  }
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+<table border="1">
+<tr><td>bboxCenter</td><td>OpenHRPでは使用しません。</td></tr>
+<tr><td>bboxSize</td><td>OpenHRPでは使用しません。</td></tr>
+<tr><td>center</td><td>Jointノードの <a href="#center">"center"</a> を参照してください。</td></tr>
+<tr><td>humanoidBody</td><td>子ノードをぶら下げるフィールドです。0個以上のJointノード、0または1個のSegmentノードをぶらさげます。</td></tr>
+<tr><td>info</td><td>モデルに関するコメントを記述するフィールドです。</td></tr>
+<tr><td>joints</td><td>定義したJointの一覧を格納するフィールドです。</td></tr>
+<tr><td>name</td><td>モデルの名前を指定するフィールドです。</td></tr>
+
+<tr><td>rotation</td><td>Jointノードの <a href="#rotation">"rotation"</a> を参照してください。</td></tr>
+<tr><td>scale</td><td>Jointノードの <a href="#scale">"scale"</a> を参照してください。</td></tr>
+<tr><td>scaleOrientation</td><td>Jointノードの <a href="#scaleOrientation">"scaleOrientation"</a> を参照してください。</td></tr>
+<tr><td>segments</td><td>定義したSegmentの一覧を格納するフィールドです。</td></tr>
+<tr><td>sites</td><td>OpenHRPでは使用しません。</td></tr>
+<tr><td>translation</td><td>Jointノードの <a href="#translation">"translation"</a> を参照してください。</td></tr>
+
+<tr><td>version</td><td>モデルのバージョン番号を指定するフィールドです。</td></tr>
+<tr><td>viewpoints</td><td>仮想環境における視点位置を指定するフィールドです。</td></tr>
+</table>
+</div>
+<br>
+
+<div>
+モデルのルートノードとなるHumanoidノードがただ一つだけ存在するようにします。また、Humanoidノードのjoints/segmentsフィールドには、自分の使用したJoint/Segment名をすべて列挙します。
+</div>
+
+<!-- Jointノード -->
+<a name="JOINT"></a>
+
+<h4> Joint </h4>
+
+<p>
+Jointノードはリンクフレームを定義します。
+</p>
+
+<div>
+<code>
+<pre>
+PROTO Joint [
+  exposedField     SFVec3f      center              0 0 0
+  exposedField     MFNode       children            []
+  exposedField     MFFloat      llimit              []
+  exposedField     MFFloat      lvlimit             []
+  exposedField     SFRotation   limitOrientation    0 0 1 0
+  exposedField     SFString     name                ""
+  exposedField     SFRotation   rotation            0 0 1 0
+  exposedField     SFVec3f      scale               1 1 1
+  exposedField     SFRotation   scaleOrientation    0 0 1 0
+  exposedField     MFFloat      stiffness           [ 0 0 0 ]
+  exposedField     SFVec3f      translation         0 0 0
+  exposedField     MFFloat      ulimit              []
+  exposedField     MFFloat      uvlimit             []
+  exposedField     SFString     jointType           ""
+  exposedField     SFInt32      jointId             -1
+  exposedField     SFVec3f      jointAxis           0 0 1
+
+  exposedField     SFFloat      gearRatio           1
+  exposedField     SFFloat      rotorInertia        0
+  exposedField     SFFloat      rotorResistor       0
+  exposedField     SFFloat      torqueConst         1
+  exposedField     SFFloat      encoderPulse        1
+]
+{
+  Transform {
+    center           IS center
+    children         IS children
+    rotation         IS rotation
+    scale            IS scale
+    scaleOrientation IS scaleOrientation
+    translation      IS translation
+  }
+}
+</pre>
+</code>
+</div>
+
+<div>
+<table border="1">
+<tr id="center"><td>center</td><td>関節回転中心の位置を指定するフィールドです。ローカル座標系原点からのオフセットで指定します。</td></tr>
+<tr><td>children</td><td>子ノードをぶら下げるフィールドです。0個以上のJointノード、0または1個のSegmentノードをぶらさげます。</td></tr>
+<tr><td>llimit<sup>(1)</sup></td><td>関節回転角度の下限値[rad]を指定するフィールドです。（デフォールト値："-∞"）</td></tr>
+<tr><td>lvlimit<sup>(1)</sup></td><td>関節回転角速度の下限値[rad/s]を指定するフィールドです。（デフォールト値："-∞"）</td></tr>
+<tr><td>limitOrientation</td><td>OpenHRPでは使用しません。</td></tr>
+<tr><td>name</td><td>Joint名を指定するフィールドです。</td></tr>
+<tr id="rotation"><td>rotation</td><td>ローカル座標系の姿勢を設定するフィールドです。親ノードからのオフセットを指定します。</td></tr>
+
+<tr id="scale"><td>scale</td><td>スケーリングを設定するフィールドです。centerで指定した位置を中心にスケーリングします。</td></tr>
+<tr id="scaleOrientation"><td>scaleOrientation</td><td>スケーリングを行う際にスケーリングを行うための座標系の姿勢を設定するフィールドです。（定義しなくても問題なし）</td></tr>
+<tr><td>stiffness</td><td>OpenHRPでは使用しません。</td></tr>
+<tr id="translation"><td>translation</td><td>ローカル座標系の位置を設定するフィールドです。親ノードからのオフセット値を指定します。</td></tr>
+<tr><td>ulimit<sup>(1)</sup></td><td>関節回転角度の上限値[rad]を指定するフィールドです。（デフォールト値："+∞"）</td></tr>
+<tr><td>uvlimit<sup>(1)</sup></td><td>関節回転角速度の上限値[rad/s]を指定するフィールドです。（デフォールト値："+∞"）</td></tr>
+<tr id="jointTypes"><td>jointType</td><td>関節タイプを設定するためのフィールドです。free/slide/rotate/fixedのうちのいずれかを指定します。
+<dl>
+<dt>free</dt>
+<dd>任意軸方向への並進・任意軸回りの回転が可能です(6自由度)。<I>ルートの関節にのみ使用できます。</I></dd>
+<dt>rotate</dt>
+<dd>jointAxisで指定する軸回りの回転のみ可能です(1自由度)。</dd>
+<dt>slide</dt>
+<dd>jointAxisで指定する軸方向への並進直動関節となります(１自由度)。</dd>
+<dt>fixed</dt>
+<dd>関節を固定します(自由度なし)。</dd>
+</dl>
+</td></tr>
+<tr><td>jointId</td><td>関節番号を指定するためのフィールドです。
+jointIdは関節角度等の属性値を配列形式に並べて格納する際に何番目の要素に入れるかを指定するために利用されます。多くの場合，ロボットのコントローラ開発において関節角度を読み取ったり，指定したりできるのは制御可能な関節のみですから，そのような関節にjointIdを付ける、と考えていただければよろしいかと思います（必ずそうでなければならないということではありません）。以下、Idのつけ方に関するルールを示します。
+<ul>
+<li>jointIdは0から始まる。
+<li>jointIdには連続した整数値を用いる（間が空いたり，重複したりしていないこと）。
+</ul>
+</div>
+<br>
+なお、本フィールドの型は OpenHRPの旧バージョンではSFFloat型でしたが、
+version 3 より SFInt32型 となりましたので、ご注意ください。</td></tr>
+<tr><td>jointAxis</td><td>関節の軸を指定するためのフィールドです。<br>
+OpenHRPの旧バージョンでは文字列の"X", "Y", "Z"のいずれかで軸を指定していましたが、
+OpenHRP3ではベクトルを用いて任意方向への軸を指定可能となっています。
+旧バージョンの指定法もサポートはされますが、今後は新しい指定法をお使いください。</td></tr>
+<tr><td>gearRatio</td><td>ギヤ比: モータから関節までの減速比が1/100で
+あれば、100と記述します</td></tr>
+<tr><td>gearEfficiency</td><td>減速器の効率。効率が 60%であれば0.6と記述します。
+このフィールドがなければ、効率100%の減速器を想定します。</td></tr>
+<tr><td>rotorInertia</td><td>モータ回転子の慣性モーメント [kgm^2]</td></tr>
+<tr><td>rotorResistor</td><td>モータコイルの抵抗 [Ohm] ※コントローラで
+使用</td></tr>
+<tr><td>torqueConst</td><td>トルク定数 [Nm/A] ※コントローラで使用</td></tr>
+<tr><td>encoderPulse</td><td>エンコーダパルス数
+[pulse/rotate] ※コントローラで使用</td></tr>
+</table>
+</div>
+<br>
+<sup>(1)</sup> ： これらの値はシミュレーションでは使用されません。コントローラがこれらの値を読み込んで限界値を超えないように制御するために定義されているパラメータです。
+<p>
+
+<div>
+関節は、Jointノードを用いて定義します。Jointノードは、リンクフレームの情報を含みます。関節の親子関係は、そのままJointノードの親子関係に対応します。例えば人間の腕を考えたとき、「肩→肘→手首」の順に関節が存在するわけですから、この場合のリンク構造はJointノードを用いて、<br>
+
+<center>
+<img src="../img_new/joint1.gif" alt="腕のリンク構造"><br>
+図1.腕のリンク構造
+</center>
+<pre>
+<code>
+DEF 肩 <span style="color: red">Joint</span> {
+  children [
+    DEF 肘 <span style="color: red">Joint</span> {
+      children [
+        DEF 手首 <span style="color: red">Joint</span> {
+            :
+            :
+            :
+      ]
+    }
+  ]
+}</code>
+</pre>
+のように定義します。
+</div>
+
+<div>
+1関節にn自由度(n≧2)を持たせたい場合、その関節は、原点が一致したn個の関節から構成されていると考えることが出来ます。この場合はリンクフレームの原点を重ねるようにしてJointをn個定義します。例えば人間の肘は下図のように2自由度存在すると考えられ、<br>
+
+<center>
+<img src="../img_new/joint2.gif" alt="肘のリンク構造"><br>
+図2.肘のリンク構造
+</center>
+この場合は、
+<pre>
+<code>
+DEF 肘0 <span style="color: red">Joint</span> {      <span style="color: green">← 肘の曲げ</span>
+  children [
+    DEF 肘1 <span style="color: red">Joint</span> {  <span style="color: green">← 肘のひねり</span>
+
+        :
+        :
+        :
+    }
+  ]
+  <span style="color: red">translation 0 0 0</span>  <span style="color: green">← 座標原点を合わせる</span>
+}
+</code>
+</pre>
+のように定義します。
+</div>
+
+<br>
+
+<!-- Segment ノード -->
+<a name="SEGMENT"></a>
+<h4> Segment </h4>
+
+<p>
+Segmentノードはリンク形状を定義します。
+</p>
+
+<div>
+<code>
+<pre>
+PROTO Segment [
+  field         SFVec3f   bboxCenter        0 0 0
+  field         SFVec3f   bboxSize          -1 -1 -1
+  exposedField  SFVec3f   centerOfMass      0 0 0
+  exposedField  MFNode    children          [ ]
+  exposedField  SFNode    coord             NULL
+  exposedField  MFNode    displacers        [ ]
+  exposedField  SFFloat   mass              0 
+  exposedField  MFFloat   momentsOfInertia  [ 0 0 0 0 0 0 0 0 0 ]
+  exposedField  SFString  name              ""
+  eventIn       MFNode    addChildren
+  eventIn       MFNode    removeChildren
+]
+{
+  Group {
+    addChildren    IS addChildren
+    bboxCenter     IS bboxCenter
+    bboxSize       IS bboxSize
+    children       IS children
+    removeChildren IS removeChildren
+  }
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+<table border="1">
+<tr><td>bboxCenter</td><td>OpenHRPでは使用しません。</td></tr>
+<tr><td>bboxSize</td><td>OpenHRPでは使用しません。</td></tr>
+<tr><td>centerOfMass</td><td>重心位置を指定するフィールドです。</td></tr>
+<tr><td>children</td><td>子ノードをぶら下げるフィールドです。ここに、形状を定義するノードを追加します。</td></tr>
+<tr><td>coord</td><td>OpenHRPでは使用しません。</td></tr>
+<tr><td>displacers</td><td>OpenHRPでは使用しません。</td></tr>
+<tr><td>mass</td><td>質量を指定するフィールドです。</td></tr>
+<tr><td>momentsOfInertia</td><td>重心位置回りの慣性テンソルを指定するフィールドです。</td></tr>
+<tr><td>name</td><td>Segment名を指定するフィールドです。</td></tr>
+<tr><td>addChildren</td><td>OpenHRPでは使用しません。</td></tr>
+<tr><td>removeChildren</td><td>OpenHRPでは使用しません。</td></tr>
+</table>
+</div>
+<br>
+
+<div>
+リンク形状は、Segmentノードに定義します。Segmentノードは、Jointノードの子ノードとして複数個設定でき、Transformノードの子ノードとして記述することも可能です。
+<pre>
+<code>
+DEF JOINT1 Joint {
+  children [
+    DEF SEGMENT1 <span style="color: red">Segment</span> {
+      children [
+          :
+      ]
+    }
+    Transform {
+      translation 0 0 0.5
+      rotation 1 0 0 1.57
+      children DEF SEGMENT2 <span style="color: red">Segment</span> {
+        children [
+          :
+        ]
+      }
+    }
+  ]
+}
+</code>
+</pre>
+</div>
+
+<div>
+例えば、人間の肩から肘にかけての形状を定義したい場合、この形状が肩のリンクフレームに属するとすると、<br>
+
+<center>
+<img src="../img_new/joint3.gif" alt="肩から肘にかけての形状"><br>
+図3.肩から肘にかけての形状
+</center>
+<pre>
+<code>
+DEF 肩 Joint {
+  children [
+    DEF 肩から肘 <span style="color: red">Segment</span> {
+      children [
+        :
+        :    <span style="color: green">←ここに実際の形状を記述する</span>
+        :
+      ]
+    }
+    DEF 肘 Joint {
+        :
+        :
+        :
+    }
+  ]
+}
+</code>
+</pre>
+のように構造を定義します。
+
+</div>
+
+<div>
+Segmentノードのchildrenフィールド下に実際の形状を定義します。形状の定義にはモデリングツールを使用されることをお勧めします。簡単な形状であればテキストエディタを使用して手作業で編集することも可能です。
+</div>
+
+<br>
+
+<a name="EXTRAJOINT"></a>
+<h4> ExtraJoint </h4>
+
+<p>
+ExtraJointノードは閉リンク機構を定義します。閉リンクの1つの関節がボールジョイントで接続されていると考え、2つのリンクが離れないように拘束力を発生させます。
+</p>
+
+<div>
+<code>
+<pre>
+PROTO ExtraJoint [
+  exposedField SFString link1Name 	""
+  exposedField SFString link2Name 	""
+  exposedField SFVec3f  link1LocalPos 	0 0 0
+  exposedField SFVec3f  link2LocalPos 	0 0 0
+  exposedField SFString jointType 	"xyz"
+  exposedField SFVec3f  jointAxis 	1 0 0
+]
+{
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+<table border="1">
+<tr><td>link1Name</td><td>ボールジョイントを受けているジョイント名を指定します。</td></tr>
+<tr><td>link2Name</td><td>ボールジョイントが付いているジョイント名を指定します。</td></tr>
+<tr><td>link1LocalPos</td><td>link1Nameジョイントの拘束位置をそのジョイントのローカル座標で指定します。</td></tr>
+<tr><td>link2LocalPos</td><td>link2Nameジョイントの拘束位置をそのジョイントのローカル座標で指定します。</td></tr>
+<tr><td>jointType</td><td>拘束する軸数を指定します。xyz：互いに直交する3軸　xy：jointAxisで指定した軸に直交する２軸　z：jointAxisで指定した１軸</td></tr>
+<tr><td>jointAxis</td><td>link1Nameジョイントのローカル座標で単位ベクトルを指定します。ベクトルの意味は、jointTypeの指定で変わります。</td></tr>
+</table>
+</div>
+<br>
+
+<div>
+閉リンク機構のサンプルclosed-link-sample.wrlが、サンプルモデルにありますので、参考にして下さい。
+</div>
+
+<br>
+
+<!-- AccelerationSensor ノード -->
+<a name="ACCELERATIONSENSOR"></a>
+<h4> AccelerationSensor </h4>
+
+<p>
+AccelerationSensorノードは、3軸加速度センサを定義します。
+</p>
+
+<div>
+<code>
+<pre>
+PROTO AccelerationSensor [
+  exposedField SFVec3f    maxAcceleration -1 -1 -1
+  exposedField SFVec3f    translation     0 0 0
+  exposedField SFRotation rotation        0 0 1 0
+  exposedField SFInt32    sensorId        -1
+]
+{
+  Transform {
+    translation IS translation
+    rotation    IS rotation
+  }
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+<table border="1">
+<tr><td>maxAcceleration</td><td>計測可能な最大加速度を指定します。</td></tr>
+<tr><td>translation</td><td>ローカル座標系の位置を、親ノード座標系からのオフセット値で指定します。</td></tr>
+<tr><td>rotation</td><td>ローカル座標系の姿勢を、親ノード座標系からのオフセット値で指定します。</td></tr>
+<tr><td>sensorId</td><td>センサのIDを指定します。センサIDは一つのモデル内の同一種類のセンサに対して0番から順に番号の飛びや重複がないように設定して下さい。このIDは同一種類のセンサからのデータを並べる際に順番を決定するために使用されます。</td></tr>
+</table>
+</div>
+
+<p>
+各種センサノードはそのセンサが取り付けられているJointノードの下に取り付けます。
+例えば、サンプルモデルの腰部(WAIST)に加速度センサを取り付けられている場合は、次のように記述します。
+</p>
+<pre>
+<code>
+DEF WAIST Joint
+{
+     :
+  children [
+    DEF gsensor <span style="color: red">AccelerationSensor</span>
+    {
+        :
+    }
+     :
+  ]
+}
+</code>
+</pre>
+</div>
+<br>
+
+<!-- Gyro ノード -->
+<a name="GYROSENSOR"></a>
+<h4> GyroSensor </h4>
+
+<p>
+Gyroノードは、3軸角速度センサを定義します。
+</p>
+
+<div>
+<code>
+<pre>
+PROTO Gyro [
+  exposedField SFVec3f    maxAngularVelocity -1 -1 -1
+  exposedField SFVec3f    translation        0 0 0
+  exposedField SFRotation rotation           0 0 1 0
+  exposedField SFInt32    sensorId           -1
+]
+{
+  Transform {
+    translation IS translation
+    rotation    IS rotation
+  }
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+<table border="1">
+<tr><td>maxAngularVelocity</td><td>計測可能な最大角速度を指定します。</td></tr>
+<tr><td>translation</td><td>ローカル座標系の位置を、親ノード座標系からのオフセット値で指定します。</td></tr>
+<tr><td>rotation</td><td>ローカル座標系の姿勢を、親ノード座標系からのオフセット値で指定します。</td></tr>
+<tr><td>sensorId</td><td>センサのIDを指定します。</td></tr>
+</table>
+</div>
+<br>
+
+<!-- VisionSensor ノード -->
+<a name="VISIONSENSOR"></a>
+<h4> VisionSensor </h4>
+
+<p>
+VisionSensorノードは、視覚センサを定義します。
+</p>
+
+<div>
+<code>
+<pre>
+PROTO VisionSensor
+[
+  exposedField  SFVec3f     translation       0 0 0
+  exposedField  SFRotation  rotation          0 0 1 0
+  exposedField  SFFloat     fieldOfView       0.785398
+  field         SFString    name              ""
+  exposedField  SFFloat     frontClipDistance 0.01
+  exposedField  SFFloat     backClipDistance  10.0
+  exposedField  SFString    type              "NONE"
+  exposedField  SFInt32     sensorId          -1
+  exposedField  SFInt32     width             320
+  exposedField  SFInt32     height            240
+  exposedField  SFFloat     frameRate         30
+]
+{
+  Transform
+  {
+    translation IS translation
+    rotation    IS rotation
+  }
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+<table border="1">
+<tr><td>translation</td><td>視点の位置を、親ノード座標系からの相対位置で指定します。</td></tr>
+<tr id="VSrotation"><td>rotation</td><td>視点の姿勢を、親ノード座標系からの相対姿勢で指定します。
+
+<div>
+視点の姿勢は以下のように定義されます。
+<ul style="list-style-type: none">
+<li>視線前方向 ・・・ ローカル座標系でZ軸の負の向き
+<li>視線上方向 ・・・ ローカル座標系でY軸の正の向き
+</ul>
+<center>
+<img src="../img_new/viewvector.gif" alt="視線ベクトル"><br>
+</center>
+</div>
+
+
+</td></tr>
+<tr><td>fieldOfView</td><td>カメラの視野角度を指定します。単位はradで、(0, pi)の値が設定可能です。</td></tr>
+<tr><td>name</td><td>センサの名称を指定します。</td></tr>
+<tr><td>frontClipDistance</td><td>視点から前クリップ面までの距離を指定します。</td></tr>
+
+<tr><td>backClipDistance</td><td>視点から後クリップ面までの距離を指定します。</td></tr>
+<tr><td>type</td><td>センサから取得する情報の種類を指定します。
+<dl>
+<dt>"COLOR"</dt>
+<dd>色情報を取得します。</dd>
+<dt>"DEPTH"</dt>
+<dd>深さ情報を取得します。</dd>
+<dt>"COLOR_DEPTH"</dt>
+<dd>色情報と深さ情報を取得します。</dd>
+
+<dt>"NONE"</dt>
+<dd>いずれの情報も取得しません。</dd>
+</dl>
+</td></tr>
+<tr><td>sensorId</td><td>センサのIDを指定します。</td></tr>
+<tr><td>width</td><td>画像の幅を指定します。</td></tr>
+<tr><td>height</td><td>画像の高さを指定します。</td></tr>
+<tr><td>frameRate</td><td>カメラが毎秒何枚の画像を出力するかを指定します。</td></tr>
+</table>
+</div>
+<br>
+
+<!-- ForceSensor ノード -->
+<a name="FORCESENSOR"></a>
+<h4> ForceSensor </h4>
+
+<p>
+ForceSensorノードは、力／トルクセンサを定義します。
+</p>
+
+<div>
+<code>
+<pre>
+PROTO ForceSensor [  
+  exposedField SFVec3f maxForce -1 -1 -1
+  exposedField SFVec3f maxTorque -1 -1 -1
+  exposedField SFVec3f translation 0 0 0
+  exposedField SFRotation rotation 0 0 1 0
+  exposedField SFInt32 sensorId -1
+]
+{
+  Transform {
+translation IS translation
+    rotation IS rotation
+  }
+}
+</pre>
+</code>
+</div>
+
+<div>
+<table border="1">
+<tr><td>maxForce</td><td>計測可能な力の最大値を設定します。</td></tr>
+<tr><td>maxTorque</td><td>計測可能なトルクの最大値を設定します。</td></tr>
+
+<tr><td>translation</td><td>ローカル座標系の位置を、親ノード座標系からのオフセット値で指定します。</td></tr>
+<tr><td>rotation</td><td>ローカル座標系の姿勢を、親ノード座標系からのオフセット値で指定します。</td></tr>
+<tr><td>sensorId</td><td>センサのIDを指定します。</td></tr>
+</table>
+</div>
+<br>
+
+<!-- RangeSensor ノード -->
+<a name="RANGESENSOR"></a>
+<h4> RangeSensor </h4>
+
+<p>
+RangeSensorノードは、距離センサを定義します。
+</p>
+
+<div>
+<code>
+<pre>
+ PROTO RangeSensor [
+   exposedField SFVec3f    translation       0 0 0
+   exposedField SFRotation rotation          0 0 1 0
+   exposedField MFNode     children          [ ]
+   exposedField SFInt32    sensorId          -1
+   exposedField SFFloat    scanAngle         3.14159 #[rad]
+   exposedField SFFloat    scanStep          0.1     #[rad]
+   exposedField SFFloat    scanRate          10      #[Hz]
+   exposedField SFFloat    maxDistance	    10
+ ]
+ {
+   Transform {
+     rotation         IS rotation
+     translation      IS translation
+     children         IS children
+   }
+ }
+</pre>
+</code>
+</div>
+
+<div>
+<table border="1">
+<tr><td>translation</td><td>このセンサが取り付けられているリンクに対するこのセンサの位置</td></tr>
+<tr><td>rotation</td><td>このセンサが取り付けられているリンクに対するこのセンサの姿勢。センサ座標系において、Z軸マイナス方向が計測正面、スキャンする場合の計測面はXZ平面となります。
+これは<a href="#VSrotation">VisionSensor</a>と同じですので、従来VisionSensorで代用していたモデルを変更する場合は
+位置、姿勢はそのまま使えます。</td></tr>
+<tr><td>sensorId</td><td>このロボットに取り付けられているRangeSensorの中での通し番号</td></tr>
+<tr><td>scanAngle</td><td>距離をスキャンする角度[rad]。0度を中心として、その両側にscanStepの倍数の角度でscanAngleの範囲内の角度が計測されます。センサにスキャン機能がない場合は0とします。</td></tr>
+<tr><td>scanStep</td><td>スキャン中に距離が計測される角度の刻み[rad]</td></tr>
+<tr><td>scanRate</td><td>１秒間あたり行うスキャン回数[Hz]</td></tr>
+<tr><td>maxDistance</td><td>計測可能な最大距離[m]</td></tr>
+</table>
+</div>
+<br>
+
+

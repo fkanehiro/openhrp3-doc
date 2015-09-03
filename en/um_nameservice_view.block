@@ -1,0 +1,45 @@
+title = NameService Monitor View
+base  = ..
+
+<h2>NameService Monitor View</h2>
+<p>
+Here we explain various elements that compose NameService Monitor View.
+</p>
+<p align=center>
+<img src="../img_new/um_004.png">
+</p>
+
+<ul>
+<ol>
+<li><p>update button<br>
+Click to update the status.
+</p></li>
+<li><p>Host<br>
+Specify the host name of NameService. The value of the environment variable "NS_HOST" is displayed 
+at the initial state. It will be displayed as "localhost" if "NS_HOST" is undefined.
+</p></li>
+<li><p>Port<br>
+Specify the port number of NameService. The value of the environment variable "NS_PORT" is displayed 
+at the initial state. It will be displayed as "2809" if "NS_PORT" is undefined.
+</p></li>
+<li><p>Display area<br>
+( State ) Identifier<br>
+The CORBA objects registered into NameService are enumerated with this form. <br>
+A state displays one of following.
+  <ul>
+  Active: It is a state with effective binding at an identifier. <br>
+  not Active: It is a state with invalid binding at an identifier. <br>
+  </ul>
+</li>
+<li><p>NS_URL<br>
+Display the contact URL of the NameService.
+</p></li>
+</ul>
+<br>
+When update button is pressed at the initial state, it will be seen as following View.
+<p align=center>
+<img src="../img_new/um_005.png">
+</p>
+
+
+

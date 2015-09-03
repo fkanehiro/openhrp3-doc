@@ -1,0 +1,149 @@
+title = OpenHRP View
+base  = ..
+
+<h2>OpenHRP View概要</h2>
+<p>
+OpenHRP Viewを構成する各種要素について説明します。<br>
+OpenHRP Viewはsimulation, controller, collisionの3つのタブから構成されます．
+</p>
+<h3>simulationタブ</h3>  
+<p align=center>
+<img src="../img_new/um_015.png"><br>
+simulationタブ
+</p>
+
+<ul>
+<ol>
+<li>Total Time[s]<br>
+シミュレーションを行う総時間を秒単位で指定します。
+</li>
+<li>Integration Step[s]<br>
+積分タイムステップを秒単位で指定します。
+</li>
+<li>Logging Step[s]<br>
+ロギングタイムステップを秒単位で指定します。
+</li>
+<li>Integration Method<br>
+積分方法を指定します。
+</li>
+<li>Gravity[m/s^2]<br>
+重力加速度を指定します。
+</li>
+<li>Forward Dynamice<br>
+順動力学計算の有無を指定します。
+</li>
+<li>View Simulation<br>
+視野画像シミュレーションを行うか否かを指定します。このチェックボックスにチェックを入れると，シミュレーション対象のロボットや環境オブジェクトに<a href=create_model.html#VISIONSENSOR>VisionSensorノード</a>が取り付けられていた場合に視野画像生成が行われ，シミュレーション開始と同時に視野画像を表示するウィンドウが表示されます．逆にこのチェックボックスにチェックが入っていない場合，VisionSensorノードが取り付けられたモデルのシミュレーションを行っても視野画像の生成は行われません．
+</li>
+</ol>
+</ul>
+
+<h3>controllerタブ</h3>  
+<p align=center>
+<img src="../img_new/um_016.png"><br>
+controllerタブ
+</p>
+
+<ul>
+<ol>
+<li>Robot Name<br>
+ロボット名の一覧です。
+</li>
+<li>Controller<br>
+コントローラーの一覧です。CORBA IDで表示されます。
+</li>
+<li>Control Time[s]<br>
+制御周期の一覧です。
+</li>
+<li>Working Dir.<br>
+ワークディレクトリの一覧です。
+</li>
+<li>Setup Command<br>
+起動コマンドの一覧です。
+</li>
+<li>Detach ボタン<br>
+クリックすることで選択した行を削除します。
+</li>
+<li>Edit ボタン<br>
+クリックすることで選択した行をEditできる様にします。
+</li>
+<li>Controller<br>
+コントローラーをCORBA IDリストボックスから選択します。
+</li>
+<li>Control Time[s]<br>
+制御周期を秒単位で指定します。
+</li>
+<li>Working Dir.<br>
+ワークディレクトリを指定します。$(環境変数名)の形で環境変数が使えます。
+</li>
+<li>Setup Command<br>
+起動コマンドを指定します。$(環境変数名)の形で環境変数が使えます。
+</li>
+</ol>
+</ul>
+
+<h3>collisionタブ</h3>  
+<p align=center>
+<img src="../img_new/um_017.png"><br>
+collisionタブ
+</p>
+<ul>
+<ol>
+<li>Object1<br>
+collisionペア(その1)のObjectの一覧です。
+</li>
+<li>Link1<br>
+collisionペア(その1)のLinkの一覧です。
+</li>
+<li>Object2<br>
+collisionペア(その2)のObjectの一覧です。
+</li>
+<li>Link2<br>
+collisionペア(その2)のLinkの一覧です。
+</li>
+<li>SDModel<br>
+Spring Damper Modelが有効かどうかの一覧です。
+</li>
+<li>Add ボタン<br>
+collisionペアを追加します。
+</li>
+<li>Remove ボタン<br>
+選択されたcollisionペアを削除します。
+</li>
+<li>Edit ボタン<br>
+選択されたcollisionペアを編集します。
+</li>
+<li>Add Allボタン<br>
+組み合わせられるcollisionペアを全て追加します。
+</li>
+<li>Object1<br>
+collisionペア(その1)のObjectをリストボックスから選択します。
+</li>
+<li>Link1<br>
+collisionペア(その1)のLinkをリストボックスから選択します。選択しない場合はすべてのLinkが対象となります。
+</li>
+<li>Object2<br>
+collisionペア(その2)のObjectをリストボックスから選択します。
+</li>
+<li>Link1<br>
+collisionペア(その2)のLinkをリストボックスから選択します。選択しない場合はすべてのLinkが対象となります。
+</li>
+<li>Spring Damper Model<br>
+スプリングダンパーモデルを指定するときにチェックします。
+</li>
+<li>Spring Constant<br>
+スプリングダンパーモデルが指定された場合、バネ定数を入力します。
+</li>
+<li>Damper Constant<br>
+スプリングダンパーモデルが指定された場合、ダンパー定数を入力します。
+</li>
+<li>Static<br>
+静摩擦係数を入力します。スプリングダンパーモデルが指定されない場合に有効です。
+</li>
+<li>Sliding<br>
+動摩擦係数を入力します。スプリングダンパーモデルが指定されない場合に有効です。
+</li>
+</ol>
+</ul>
+
+

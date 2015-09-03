@@ -1,0 +1,43 @@
+title = GrxUI Menu
+base  = ..
+
+<h2>GrxUI Menu</h2>
+<p>
+Here we explain the various elements that compose GrxUI menu.
+</p>
+<p align=center>
+<img src="../img_new/um_019.png"><br>
+Menu before simulation start
+</p>
+
+<p align=center>
+<img src="../img_new/um_020.png"><br>
+Menu while simulation in prograss
+</p>
+
+<ul>
+<ol>
+<li><p>New Project<br>
+Click to create new project. All the previous items will be deleted.
+</p></li>
+<li><p>Load Project<br>
+Click to load previous project. All the previous items will be deleted.
+</p></li>
+<li><p>Restore Project<br>
+Click to restore a project.
+</p></li>
+<li><p>Save Project As<br>
+Click to save a project in other name.
+</p></li>
+<li><p>Start Simulation<br>
+Click to start simulation.
+</p></li>
+<li><p>Stop Simulation<br>
+Click to stop simulation.
+</p></li>
+</ol>
+</ul>
+
+
+
+

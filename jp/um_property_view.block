@@ -1,0 +1,33 @@
+title = Property View
+base  = ..
+
+<h2>Property View概要</h2>
+<p>
+Property Viewを構成する各種要素について説明します。
+</p>
+<p align=center>
+<img src="../img_new/um_012.png">
+</p>
+
+<ul>
+<ol>
+<li>アイテム名<br>
+<a href="./um_item_view.html">"Item View"</a>で選択されたItemやNodeの名前が表示されます。アイテム名を入力して、選択することもできます。
+</li>
+<li>Name一覧<br>
+変数名の一覧を表示するエリアです。
+</li>
+<li>Value一覧<br>
+変数値の一覧を表示するエリアです。編集も可能です。（ここでは編集できない変数もあります。）
+</li>
+</ol>
+</ul>
+
+サンプルプロジェクト"SamplePD.xml"をロードし、"sample"ロボットを選択した時の例を示します。
+</p>
+<p align=center>
+<img src="../img_new/um_026.png">
+</p>
+
+
+

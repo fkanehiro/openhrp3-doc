@@ -1,0 +1,72 @@
+title = Graph View
+base  = ..
+
+<h2>Graph View概要</h2>
+<p>
+Graph Viewを構成する各種要素について説明します。
+</p>
+<p align=center>
+<img src="../img_new/graph_view.jpg">
+</p>
+
+<ol>
+<li>クリックして、グラフを選択します。
+</li>
+<li>バーをドラッグして、グラフ表示の幅、高さを変更します。
+</li>
+<li>全てのグラフの水平軸の範囲を設定します。
+</li>
+</p>
+<p align=left>
+<img src="../img_new/graph_2.jpg">
+<ol>
+<li>表示する時間の幅を設定します。
+</li>
+<li>赤線マーカーの位置を設定します。
+</li>
+<li>設定をグラフに反映します。
+</li>
+</ol>
+<br>
+<li>選択しているグラフの垂直軸の範囲を設定します。
+</li>
+</p>
+<p align=left>
+<img src="../img_new/graph_3.jpg">
+</p>
+<ol>
+<li>グラフの最大値を設定します。
+</li>
+<li>グラフの最小値を設定します。
+</li>
+<li>設定をグラフに反映します。
+</li>
+</ol>
+<br>
+<li>選択しているグラフに表示する内容を設定します。
+</li>
+</p>
+<p align=left>
+<img src="../img_new/graph_1.jpg">
+</p>
+<ol>
+<li>モデルを選択します。
+</li>
+<li>センサの種類を選択します。
+</li>
+<li>センサを選択します。
+</li>
+<li>データ項目を選択します。
+</li>
+<li>選択した項目を削除します。
+</li>
+<li>設定した項目を追加します。
+</li>
+<li>グラフの色を選択します。
+</li>
+<li>グラフの名前を編集します。
+</li>
+<li>設定をグラフに反映します。
+</li>
+</ol>
+</ol>

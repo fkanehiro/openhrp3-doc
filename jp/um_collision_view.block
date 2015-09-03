@@ -1,0 +1,71 @@
+title = Collision View
+base  = ..
+
+<h2>Collision View概要</h2>
+<p>
+Collision Viewを構成する各種要素について説明します。<br>
+</p>
+<p align=center>
+<img src="../img_new/um_017.png"><br>
+Collision View
+</p>
+<ul>
+<ol>
+<li>Object1<br>
+collisionペア(その1)のObjectの一覧です。
+</li>
+<li>Link1<br>
+collisionペア(その1)のLinkの一覧です。
+</li>
+<li>Object2<br>
+collisionペア(その2)のObjectの一覧です。
+</li>
+<li>Link2<br>
+collisionペア(その2)のLinkの一覧です。
+</li>
+<li>Static<br>
+静摩擦係数の一覧です。
+</li>
+<li>Sliding<br>
+動摩擦係数の一覧です。
+</li>
+<li>Culling Thresh<br>
+接触力を計算するときに、接触点を間引く閾値の一覧です。
+</li>
+<li>Add ボタン<br>
+collisionペアを追加します。
+</li>
+<li>Remove ボタン<br>
+選択されたcollisionペアを削除します。
+</li>
+<li>Edit ボタン<br>
+選択されたcollisionペアを編集します。
+</li>
+<li>Add Allボタン<br>
+組み合わせられるcollisionペアを全て追加します。
+</li>
+<li>Object1<br>
+collisionペア(その1)のObjectをリストボックスから選択します。
+</li>
+<li>Link1<br>
+collisionペア(その1)のLinkをリストボックスから選択します。選択しない場合はすべてのLinkが対象となります。
+</li>
+<li>Object2<br>
+collisionペア(その2)のObjectをリストボックスから選択します。
+</li>
+<li>Link1<br>
+collisionペア(その2)のLinkをリストボックスから選択します。選択しない場合はすべてのLinkが対象となります。
+</li>
+<li>Static<br>
+静摩擦係数を入力します。
+</li>
+<li>Sliding<br>
+動摩擦係数を入力します。
+</li>
+<li>Culling Thresh<br>
+接触力を計算するときに、接触点を間引く閾値（ｍ）を指定します。距離がこの値以下の接触点は同一の接触点として扱われます。
+</li>
+</ol>
+</ul>
+
+

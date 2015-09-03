@@ -1,0 +1,29 @@
+title = リリースノートVer.3.0.2
+base  = ..
+
+<h2>リリースノートVer.3.0.2</h2>
+<p>
+Ver.3.0.2の主な変更点:
+
+<ul>
+  <li>GrxUI上で新規プロジェクトを作成した場合、グラフコンテンツを作成しても Seriesボタンが有効にならない不具合を修正しました。</li>
+  <li>GrxUI終了時にGrxUIから起動したomniNamesが自動的に終了しない不具合を修正しました。</li>
+  <li>ControllerBridgeでABS_TRANSFORMタイプのInPortが作成できない不具合を修正しました。</li>
+  <li>ControllerBridgeの入力ポートの指定で識別名が使用できない不具合を修正しました。</li>
+  <li>NoSimモード（Forward Dynamicsのチェックを外したモード）で、ロボットのベース座標の位置姿勢、全関節の角度を与えてロボットを動かすとベースリンクだけが先行して動くような表示がされる不具合を修正しました。</li>
+  <li>GrxUI OpenHRPタブウィンドウサイズが狭い場合OK,CANCELボタンが表示されない不具合を修正しました。</li>
+  <li>SampleControllerを東大サーバ(DynamicsSimulator/server.ut)で実行するとシミュレートできない不具合を修正しました。</li>
+  <li>ViewSimulatorの画像生成がシミュレーション時間に同期して行われていない不具合を修正しました。</li>
+  <li>VC++のデバッグモードでDynamicsSimulatorを起動した時エラーが起こる不具合を修正しました。[Windows版]</li>
+  <li>jythonの配布元がjython.jarのインストール場所を変更したためjython.jarが参照できない不具合を修正しました。[Linux版]</li>
+  <li>config.sh、config.batでは変更可能なパラメータのみの定義に改めました。</li>
+  <li>Java3D,JMFをパッケージに含めて配布するように改めました。</li>
+  <li>Java 3Dの1.5系バージョンでは深度バッファの取得に不具合があるので1.4.1の使用に変更しました。</li>
+  <li>GrxUI用のTempディレクトリを${HOME}/.grxuiに変更しました。[Linux版]</li>
+  <li>ControllerBridgeのconfig-fileオプションで読み込む設定ファイルの書式を変更しました。</li>
+  <li>ControllerBridgeのmoduleオプションで拡張子を省略可能とする機能を追加しました。</li>
+  <li>DynamicsSimulatorからデータを受け取る際シミュレーション時刻を出力する機能を追加しました。</li>
+  <li>英語版のマニュアルに対応しました。</li>
+</ul>
+<div align="right">2008/09/19</div>
+</p>

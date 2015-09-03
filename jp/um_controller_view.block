@@ -1,0 +1,64 @@
+title = Controller View
+base  = ..
+
+<h2>Controller View概要</h2>
+<p>
+Controller Viewを構成する各種要素について説明します。
+</p>
+<p align=center>
+<img src="../img_new/um_016.png"><br>
+Controller View 1
+</p>
+
+<ul>
+<ol>
+<li>Robot Name<br>
+ロボット名の一覧です。
+</li>
+<li>Controller<br>
+コントローラーの一覧です。CORBA IDで表示されます。
+</li>
+<li>Control Time[s]<br>
+制御周期の一覧です。
+</li>
+<li>Working Dir.<br>
+ワークディレクトリの一覧です。
+</li>
+<li>Setup Command<br>
+起動コマンドの一覧です。
+</li>
+<li>Detach ボタン<br>
+クリックすることで選択した行を削除します。
+</li>
+<li>Edit ボタン<br>
+クリックすることで選択した行をEditできる様にします。
+</li>
+<p align=center>
+<img src="../img_new/um_016_1.png"><br>
+Controller View 2
+</p>
+<li>Controller<br>
+コントローラーをCORBA IDリストボックスから選択します。
+</li>
+<li>Control Time[s]<br>
+制御周期を秒単位で指定します。
+</li>
+<li>Working Dir.<br>
+ワークディレクトリを指定します。$(環境変数名)の形で環境変数が使えます。
+</li>
+<li>new file<br>
+新しいファイルを開きます。</li>
+<li>select file<br>
+既存のファイルを選択します。
+</li>
+<li>open file<br>
+既存のファイルを開きます。
+</li>
+<li>OK　ボタン<br>
+編集した内容を更新して、終了します。
+</li>
+<li>Cancel　ボタン<br>
+編集した内容を破棄して、終了します。
+</li>
+</ol>
+</ul>

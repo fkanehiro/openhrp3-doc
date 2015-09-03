@@ -1,0 +1,20 @@
+title = Release Note Ver.3.0.5
+base  = ..
+
+<h2>Release Note Ver.3.0.5</h2>
+Ver.3.0.5 is a bug-fixed version of Ver.3.0.4.
+<p>
+Basic changes in Ver.3.0.5:
+
+<ul>
+  <li>
+   Fixed a critical bug that occurs when displaying normal-vector. 
+  </li>
+  <li>
+   Settings changed not to occur exceptions, when simulation executed on 
+   OnlineViewer less than 60000 frames (about 60sec).<br>
+   However, an exception occurs when it exceeded 60000 frames.
+  </li>
+</ul>
+<div align="right">09-04-2009</div>
+</p>

@@ -1,0 +1,73 @@
+title = Graph View
+base  = ..
+
+<h2>Graph View</h2>
+<p>
+Here we explain various elements that compose Graph View. Windows settings are taken for 
+following example.
+</p>
+<p align=center>
+<img src="../img_new/graph_view.jpg">
+</p>
+
+<ol>
+<li>Clicks to chooses a graph. 
+</li>
+<li>If bar is dragged, the width of a graphical representation and height are changed. 
+</li>
+<li>The range of the horizontal axis of all the graphs is set up. 
+</li>
+</p>
+<p align=left>
+<img src="../img_new/graph_2.jpg">
+<ol>
+<li>The range of time to display is set up.
+</li>
+<li>The position of a red line marker is set up.
+</li>
+<li>A setup is reflected in a graph.
+</li>
+</ol>
+<br>
+<li>The range of the vertical axis of the chosen graph is set up. 
+</li>
+</p>
+<p align=left>
+<img src="../img_new/graph_3.jpg">
+</p>
+<ol>
+<li>The maximum of a graph is set up.
+</li>
+<li>The minimum of a graph is set up.
+</li>
+<li>A setup is reflected in a graph.
+</li>
+</ol>
+<br>
+<li>The contents displayed on the chosen graph are set up. 
+</li>
+</p>
+<p align=left>
+<img src="../img_new/graph_1.jpg">
+</p>
+<ol>
+<li>A model is chosen. 
+</li>
+<li>The kind of sensor is chosen.
+</li>
+<li>A sensor is chosen. 
+</li>
+<li>A data item is chosen. 
+</li>
+<li>The selected item is deleted. 
+</li>
+<li>The set-up item is added.
+</li>
+<li>The color of a graph is chosen.
+</li>
+<li>The name of a graph is edited. 
+</li>
+<li>A setup is reflected in Graf.
+</li>
+</ol>
+</ol>

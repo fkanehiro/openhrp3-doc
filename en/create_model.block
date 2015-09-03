@@ -1,0 +1,1092 @@
+title = Robot and Environmental Model Define Format
+base  = ..
+
+<h2>Overview of VRML Model</h2>
+<p>
+In OpenHRP, models that forms the robot and environmental objects, are defined by using the language called 
+<a href="http://www.web3d.org/" target="_blank">VRML2.0 (Virtual Reality Markup Language)</a> 
+which used to define 3D models. Each entity in the environment required an individual 
+model file. Which means, to express a situation of a robot standing on the floor, you will need 
+two VRML files(***.wrl); one for the floor and another for the robot, which would make two VRML 
+files in total.
+</p>
+<p>
+Basic layout of a VRML file is as follows.
+</p>
+
+<dl>
+<dt>Header:</dt>
+<dd>PROTO declaration part (Declare the PROTO Structure)</dd>
+<dt>The rest:</dt>
+<dd>Real-model definition part (Declare the instances that uses PROTO)</dd>
+</dl>
+
+<p>
+PROTO declaration part is used to define new nodes that were not originally defined in VRML97.
+Therefore we use a node called "PROTO", which is similar to the concept of structure C 
+language(For more details, please refer "PROTO Node"). <br>
+The basic layout of real-model definition part is as follows:
+</p>
+
+<div>
+<pre>
+    Humanoid sample(The root node of the whole model)
+     + Joint WAIST (The center of the robot. A free point floats in the space)
+     | ...
+     |  + Joint Chest
+     |    + Joint Head
+     |    + Joint Left Arm
+     |    + Joint Right Arm
+     |
+     + Joint Left Leg
+     |
+     + Joint Right Leg
+</pre>
+</div>
+
+<p>
+This means, "Left leg", "Right leg" and the "Chest" are connected to the "Waist" which is floating 
+in the space, and so as "Left arm", "Right arm" and the "Head" are connected to the "Chest".
+</p>
+
+
+<h3 id="PROTO"> The PROTO Node </h3>
+
+<p>
+In OpenHRP, the model is made by assembling instances of the following PROTO nodes. The PROTO node 
+used here is based on PROTO node enacted by <a href="http://ece.uwaterloo.ca/~h-anim/" 
+target="_blank">h-anim1.1</a>, which is originaly used to describe human figure, and we 
+extended/modified it to be use with OpenHRP model description. These OpenHRP PROTO nodes we will 
+be using are Humanoid, Joint and Segment. We create models by combining instances of the these 
+nodes and making a layered structure.
+</p>
+
+<p>
+Apart from the three PROTO nodes mentioned above, we have prepared PROTO nodes to define various 
+sensors. Camera, 6 axis ForceSensor, GyroSensor, AccelerationSensor and RangeSensor can be 
+simulated by including each sensor in to the hierarchy.
+</p>
+
+<p>
+Here, we explain the items defined by each node.
+</p>
+
+<ul>
+ <li>
+  Nodes that define link structure and dynamics/mechanism parameter.<br>
+  <ol>
+   <li><a href="#HUMANOID">Humanoid Node</a></li>
+   <li><a href="#JOINT">Joint Node</a></li>
+   <li><a href="#SEGMENT">Segment Node</a></li>
+   <li><a href="#EXTRAJOINT">ExtraJoint Node</a></li>
+  </ol>
+ </li>
+ <br>
+ <li>
+  Nodes that define each sensor<br>
+  <ol>
+   <li><a href="#ACCELERATIONSENSOR">AccelerationSensor node</a>
+   <li><a href="#GYROSENSOR">GyroSensor node</a>
+   <li><a href="#VISIONSENSOR">VisionSensor node</a>
+   <li><a href="#FORCESENSOR">ForceSensor node</a>
+   <li><a href="#RANGESENSOR">RangeSensor node</a>
+  </ol>
+ </li>
+</ul>
+
+<p>
+If the user have not defined values for each node, the default values in the fourth column of 
+the list below, will be applied.
+</p>
+
+<!-- Humanoid node -->
+<a name="HUMANOID"></a>
+<h4> Humanoid </h4>
+
+<p>
+Humanoid is the root node of the model.
+</p>
+
+<div>
+<code>
+<pre>
+PROTO Humanoid [
+  field         SFVec3f     bboxCenter        0 0 0
+  field         SFVec3f     bboxSize          -1 -1 -1
+  exposedField  SFVec3f     center            0 0 0
+  exposedField  MFNode      humanoidBody      [ ]
+  exposedField  MFString    info              [ ]
+  exposedField  MFNode      joints            [ ]
+  exposedField  SFString    name              ""
+  exposedField  SFRotation  rotation          0 0 1 0
+  exposedField  SFVec3f     scale             1 1 1
+  exposedField  SFRotation  scaleOrientation  0 0 1 0
+  exposedField  MFNode      segments          [ ]
+  exposedField  MFNode      sites             [ ]
+  exposedField  SFVec3f     translation       0 0 0
+  exposedField  SFString    version           "1.1"
+  exposedField  MFNode      viewpoints        [ ]
+]
+{
+  Transform {
+    bboxCenter       IS bboxCenter
+    bboxSize         IS bboxSize
+    center           IS center
+    rotation         IS rotation
+    scale            IS scale
+    scaleOrientation IS scaleOrientation
+    translation      IS translation
+    children [
+      Group {
+        children IS viewpoints
+      }
+      Group {
+        children IS humanoidBody 
+      }
+    ]
+  }
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+<table border="1">
+ <tr>
+  <td>bboxCenter</td>
+  <td>Not used in OpenHRP.</td>
+ </tr>
+ <tr>
+  <td>bboxSize</td>
+  <td>Not used in OpenHRP.</td>
+ </tr>
+ <tr>
+  <td>center</td>
+  <td>Refer <a href="#center">"center"</a> of Joint node.</td>
+ </tr>
+ <tr>
+  <td>humanoidBody</td>
+  <td>The field that child nodes hang to. 
+      0 or more Joint nodes and 0 or 1 Segment node can be hanged.
+  </td>
+ </tr>
+ <tr>
+  <td>info</td>
+  <td>Contain comments related to the model.</td>
+ </tr>
+ <tr>
+  <td>joints</td>
+  <td>Stores the list of defined Joints.</td>
+ </tr>
+ <tr>
+  <td>name</td>
+  <td>Used to specify model name.</td>
+  </tr>
+ <tr>
+  <td>rotation</td>
+  <td>Refer <a href="#rotation">"rotation"</a> of Joint node.</td>
+ </tr>
+ <tr>
+  <td>scale</td>
+  <td>Refer <a href="#scale">"scale"</a> of Joint node.</td>
+ </tr>
+ <tr>
+  <td>scaleOrientation</td>
+  <td>Refer <a href="#scaleOrientation">"scaleOrientation"</a> of Joint node.</td>
+ </tr>
+ <tr>
+  <td>segments</td>
+  <td>Stores the list of defined Segments.</td>
+ </tr>
+ <tr>
+  <td>sites</td>
+  <td>Not used in OpenHRP.</td>
+ </tr>
+ <tr>
+  <td>translation</td>
+  <td>Refer <a href="#translation">"translation"</a> of Joint node.</td>
+ </tr>
+ <tr>
+  <td>version</td>
+  <td>Used to specify version number of the model.</td>
+ </tr>
+ <tr>
+  <td>viewpoints</td>
+  <td>specifies the aspect position in the virtual environment.</td>
+ </tr>
+</table>
+</div>
+
+<p>
+Only one Humanoid node that becomes the root node of the model can be exist. Moreover, all the
+Joint/Segment names that you used are enumerated in the joints/segments field of the Humanoid node.
+</p>
+
+
+<!-- Joint node -->
+<a name="JOINT"></a>
+<h4> Joint </h4>
+
+<p>
+The Joint node specifies the Link Structure.
+</p>
+
+<div>
+<code>
+<pre>
+PROTO Joint [
+  exposedField     SFVec3f      center              0 0 0
+  exposedField     MFNode       children            []
+  exposedField     MFFloat      llimit              []
+  exposedField     MFFloat      lvlimit             []
+  exposedField     SFRotation   limitOrientation    0 0 1 0
+  exposedField     SFString     name                ""
+  exposedField     SFRotation   rotation            0 0 1 0
+  exposedField     SFVec3f      scale               1 1 1
+  exposedField     SFRotation   scaleOrientation    0 0 1 0
+  exposedField     MFFloat      stiffness           [ 0 0 0 ]
+  exposedField     SFVec3f      translation         0 0 0
+  exposedField     MFFloat      ulimit              []
+  exposedField     MFFloat      uvlimit             []
+  exposedField     SFString     jointType           ""
+  exposedField     SFInt32      jointId             -1
+  exposedField     SFVec3f      jointAxis           0 0 1
+
+  exposedField     SFFloat      gearRatio           1
+  exposedField     SFFloat      rotorInertia        0
+  exposedField     SFFloat      rotorResistor       0
+  exposedField     SFFloat      torqueConst         1
+  exposedField     SFFloat      encoderPulse        1
+]
+{
+  Transform {
+    center           IS center
+    children         IS children
+    rotation         IS rotation
+    scale            IS scale
+    scaleOrientation IS scaleOrientation
+    translation      IS translation
+  }
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+ <table border="1">
+  <tr>
+   <td id="center">center</td>
+   <td>
+    Center position of joints' rotation axis.<br> 
+    Specify this, as an offset value relative to the origin of local coordinate system.
+   </td>
+  </tr>
+  <tr>
+   <td>children</td>
+   <td>
+    Used to specify the child nodes.<br> 
+    A child node can be consist of number of Joint nodes and/or 1 Segment node. 
+   </td>
+  </tr>
+  <tr>
+   <td>llimit<sup>(1)</sup></td>
+   <td>
+    Lower bound value of the Joint rotation angle[rad].<br> 
+    Dafault value : "-&infin;"
+   </td>
+  </tr>
+  <tr>
+   <td>lvlimit<sup>(1)</sup></td>
+   <td>
+    Lower bound value of the Joint rotation angular velocity[rad/s].<br> 
+    Dafault value : "-&infin;"
+   </td>
+  </tr>
+  <tr>
+   <td>limitOrientation</td>
+   <td>Not used in OpenHRP.</td>
+  </tr>
+  <tr>
+   <td>name</td>
+   <td>Name of the Joint.</td>
+  </tr>
+  <tr>
+   <td id="rotation">rotation</td>
+   <td>
+    Orientation of the local coordinate system.<br> 
+    Specify the offset value, relative to the parent node.
+   </td>
+  </tr>
+  <tr>
+   <td id="scale">scale</td>
+   <td>
+    Allows to set scaling. When setting up scaling, keep the position specified in "center", as 
+    your scaling center.
+   </td>
+  </tr>
+  <tr>
+   <td id="scaleOrientation">scaleOrientation</td>
+   <td>
+    Used to specify the orientation of the coordinate system that uses for scaling.<br> 
+    (Does not matter, even if you skip defining this.)
+   </td>
+  </tr>
+  <tr>
+   <td>stiffness</td>
+   <td>Not used in OpenHRP.</td>
+  </tr>
+  <tr>
+   <td id="translation">translation</td>
+   <td>
+    Position of the local coordinate system.<br> 
+    Specify the offset value, relative to the parent node.
+   </td>
+  </tr>
+  <tr>
+   <td>ulimit<sup>(1)</sup></td>
+   <td>
+    Upper bound value of the Joint rotation angle[rad].<br> 
+    Dafault value : "+&infin;"
+   </td>
+  </tr>
+  <tr>
+   <td>uvlimit<sup>(1)</sup></td>
+   <td>
+    Upper bound value of the Joint rotation angular velocity[rad/s].<br> 
+    Dafault value : "+&infin;"
+   </td>
+  </tr>
+  <tr id="jointTypes">
+   <td>jointType</td>
+   <td>
+    Here you can specify the type of the Joint.<br>
+    Your choices are: free / slide / rotate / fixed.
+    
+    <dl>
+     <dt>free</dt>
+     <dd>
+      Allows to translate along and rotate around all 3 coordinate axes (6 degrees of freedom[DOF]).<br>
+      <i>Can be used only for root node.</i>
+     </dd>
+     
+     <dt>rotate</dt>
+     <dd>Allows to rotate only around the coordinate axis specified in "jointAxis". (1 DOF)</dd>
+     
+     <dt>slide</dt>
+     <dd>Allows translate only along the coordinate axis specified in "jointAxis". (1 DOF)</dd>
+     
+     <dt>fixed</dt>
+     <dd>The joint is allowed no translation, no rotation. (0 DOF)</dd>
+    </dl>
+   </td>
+  </tr>
+  <tr>
+   <td>jointId</td>
+   <td>
+     Used to specify the ID number of the Joint.<br>
+     "jointId" is used to specify the element's index number of an array, when storing attribute 
+     values such as joint-angle in the array format. When developing the controller of a robot, in 
+     most situations, joint-angle of the controllable joints can only be loaded or modified. 
+     Therefore we can say that jointid is assigned for such controllable joints. (However, it is 
+     not necessarily to be like that.) "JointId" must be assigned according to the following rules.
+     <ul>
+     <li>"JointId" must start from 0(zero).
+     <li>"jointId" should be a continuous sequence of integers having no gaps(spaces) or duplicates.
+     </ul>
+     <br>
+     Please note that the type of this field has been changed; SFFloat, the type used in previous 
+     version of OpenHRP, has been changed to SFInt32 type with OpenHRP version3.
+   </td>
+  </tr>
+  <tr>
+   <td>jointAxis</td>
+   <td>
+    Used to specify the axis of the joint. <br>
+    In the previous version of OpenHRP, the axis was specified by either of the character strings 
+    "X","Y" or "Z". But with OpenHRP3, users are allowed to specify an axis to an arbitrary direction, 
+    by using vectors.Although the old specification format is still supported, we recommand using 
+    vector specification from now on.
+   </td>
+  </tr>
+  <tr>
+   <td>gearRatio</td>
+   <td>
+    Gear ratio;<br> 
+    If the deceleration ratio from the motor to the joint is 1/100, assign as 100.
+   </td>
+  </tr>
+  <tr>
+   <td>gearEfficiency</td>
+   <td>
+    Deceleration efficiency of the gear;<br> 
+    If the efficiency is 60%, assign as 0.6 .<br>
+    If this field has not specified, the deceleration efficiency will be assumed as 100%. 
+   </td>
+  </tr>
+  <tr>
+   <td>rotorInertia</td>
+   <td>The Moment of Inertia of motor rotor [kgm^2]</td>
+  </tr>
+  <tr>
+   <td>rotorResistor</td>
+   <td>Resistance of a motor coil[Ohm] -(Used with Controller)</td>
+  </tr>
+  <tr>
+   <td>torqueConst</td>
+   <td>Torque constant [Nm/A] -(Used with Controller<)/td>
+  </tr>
+  <tr>
+   <td>encoderPulse</td>
+   <td>Encoder pulse count [pulse/rotate] -(Used with Controller)</td>
+  </tr>
+</table>
+</div>
+<p>
+<sup>(1)</sup> : These values are not used for simulation. These are for controller to read and 
+control as appropriate not to go over the limits. Default value will be applied if not specified.
+</p>
+
+<p>
+Joints are defined by using Joint Nodes. Joint Node contains information about the link frame. 
+Child-Parent relationships of Joints, are applied to the Joint Nodes in same way. For instance, 
+let`s consider a human arm; joints of a human arm exists in the order of "Shoulder > elbow > wrist". 
+This can be represented by Joint Nodes as follows;
+</p>
+
+<p>
+<center>
+<img src="../img_new/joint1_en.gif" alt="Arm Link Structure"><br>
+Fig 1. Arm Link Structure
+</center>
+</p>
+<p>
+<pre>
+<code>
+DEF shoulder <span style="color: red">Joint</span> {
+  children [
+    DEF elbow <span style="color: red">Joint</span> {
+      children [
+        DEF wrist <span style="color: red">Joint</span> {
+            :
+            :
+            :
+      ]
+    }
+  ]
+}
+</code>
+</pre>
+</p>
+
+<p>
+A Joint having n DOF (n&ge;2) means, that the Joint is composed of n number of Joints, that are sharing 
+same origin. In this case, define n number of Joints, placing all Link Frames at common origin.
+For example, human elbow can be consider as a Joint having 2 DOF, as shown below.
+</p>
+
+<p>
+<center>
+<img src="../img_new/joint2_en.gif" alt="An Elbow Link Structure"><br>
+Fig 2. Elbow Link Structure
+</center>
+</p>
+<br>
+
+<p>
+In this case, our Joints definition would be as follows.
+<pre>
+<code>
+DEF Elbow0 <span style="color: red">Joint</span> {      <span style="color: green">//bending motion </span>
+  children [
+    DEF Elbow1 <span style="color: red">Joint</span> {  <span style="color: green">//twisting motion</span>
+
+        :
+        :
+        :
+    }
+  ]
+  <span style="color: red">translation 0 0 0</span>  <span style="color: green">// Place all joints at origin</span>
+}
+</code>
+</pre>
+</p>
+
+
+<!-- Segment node -->
+<a name="SEGMENT"></a>
+<h4> Segment </h4>
+
+<p>
+Segment node defines the Link shape.
+</p>
+
+<div>
+<code>
+<pre>
+PROTO Segment [
+  field         SFVec3f   bboxCenter        0 0 0
+  field         SFVec3f   bboxSize          -1 -1 -1
+  exposedField  SFVec3f   centerOfMass      0 0 0
+  exposedField  MFNode    children          [ ]
+  exposedField  SFNode    coord             NULL
+  exposedField  MFNode    displacers        [ ]
+  exposedField  SFFloat   mass              0 
+  exposedField  MFFloat   momentsOfInertia  [ 0 0 0 0 0 0 0 0 0 ]
+  exposedField  SFString  name              ""
+  eventIn       MFNode    addChildren
+  eventIn       MFNode    removeChildren
+]
+{
+  Group {
+    addChildren    IS addChildren
+    bboxCenter     IS bboxCenter
+    bboxSize       IS bboxSize
+    children       IS children
+    removeChildren IS removeChildren
+  }
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+ <table border="1">
+  <tr>
+   <td>bboxCenter</td>
+   <td>Not used in OpenHRP.</td>
+  </tr>
+  <tr>
+   <td>bboxSize</td>
+   <td>Not used in OpenHRP.</td>
+  </tr>
+  <tr>
+   <td>centerOfMass</td>
+   <td>Coordinates of the Center-of-Gravity</td>
+  </tr>
+  <tr>
+   <td>children</td>
+   <td>Used to specify Child Nodes. Add here the nodes that define the shape.</td>
+  </tr>
+  <tr>
+   <td>coord</td>
+   <td>Not used in OpenHRP.</td>
+  </tr>
+  <tr>
+   <td>displacers</td>
+   <td>Not used in OpenHRP.</td>
+  </tr>
+  <tr>
+   <td>mass</td>
+   <td>Mass of the Segment.</td>
+  </tr>
+  <tr>
+   <td>momentsOfInertia</td>
+   <td>Moment-of-Inertia of the Segment.</td>
+  </tr>
+  <tr>
+   <td>name</td>
+   <td>Name of the Segment.</td>
+  </tr>
+  <tr>
+   <td>addChildren</td>
+   <td>Not used in OpenHRP.</td>
+  </tr>
+  <tr>
+   <td>removeChildren</td>
+   <td>Not used in OpenHRP.</td>
+  </tr>
+ </table>
+</div>
+
+<p>
+Link Configuration is defined in the Segment Node. Two or more Segment nodes can be set up as a child node of a Joint node.It can also be described as a child node of a Transform node. 
+</p>
+
+<pre>
+<code>
+DEF JOINT1 Joint {
+  children [
+    DEF SEGMENT1 <span style="color: red">Segment</span> {
+      children [
+          :
+      ]
+    }
+    Transform {
+      translation 0 0 0.5
+      rotation 1 0 0 1.57
+      children DEF SEGMENT2 <span style="color: red">Segment</span> {
+        children [
+          :
+        ]
+      }
+    }
+  ]
+}
+</code>
+</pre>
+
+<p>
+For instance, let`s say you want to define the configuration of a human arm from shoulder to elbow. 
+And since this configuration belongs to the shoulder link frame(parent node), the Link structure 
+can be defined as follows;
+</p>
+
+<p>
+<center>
+<img src="../img_new/joint3_en.gif" alt="Link Configuration from Shoulder to Elbow"><br>
+Fig 3. Link Configuration from Shoulder to Elbow
+</center>
+</p>
+
+<pre>
+<code>
+DEF Shoulder Joint {
+  children [
+    DEF Shoulder2Elbow <span style="color: red">Segment</span> {
+      children [
+        :
+        :    <span style="color: green"><- Specify the actual link shape</span>
+        :
+      ]
+    }
+    DEF Elbow Joint {
+        :
+        :
+        :
+    }
+  ]
+}
+</code>
+</pre>
+
+<p>
+Parameters that define link characteristics, should be defined under the children field of the 
+Segment node. To define these parameter values, we recommend you to use a modeling tool. However, 
+simple shapes can be edit even manually, by using text editor.
+</p>
+
+<a name="EXTRAJOINT"></a>
+<h4> ExtraJoint </h4>
+
+<p>
+ExtraJoint node defines closed link mechanism. Constraint force is generated so that two links may not separate, noting that one joint of a closed link is connected with ball joint. 
+</p>
+
+<div>
+<code>
+<pre>
+PROTO ExtraJoint [
+  exposedField SFString link1Name 	""
+  exposedField SFString link2Name 	""
+  exposedField SFVec3f  link1LocalPos 	0 0 0
+  exposedField SFVec3f  link2LocalPos 	0 0 0
+  exposedField SFString jointType 	"xyz"
+  exposedField SFVec3f  jointAxis 	1 0 0
+]
+{
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+<table border="1">
+<tr><td>link1Name</td><td>Name of the joint which has received ball joint</td></tr>
+<tr><td>link2Name</td><td>Name of the joint to which ball joint is attached </td></tr>
+<tr><td>link1LocalPos</td><td> Connection (joint) position in the local coordinate of the link1Name joint</td></tr>
+<tr><td>link2LocalPos</td><td> Connection (joint) position in the local coordinate of the link2Name joint</td></tr>
+<tr><td>jointType</td><td>The number of constraint axes. xyz:three each other orthogonal axes. xy: two orthogonal axes to the axis specified by jointAxis. z:one axis specified by jointAxis. </td></tr>
+<tr><td>jointAxis</td><td>A unit vector is specified by the local coordinate of the link1Name joint. The meaning of a vector changes by specification of jointType. </td></tr>
+</table>
+</div>
+<br>
+
+<div>
+Since sample "closed-link-sample.wrl" of a closed link mechanism is in a sample model, please refer to it. 
+</div>
+
+<br>
+
+<!-- AccelerationSensor node -->
+<a name="ACCELERATIONSENSOR"></a>
+<h4> AccelerationSensor </h4>
+
+<p>
+AccelerationSensor node defines 3-axis acceleration sensor.
+</p>
+
+<div>
+<code>
+<pre>
+PROTO AccelerationSensor [
+  exposedField SFVec3f    maxAcceleration -1 -1 -1
+  exposedField SFVec3f    translation     0 0 0
+  exposedField SFRotation rotation        0 0 1 0
+  exposedField SFInt32    sensorId        -1
+]
+{
+  Transform {
+    translation IS translation
+    rotation    IS rotation
+  }
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+<table border="1">
+ <tr>
+  <td>maxAcceleration</td>
+  <td>Maximum acceleration that can be measured.</td>
+ </tr>
+ <tr>
+  <td>translation</td>
+  <td>Specify the position of local coordinate system, by the offset value relative to the parent 
+      node coordinate system.
+  </td>
+ </tr>
+ <tr>
+  <td>rotation</td>
+  <td>Specify the orientation  of local coordinate system, by the offset value relative to the parent 
+      node coordinate system.
+  </td>
+ </tr>
+ <tr>
+  <td>sensorId</td>
+  <td>Specify the sensor ID. SensorId is assigned for same kind of sonsors in a model in sequential 
+      order starting from '0'. Skipping or overlapping id numbers is not allowed. This ID is used to 
+      decide the order, when arranging data from same kind of sensors. 
+  </td>
+ </tr>
+</table>
+</div>
+
+<p>
+Various sensor nodes are placed under the Joint node in which the sensor is installed. For instance, 
+when attaching an acceleration sensor to the WAIST of the sample model, it can be described as 
+follows. 
+</p>
+<pre>
+<code>
+DEF WAIST Joint
+{
+     :
+  children [
+    DEF gsensor <span style="color: red">AccelerationSensor</span>
+    {
+        :
+    }
+     :
+  ]
+}
+</code>
+</pre>
+</div>
+<br>
+
+
+<!-- Gyro node -->
+<a name="GYROSENSOR"></a>
+<h4> GyroSensor </h4>
+
+<p>
+Gyro node defines a 3-axis angular velocity sensor.
+</p>
+
+<div>
+<code>
+<pre>
+PROTO Gyro [
+  exposedField SFVec3f    maxAngularVelocity -1 -1 -1
+  exposedField SFVec3f    translation        0 0 0
+  exposedField SFRotation rotation           0 0 1 0
+  exposedField SFInt32    sensorId           -1
+]
+{
+  Transform {
+    translation IS translation
+    rotation    IS rotation
+  }
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+<table border="1">
+ <tr>
+  <td>maxAngularVelocity</td>
+  <td>Maximum angular velocity that can be measured.</td>
+ </tr>
+ <tr>
+  <td>translation</td>
+  <td>Specify the position of local coordinate system, by the offset value relative to the parent 
+      node coordinate system.
+  </td>
+ </tr>
+ <tr>
+  <td>rotation</td>
+  <td>Specify the orientation  of local coordinate system, by the offset value relative to the parent 
+      node coordinate system.
+  </td>
+ </tr>
+ <tr>
+  <td>sensorId</td>
+  <td>Specify the sensor ID.</td>
+ </tr>
+</table>
+</div>
+<br>
+
+
+<!-- VisionSensor Node -->
+<a name="VISIONSENSOR"></a>
+<h4> VisionSensor </h4>
+
+<p>
+The VisionSensor Node is used to define Vision sensors.
+</p>
+
+<div>
+<code>
+<pre>
+PROTO VisionSensor
+[
+  exposedField  SFVec3f     translation       0 0 0
+  exposedField  SFRotation  rotation          0 0 1 0
+  exposedField  SFFloat     fieldOfView       0.785398
+  field         SFString    name              ""
+  exposedField  SFFloat     frontClipDistance 0.01
+  exposedField  SFFloat     backClipDistance  10.0
+  exposedField  SFString    type              "NONE"
+  exposedField  SFInt32     sensorId          -1
+  exposedField  SFInt32     width             320
+  exposedField  SFInt32     height            240
+]
+{
+  Transform
+  {
+    translation IS translation
+    rotation    IS rotation
+  }
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+<table border="1">
+ <tr>
+  <td>translation</td>
+  <td>Specify the view point relative to the parent nodes' coordinate system.</td>
+ </tr>
+ <tr id="VSrotation">
+  <td>rotation</td>
+  <td>Specify the view angle relative to the parent nodes' coordinate system.
+      <ul style="list-style-type: none">
+       <li>Forward viewing direction ..... Opposite direction of Z-axis (0,0,-1) in local oordinate system
+       <li>Upper viewing direction ..... Direction of Y axis (0,1,0) in local oordinate system
+      </ul>
+      <center>
+       <img src="../img_new/viewvector_en.gif" alt="The View Vector">
+      </center>
+  </td>
+ </tr>
+ <tr>
+  <td>fieldOfView</td>
+  <td>Viewing angle of the camera in [rad]. Valid range is between 0 to pi.</td>
+ </tr>
+ <tr>
+  <td>name</td>
+  <td>"Name" of the sensor.</td>
+ </tr>
+ <tr>
+  <td>frontClipDistance</td>
+  <td>Distance from the Viewpoint to the front-clip-surface.</td>
+ </tr>
+ <tr>
+  <td>backClipDistance</td>
+  <td>Distance from the Viewpoint to the back-clip-surface.</td>
+ </tr>
+ <tr>
+  <td>type</td>
+  <td>
+   Specifies the types of information that can be acquired by sensor
+   <dl>
+    <dt>"COLOR"</dt>
+    <dd>Outputs Color information</dd>
+    
+    <dt>"DEPTH"</dt>
+    <dd>Outputs Depth information</dd>
+    
+    <dt>"COLOR_DEPTH"</dt>
+    <dd>Outputs both Color and Depth information</dd>
+    
+    <dt>"NONE"</dt>
+    <dd>Outputs no information</dd>
+   </dl>
+  </td>
+ </tr>
+ <tr>
+  <td>sensorId</td>
+  <td>ID number of the sensor.</td>
+ </tr>
+ <tr>
+  <td>width</td>
+  <td>Width of the image.</td>
+ </tr>
+ <tr>
+  <td>height</td>
+  <td>Height of the image.</td>
+ </tr>
+ <tr>
+  <td>frameRate</td>
+  <td>Image output rate of camera per second.</td>
+ </tr>
+</table>
+</div>
+<br>
+
+
+<!-- ForceSensor Node -->
+<a name="FORCESENSOR"></a>
+<h4> ForceSensor </h4>
+
+<p>
+The ForceSensor node is used to define force/torque sensor.
+</p>
+
+<div>
+<code>
+<pre>
+PROTO ForceSensor [  
+  exposedField SFVec3f maxForce -1 -1 -1
+  exposedField SFVec3f maxTorque -1 -1 -1
+  exposedField SFVec3f translation 0 0 0
+  exposedField SFRotation rotation 0 0 1 0
+  exposedField SFInt32 sensorId -1
+]
+{
+  Transform {
+translation IS translation
+    rotation IS rotation
+  }
+}
+</pre>
+</code>
+</div>
+<br>
+
+<div>
+ <table border="1">
+  <tr>
+   <td>maxForce</td>
+   <td>The maximum force that can be measured by sensor.</td>
+  </tr>
+  <tr>
+   <td>maxTorque</td>
+   <td>The maximum torque that can be measured by sensor.</td>
+  </tr>
+  <tr>
+   <td>translation</td>
+   <td>
+    Position of the local coordinate system. Specify this, as an offset value relative to the 
+    parent nodes' coordinate system.
+   </td>
+  </tr>
+  <tr>
+   <td>rotation</td>
+   <td>
+    Orientation of the local coordinate system. Specify this, as an offset value relative to the 
+    parent nodes' coordinate system.
+   </td>
+  </tr>
+  <tr>
+   <td>sensorId</td>
+   <td>The ID number of the sensor.</td>
+  </tr>
+ </table>
+</div>
+<br>
+
+
+<!-- RangeSensor node -->
+<a name="RANGESENSOR"></a>
+<h4> RangeSensor </h4>
+
+<p>
+RangeSensor is used to define distance sensor.
+</p>
+
+<div>
+<code>
+<pre>
+ PROTO RangeSensor [
+   exposedField SFVec3f    translation       0 0 0
+   exposedField SFRotation rotation          0 0 1 0
+   exposedField MFNode     children          [ ]
+   exposedField SFInt32    sensorId          -1
+   exposedField SFFloat    scanAngle         3.14159 #[rad]
+   exposedField SFFloat    scanStep          0.1     #[rad]
+   exposedField SFFloat    scanRate          10      #[Hz]
+   exposedField SFFloat    maxDistance	    10
+ ]
+ {
+   Transform {
+     rotation         IS rotation
+     translation      IS translation
+     children         IS children
+   }
+ }
+</pre>
+</code>
+</div>
+
+<div>
+<table border="1">
+ <tr>
+  <td>translation</td>
+  <td>Position of the sensor that correspond to the link which this sensor is attached</td>
+ </tr>
+ <tr>
+  <td>rotation</td>
+  <td>Orientation of the sensor that correspond to the link which this sensor is attached. According 
+      to the sensors's coordinate system, opposite direction of Z-axis (0,0,-1) is the forward measuring 
+      direction and XZ is the measuring surface while scanning. Since this is identical to the 
+      <a href="#VSrotation">VisionSensor</a>, the position and orientation of a model that has been 
+      used in VisionSensor can also be used for RangeSensor as it is.
+  </td>
+ </tr>
+ <tr>
+  <td>sensorId</td>
+  <td>ID number of the RangeSensor installed in this robot</td>
+ </tr>
+ <tr>
+  <td>scanAngle</td>
+  <td>Total angle that corresponds to measuring distance [rad]. 
+  </td>
+ </tr>
+ <tr>
+  <td>scanStep</td>
+  <td>Angle size that measures per step while scanning distance [rad]</td>
+ </tr>
+ <tr>
+  <td>scanRate</td>
+  <td>Number of scans per second [Hz]</td>
+ </tr>
+ <tr>
+  <td>maxDistance</td>
+  <td>Maximum distance that can be measured [m]</td>
+ </tr>
+</table>
+</div>
+<br>
+

@@ -1,0 +1,144 @@
+title = Installing OpenHRP3 from a binary package
+base  = ..
+
+<h2>Table of contents</h2>
+<ul type="disc">
+ <li><a href="#check_env">Before you begin</a></li>
+ <li><a href="#bin">Installing OpenHRP3 from a binary package</a></li> 
+  <ul>
+   <li><a href="#file_structure">Composition of a file </a></li>
+  </ul>
+  <ol type="1">
+   <li><a href="#bin_apt-get">Using apt-get</a></li>
+    <ul>
+     <li><a href="#chk_java">The check of Java </a></li>
+    </ul>
+   <li><a href="#bin_install_grxui">Installation of Eclipse and GrxUI plug-in </a></li>
+  </ol>
+</ul>
+
+<h2 id="check_env">Before you begin</h2>
+<p><span style="color: red">
+* The SSE extension command is validated in the binary package of OpenHRP. It does not operate in CPU before PentiumⅢ,Athlon XP.
+</span></p>
+<p>
+Since OpenHRP is an application based on 3D Graphics, it is necessary to confirm whether 
+your pc is aware of handling 3D Graphics properly, before you begin installation. To 
+confirm that, open a Terminal window and run following command;
+</p>
+
+<pre>$ glxinfo | grep rendering</pre>
+<p> </p>
+
+<ul>
+  <li><p>
+  If the result is: "direct rendering: Yes"<br>
+  Your system is capable of handling 3D graphics. Please proceed to the next section.</p>
+  </li>
+  <li><p>
+  If the result is: "direct rendering: No"<br>
+  You have to install a graphics driver, that supports 3D acceleration feature.</p>
+  
+  <ul>
+    <li><a href="./g3d_support.html">How to install graphics driver</a></li>
+  </ul>
+
+   <p>Note:</p>
+  <ol>
+    <li>
+     <p>
+     Depending on the graphics board, sometimes the above procedure may not be applicable for your 
+     system.Even in this case, basically OpenHRP itself is working.But the 3D visualizations 
+     may become slower and would not perform effectively, due to the inactivity of 3D acceleration. 
+     </p>
+    </li>
+    <li>
+     <p>
+     Regarding the graphics board, we can assure that the boards having nVidia chipsets, 
+     would support 3D acceleration feature well in Linux platfoems.
+     </p>
+    </li>
+    <li>
+     <p>
+     For Ubuntu guest platforms running on virtual machine environments, we have confirmed that the 
+     3D graphics works fine even without installing a proper graphics driver.
+     </p>
+    </li>
+  </ol>
+  </li>
+</ul>
+<br>
+
+<h2 id="bin">Installing OpenHRP3 from a binary package</h2>
+<p>
+Distribution of the binary package by apt-get is supported after OpenHRP3.1.0. &beta;4.<br>
+</p>
+
+<h3 id="file_structure">Composition of a file </h3>
+Installation directories are the following composition. <br>
+<pre>
+/usr/
+  +- bin/                  # The executable file of OpenHRP. "openhrp" is added to the head of a file name.
+  +- include/              # The header file of an OpenHRP library
+  +- lib/                  # The OpenHRP library
+      +- pkgconfig/
+          +- openhrp3.1.pc # The configuration file of pkg-config
+  +- share/
+      +- OpenHRP-3.1/
+          +- idl/          # IDL file
+          +- sample/       # Sample
+          +- java/         # The jar file of GrxUI which OpenHRP offers
+          +- plugins/      # Eclipse plug-in which OpenHRP offers
+      +- doc/              # Document
+          +- OpenHRP-3.1/  # A license, a history, etc. 
+             +- idl/       # Doxygen of IDL in English
+             +- idl_jp/    # IDoxygen of IDL in Japanese
+             +- lib/       # Doxygen of library in English
+             +- lib_jp/    # Doxygen of library in Japanese
+             +- ut/        # Doxygen of DynamicsSimulator of University of Tokyo in English
+</pre>
+</p>
+
+<p>
+Since it is dependent on OpenRTM-1.1.0, it does not operate in old version. <br>
+Please install in the following procedures. 
+</p>
+
+<h3 id="bin_apt-get">Using apt-get</h3>
+<p>
+Please execute the following command to install an openhr package. 
+<pre>
+sudo add-apt-repository ppa:hrg/stable
+sudo add-apt-repository ppa:openrave/release
+sudo apt-get update
+sudo apt-get install openhrp
+</pre>
+Please choose "Yes" or "accept", and finish installation.<br>
+<br>
+
+<h4 id="chk_java">A check of the third party of Java </h4>
+<pre>$ java -version</pre>
+Please check the third party of java. <br>
+If the sentence of "Java (TM) SE Runtime Enviroment" is displayed jre of Sun is effective.<br>
+If the sentence of OpenJDK Runtime Environment" is displayed jre of OpenJDK is effective.<br>
+Please check that Sun or OpenJDK is effective, then continue <a href="#bin_install_grxui">Installation of Eclipse and GrxUI plug-in</a>. <br>
+If it is not displayed, please execute the following command.<br>
+<pre>$ sudo update-java-alternatives -s java-6-sun</pre>
+or
+<pre>$ sudo update-java-alternatives -s java-6-openjdk</pre>
+</p><br>
+
+<h3 id="bin_install_grxui">Installation of Eclipse and GrxUI plug-in </h3>
+GrxUI is plug-in of Eclipse. The present version corresponds to Eclipse3.4. <br>
+We prepared the package which all contains required plug-in.<br>
+Please download Eclipse all-in-one package from <a href="./download.html">"download"</a> page and extract it. <br>
+<pre>
+tar xzvf eclipse342_hrpdependencies_linux_en_20120220.tar.gz
+</pre>
+Please copy all the jar files in /usr/share/OpenHRP-3.1-/java/plugins/ directory to the plugins directory of Eclipse. 
+<br>
+For example, when a current directory is an eclipse directory, please execute the following command. 
+<pre>$ cp /usr/share/OpenHRP-3.1/java/plugins/*.jar plugins/</pre>
+<br>
+Installation is completion now. The next is <a href="./init_grxui.html">Starting and initial setting of GrxUI</a>.
+<br><br>

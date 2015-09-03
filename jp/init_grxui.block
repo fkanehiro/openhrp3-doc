@@ -1,0 +1,97 @@
+title = GrxUIの起動・初期設定
+base  = ..
+
+<h2>目次</h2>
+<ul type="1">
+ <li><a href="#eclipse_init">Eclipseの初期設定</a></li>
+  <ul type="disc">
+   <li><a href="#ubuntu">Ubuntu の場合</a></li>
+   <ul type="disc">
+    <li><a href="#eclipse_ini">Eclipse.iniの設定</a></li>
+    <li><a href="#ubuntu910">Ubuntu9.10以降の環境でのEclipseの起動</a></li>
+    <li><a href="#ubuntu900">Ubuntu9.10以前の環境でのEclipseの起動</a></li>
+   </ul>
+   <li><a href="#windows">Windows の場合</a></li>
+   <ul type="disc">
+    <li><a href="#eclipse_ini">Eclipse.iniの設定</a></li>
+    <li><a href="#start_eclipse">Eclipseの起動</a></li>
+   </ul>
+  </ul>
+ <li><a href="#grxui_config">GrxUIの設定</a></li>
+</ul>
+
+<h2 id="eclipse_init">1. Eclipseの初期設定</h2>
+<h3 id="ubuntu">Ubuntu の場合</h3>
+<h4 id="eclipse_ini">Eclipse.iniの設定</h4>
+<p>
+Eclipseがインストールされているフォルダには Eclipse.ini ファイルがあります。<br>
+これをエディタで開き、ヒープメモリサイズを環境に応じて活用させるための設定をしてください。<br>
+ヒープメモリの使用範囲のサイズは -Xms 最小限から -Xmx 最大限以下の大きな値をとれるようになります。あまり大きなサイズを指定すると起動できなくなりますので、各環境によって調節してください。<br>
+<br>
+修正例:
+<pre>
+-vmargs
+-Xms128m
+-Xmx1024m
+</pre>
+</p>
+
+<h4 id="ubuntu910">Ubuntu9.10以降の環境でのEclipseの起動</h4>
+<p>
+Ubuntu9.10以降の環境でのEclipse 3.4SR2の実行にはスクリプトによる実行が必要です。<br>
+eclipseをインストールしたディレクトリに移動して、
+<pre>$ ./eclipse.sh </pre>
+<p>と、入力して起動してください。なお、プラグインを導入して初めて起動する場合は
+<pre>$ ./eclipse.sh -clean</pre>
+コマンドによる実行を行ってください。起動後に<a href="#grxui_config">GrxUIの設定</a>をしてください。
+</p>
+
+<h3 id="windows">Windows の場合</h3>
+<h4 id="eclipse_ini">Eclipse.iniの設定</h4>
+<p>
+Eclipseがインストールされているフォルダには Eclipse.ini ファイルがあります。<br>
+<p align="center">
+<img src="../img_new/install/init_win1.png"><br>
+</p>
+これをダブルクリックするとメモ帳が起動します(デフォルトの場合)。<br>
+必要であれば -Xms と -Xmx を変更してヒープメモリサイズを環境に応じて設定してください。<br>
+ヒープメモリの使用範囲のサイズは -Xms 最小限から -Xmx 最大限以下の大きな値をとれるようになります。
+あまり大きなサイズを指定すると起動できなくなりますので、各環境によって調節してください。<br>
+<br>
+修正例:
+<pre>
+-vmargs
+-Xms128m
+-Xmx1024m
+</pre>
+</p>
+<h4 id="start_eclipse">Eclipseの起動</h4>
+<p>
+プラグインを導入して初めて起動する場合は、"-clean"オプションを指定して"eclipse.exe"を実行する必要があります。<br>
+コマンドラインから"eclipse.exe -clean"実行するか、ショートカットを作成してそこに"-clean"オプションを指定してください。<br>
+ショートカットを使用する場合の手順は次の通りです。
+<ul type="1">
+<li>eclipse.exe を右クリックして[ショートカットの作成]を選択</li>
+<li>作成されたショートカットを右クリックして[プロパティ]を選択</li>
+<li>[リンク先]の末尾に" -clean"を追加</li>
+<li>ショートカットをダブルクリックすることにより、"-clean"オプションを指定してeclipseが起動できます。</li>
+</ul>
+<p align="center">
+<img src="../img_new/install/init_win2.png"><br>
+</p>
+</p>
+<h3 id="grxui_config">2. GrxUIの設定</h3>
+<p>
+Eclipseを起動し、メニューから"ウインドウ"→"設定"を選択すると、設定ダイアログ内が表示されます。
+ダイアログの左側のツリー中の "GRXUI"  をクリックして、表示された内容に従って設定を行ってください。<br>
+<p align="center">
+<img src="../img_new/install/init_eclipse_grxui.png"><br>
+</p>
+デフォルトでサーバーディレクトリの設定を行っておりますが、各項目の内容が間違っていないか確認してください。<br>
+GrxUI起動後に設定を修正した場合はGrxUIを再起動しないと反映されませんので、必ずGrxUIを再起動してください。
+<br>
+また、この設定はワークスペース毎に保存されますので、ワークスペースを変更した時は再度設定してください。<br>
+<br>
+次に、GrxUIを起動します。<br>
+メニューから"ウインドウ"→"パースペクティブを開く"→その他"を選択し、GrxUIのパースペクティブを開くことでGrxUIが起動します。
+<br><br>
