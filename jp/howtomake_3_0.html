@@ -1,0 +1,414 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>MakeコマンドによるOpenHRPのコンパイル(Ver.3.0.8)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">MakeコマンドによるOpenHRPのコンパイル(Ver.3.0.8)</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+
+
+<p>
+本ページでは、ソースパッケージより展開したOpenHRPのソースを
+makeコマンドを用いてコマンドラインからコンパイルする手順を説明します.
+</p>
+
+<p>
+makeコマンドによるコンパイルは、Linuxにおいては基本的なコンパイル方法となります。
+</p>
+
+<p>
+Windowsに関しては、通常、Visual C++ の統合開発環境上でコンパイルを行います。
+これについては、<a href="./install_windows_3_0.html">「Windowsにおけるインストール」</a>
+をご覧ください。
+バージョン3.0.0-RC3まではWindowsに関してもDOS窓からのコマンドラインコンパイルを行っていましたが、
+現在ではこの方法はサポートしていません。
+</p>
+
+
+
+<h2>ソースパッケージの展開</h2>
+
+<p>
+まず、ダウンロードしたソースパッケージ "OpenHRP-xxx.zip"を、
+unzipコマンドなどのZIPファイル解凍ツールを使って適当なディレクトリに展開します.
+(xxxは3.0.0-RC4といったバージョンを示す文字列が入ります。
+ ダウンロードしたファイルのものと置き換えて読んでください。)
+</p>
+
+<p>
+展開先は、Linuxにおいては、ホームディレクトリ以下の適当なディレクトリに展開するのが一般的です.
+</p>
+
+
+
+<h2 id="make_vars">Make.vars について</h2>
+
+<p>
+Makeコマンドによるコンパイルでは、
+コンパイルの設定を "Make.vars" というファイルで行います.
+</p>
+
+<p>
+このファイルは、基本的に
+<pre>
+DYNAMICS_ENGINE = aist
+OB_DIR =
+JDK_DIR = $(HOME)/usr/jdk1.5.0_07
+BOOST_INC_DIR =
+BOOST_LIB_DIR =
+BOOST_LIB_SFX = -mt
+TVMET_INC_DIR = $(HOME)/usr/tvmet-1.7.1/include
+NS_HOST = localhost
+NS_PORT = 2809
+</pre>
+といったかたちで、設定項目と設定内容を記述したものになっています。
+</p>
+
+<p>
+このファイルはMakefileに取り込んで使うものなので、文法はMakefileと同じです.
+例えば、$(環境変数) とすることで、環境変数の値を取り込むこともできます.
+また、# 以下の文字列はコメントとなります。
+</p>
+
+<p>
+設定内容は、主にコンパイルの際に必要なプログラムやライブラリの位置を示したものとなっています。
+基本的には、対象とするプログラムやライブラリがOSやコンパイルツールにおいて
+デフォルトで利用可能な設定となっていれば、
+Make.vars で設定する必要はありません。
+自前でインストールしたプログラムやライブラリなどがOSやコンパイルツールのパスに取り込まれていない場合に、
+Make.vars で設定することになります。
+</p>
+
+<p>
+このような設定は configure と呼ばれる自動設定スクリプトで行うことが多いのですが、
+OpenHRP3.0系では今のところそのようなスクリプトは用意しておりません。
+OpenHRP3.1.0 &beta;版にてCMakeの導入を行ないましたので、今後はバージョン3.1系にて対応していく予定です.
+</p>
+
+
+<h2>Make.vars の作成</h2>
+
+<p>
+Make.vars を作成するにあたっては、その雛形として利用できるファイルを用意していますので、
+これを利用してください.
+</p>
+
+<p>
+OpenHRPソースのトップディレクトリに、
+OS/ディストリビューションごとに以下の雛形ファイルがあります。
+</p>
+
+<ul>
+ <li>Ubuntu Linux で、<a href="./install_ubuntu_3_0.html">「Ubuntu Linux におけるインストール」</a>に従う場合
+  <ul>
+   <li>Make.vars.ubuntu.8.04 (Ubuntu 8.04用)</li>
+   <li>Make.vars.ubuntu.8.10 (Ubuntu 8.10用)</li>
+  </ul>
+ </li>
+ <li>その他一般向けの雛形
+  <ul>
+   <li>Make.vars.template</li>
+  </ul>
+ </li>
+</ul>
+
+<p>
+これらのファイルの中から対応するものを、
+ソースのトップディレクトリに "Make.vars" としてコピーしてください。
+</p>
+
+
+<h2 id="make.vars">Make.vars の設定内容</h2>
+
+<p>
+雛形よりコピーしたMake.varsについて、必要に応じて修正を行います.
+</p>
+
+<p>
+以下ではMake.varsの主要な設定項目を説明します。
+</p>
+<p>
+ただし、ここで紹介していない設定項目もあり、
+バージョンアップに伴って設定内容が変わることもあり得ますので、
+雛形ファイルに記述されたコメントもあわせて参考にするようにしてください。
+</p>
+
+<p>
+<table border="1">
+ <tr><th colspan="2">実行方法に関する設定項目</th></tr>
+ <tr>
+  <th>DYNAMICS_ENGINE</th>
+  <td>使用する動力学サーバの選択。ut (東大版), aist (産総研版) のいずれかを指定する。（※）
+  </td>
+ </tr>
+ <tr id="NS_HOST">
+  <th>NS_HOST</th>
+  <td>ミドルウェア(CORBA,OpenRTM)のネームサーバのホスト。通常は localhost でよい。（※）</td>
+ </tr>
+ <tr id="NS_PORT">
+  <th>NS_PORT</th>
+  <td>ミドルウェア(CORBA,OpenRTM)のネームサーバのポート番号。通常は初期値でよい。（※）</td>
+ </tr>
+
+ <tr><th colspan="2">プログラミング言語環境に関する設定項目</th></tr>
+ <tr>
+  <th>JDK_DIR</th>
+  <td>JDKのインストール先ディレクトリ。java, javac といったJDKのコマンドにパスが通っていない場合に指定する。（※）</td>
+ </tr>
+ <tr>
+  <th>JYTHON_DIR</th>
+  <td>Jythonのインストール先ディレクトリ。(jython.jarがあるディレクトリ。) （※）</td>
+ </tr>
+
+ <tr><th colspan="2">コンパイル方法に関する設定項目</th>
+ <tr>
+  <th>DEBUG_VER</th>
+  <td>デバッグ・オプションの切り替え。以下から選択してください，
+    <ul>
+      0：　(最適化あり、デバッグ情報なし)<br>
+      1：　(最適化あり、デバッグ情報あり)<br>
+      2：　(最適化なし、デバッグ情報あり)
+    </ul>
+  </td>
+ </tr>
+ <tr>
+  <th>CXX_CPU_FLAGS</th>
+  <td>特定のCPUに対する最適化のためのコンパイルオプションを指定する。SSEなどを使いたい場合、ここで設定するとよい。
+ </tr>
+
+ <tr><th colspan="2">ライブラリに関する設定項目</th>
+ <tr>
+  <th>J3DHOME</th>
+  <td>Java3Dのインストール先ディレクトリ。空白の場合は同名の環境変数に${OPENHRPHOME}/client/gui/Java3D/1.4.1/unix を代入します。（※）</td>
+ </tr>
+ <tr>
+  <th>JMFHOME</th>
+  <td>JMFのインストール先ディレクトリ。空白の場合は同名の環境変数に ${OPENHRPHOME}/client/gui/JMF2.1.1e/Unix を代入します。（※）</td>
+ </tr>
+ <tr>
+  <th>OB_DIR</th>
+  <td>omniORBのインストール先ディレクトリ。</td>
+ </tr>
+ <tr>
+  <th>BOOST_INC_DIR</th>
+  <td>boostライブラリのヘッダファイルのための追加パス</td>
+ </tr>
+ <tr>
+  <th>BOOST_LIB_DIR</th>
+  <td>boostライブラリのライブラリファイルのための追加パス</td>
+ </tr>
+ <tr>
+  <th>BOOST_LIB_SFX</th>
+  <td>boostライブラリのライブラリファイルのサフィックス(拡張子を除く)。
+     boostのライブラリファイルは様々なバージョンを様々なサフィックスで区別しており、
+     このサフィックスが環境によって違う場合があるので、ここで指定する。
+     基本的にはマルチスレッドのリリース版に対応するものを指定すればよい。
+  </td>
+ </tr>
+ <tr>
+  <th>TVMET_DIR</th>
+  <td>tvmetライブラリのインストール先ディレクトリ</td>
+ </tr>
+ <tr>
+  <th>OPENRTM_DIR</th>
+  <td>OpenRTM-aist のインストール先ディレクトリ</td>
+ </tr>
+
+ <tr>
+  <th>LAPACK_VARIANT</th>
+  <td>LAPACKライブラリの種類を指定する。LAPACK（Fortranオリジナル版）,
+      CLAPACK(C言語変換版), ATLAS 等から選択する。</td>
+ </tr>
+ <tr>
+  <th>LAPACK_INC_DIR</th>
+  <td>LAPACKのヘッダファイルのための追加パス</td>
+ </tr>
+ <tr>
+  <th>LAPACK_LIB_DIR</th>
+  <td>LAPACKのライブラリファイルのための追加パス</td>
+ </tr>
+ <tr>
+  <th>LAPACK_VARIANT_LIB_DIR</th>
+  <td>ライブラリファイルが複数のディレクトリにまたがる場合に、LAPACK_LIB_DIRに追加して指定する。</td>
+ </tr>
+ <tr>
+  <th>CLAPACK_SUFFIX</th>
+  <td>CLAPACKにおいてライブラリファイルにつく "_LINUX" などのサフィックスがあれば指定する。</td>
+ </tr>
+ <tr>
+  <th>M_ARCHITECTURE</th>
+  <td>特定のアーキテクチャに対するライブラリパス設定、コンパイルオプションの指定などに使用。今はi386のみに対応。予約変数。</td>
+ </tr>
+</table>
+</p>
+
+<p>
+（※）： 運用時の変更はbin/unix/config.shで行ないます。
+</p>
+
+<p>
+パスに関する以下の項目については、システムの実行パス、インクルードパス、ライブラリパスに含まれる
+ディレクトリ(Linuxにおける /usr, /usr/local 以下などや、自前でパスを設定したディレクトリ）
+へインストールされている場合は、空白とします。
+<ul>
+ <li>OB_DIR
+ <li>BOOST_INC_DIR, BOOST_LIB_DIR
+ <li>TVMET_DIR
+ <li>OPENRTM_DIR
+ <li>LAPACK_INC_DIR, LAPACK_LIB_DIR, LAPACK_VARIANT_LIB_DIR
+</ul>
+</p>
+
+
+<p>
+また、スペースなどの空白文字を含むパスはコマンドラインツールが対応出来ない場合があるので、
+インストール先はそのようなパスを避けるようにしてください。
+</p>
+
+
+<h2>Makeコマンドの実行</h2>
+
+<p>
+OpenHRPソースのトップディレクトリで make コマンドを実行し、コンパイルを行います。
+</p>
+
+<p>
+コンパイルエラーがでた場合は、エラーメッセージを参考に、
+必要なプログラムやライブラリが正しくインストールされているか、
+Make.vars の設定は正しいかといったことを確認してみてください。
+</p>
+
+<p>
+なお、現在のMakefileは依存関係の指定が一部甘い部分があり、
+設定をしなおして再コンパイルする際には、
+一度 "make clean" を実行して、Makeを最初からやり直す方がよい場合もあります。
+</p>
+
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

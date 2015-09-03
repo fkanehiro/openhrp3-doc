@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Creating models using GrxUI</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Creating models using GrxUI</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Creating models using GrxUI</h2>
+
+<p>
+In this section we describe how to create VRML models for OpenHRP using GrxUI.<br>
+(Note: Following screeshots may somewhat differ from the actual appearence.)
+</p>
+
+
+<h3>Required data</h3>
+
+<p>
+Please be prepared with following data.
+<ul>
+ <li>Mass, barycenter position relative to the link origin, inertial matrix around the barycenter and
+     shape data of each link.<br>
+     Prepare the shape data using CAD software(No extensions available through OpenHRP) and export 
+     the output file in VRML97 file format.
+ </li>
+ <li>Positional relation of each link</li>
+ <li>Attaching position and orientation of each sensor</li>
+</ul>
+</p>
+
+
+<h3>Let's begin model making</h3>
+
+<p>
+Right-click on <i>"Model"</i> item displaying on in GrxUI's ItemView panel and select <i>"create"</i>.
+</p>
+
+<p align=center>
+<img src="../img_new/me_create_robot.png">
+</p>
+
+<p>
+Robot(note the robot icon) and its root link is generated as shown below.
+</p>
+
+<p align=center>
+<img src="../img_new/me_create_robot2.png">
+</p>
+
+
+<h3>Generating tree</h3>
+
+<p>
+Right-clicking link item opens a menu as shown below. 
+Select <i>"add joint"</i>, <i>"add sensor"</i>, <i>"add segment"</i>, to add child link,
+sensor or segment to this link.
+Moreover, the already created model file can be read by choosing <i>"add robot"</i>.
+</p>
+</p>
+
+<p align=center>
+<img src="../img_new/me_create_child.png">
+</p>
+
+<p>
+Robot's link tree will be generated by adding necessary items through these menus.
+</p>
+
+
+<h4>Adding child link</h4>
+
+<p>
+Right-click on link item and select <i>"add joint"</i> from menu. Enter the child link name in the 
+poping up dialog box and press OK.
+</p>
+
+<p align=center>
+<img src="../img_new/me_add_joint.png">
+</p>
+
+
+<h4>Adding sensor</h4>
+
+<p>
+Right-click on link item and select <i>"add sensor"</i> from menu. Enter the sensor name in the 
+poping up dialog box and press OK.
+</p>
+
+<p align=center>
+<img src="../img_new/me_add_sensor.png">
+</p>
+
+<h4>Adding segment</h4>
+<p>
+Right-click on link item and select <i>"add segment"</i> from menu.
+Enter the segment name in the poping up dialog box and press OK.
+</p>
+<p align=center>
+<img src="../img_new/me_add_segment.png">
+</p>
+
+<h4>Adding robot</h4>
+<p>
+Right-click on link item and select <i>"add robot"</i> from menu.
+Please choose a file in a file dialog. 
+The file must be defined according to the model description of OpenHRP3.
+The route link of the read file is added as a child link of the selected link.
+If jointType of the route link of the read file is "free", a simulation cannot be performed correctly. 
+Please be sure to rewrite in another types, such as "fixed", by setup of the property explained below. 
+</p>
+
+<h3>Adding shape</h3>
+<p>
+Right-click on segment item or sensor item and select <i>"add shape from VRML97"</i>, "add primitive shape" from menu, to add shape.
+<p align=center>
+<img src="../img_new/me_add_shape.png">
+</p>
+</p>
+
+<h4>Adding shape by VRML97 file</h4>
+<p>
+If you select <i>"add shape from VRML97"</i>, file-select dialog box will be opened. 
+Select the previously prepared VRML97 file that contain shape data and press OK.
+</p>
+
+<h4>Adding primitive shape </h4>
+<p>
+If you select <i>"add primitive shape"</i>, Furthermore, the menu of Box", "Cone", "Cylinder", and "Sphere" is showed. Please choose either. 
+</p>
+<p align=center>
+<img src="../img_new/me_add_primitive_shape.png">
+</p>
+
+<h3>Configuring item properties</h3>
+
+<p>
+When you select link or sensor item, its properties are displayed in <i>"PropertyView"</i> panel. 
+There you can edit the properties and input the predefined parameters of the robot. All the property 
+values are in SI units.
+</p>
+
+
+<h4>Link properties</h4>
+
+<p>
+Each link contains following properties.
+</p>
+
+<p align=center>
+<img src="../img_new/me_joint_property.png">
+</p>
+
+<p>
+<i>"translation"</i> and <i>"rotation"</i> are for position and orientation of this link relative to 
+the parent link. For <i>"translation"</i>, set the position of this link with x,y,z coordinates 
+relative to the parent link's coordinate system and for <i>"rotation"</i>, set the orientation of 
+this link by defining rotation vector with 3 elements relative to the parent link and the rotation 
+angle, as total of 4 elements. These position and orientation parameters are same to the sensor and 
+shape items. Numbers below the decimal point are omitted for some properties such as 
+<i>"translation"</i>, to prevent the view being complicated.
+</p>
+
+<p>
+<i>"centerOfMass"</i>, <i>"inertia"</i> and <i>"mass"</i> each indicates barycenter position, inertial 
+matrix around the barycenter, and mass of this link. 
+When the link item is selected in ItemView, the ellipsoids that correspond to these mass 
+characteristics are displayed in translucent orange. These values cannot be edited.
+These can be edited in the property of a segment item.
+</p>
+
+<p>
+<i>"encoderPulse"</i>, <i>"rotorResistor"</i> and <i>"torqueConst"</i> each indicates pulse count, 
+rotor resistance and torque constant that the encoder outputs when the motor makes one rotation. 
+These properties are used by controller, but not in simulation.
+</p>
+
+<p>
+<i>"gearRatio"</i> and <i>"rotorInertia"</i> each indicates gear ratio of the joint which this link and 
+parent link are connected and the inertia of the motor. These parameters have to be set appropriately, 
+if joint is controlling torque, or simultaion would be unstable.
+</p>
+
+<p>
+<i>"jointAxis"</i>, <i>"jointId"</i> and <i>"jointType"</i> each indicates direction of joint-axis, 
+joint-number and type of the joint. Direction of joint-axis is specified relative to this link's 
+coordinate system. Joint number is the index of this link, when all the joint data is arranged on a 
+vector. Therefore, the number should not be duplicate. JointType can be selected from free-joint(free),
+rotate-joint(rotate), slide-joint(slide) or fixed-joint(fixed).
+</p>
+
+<p>
+<i>"llimit"</i>, <i>"ulimit"</i>, <i>"lvlimit"</i>, <i>"uvlimit"</i> each indicates minimum value 
+of movable range, maximum value of movable range, minimum value of speed and the maximum value of 
+speed of this link. These are also for controller to use, but not in simulation.
+</p>
+
+
+<h4>Sensor properties</h4>
+
+<p>
+Each sensor has following properties.<br>
+</p>
+<p>
+<i>"type"</i> means type of the sensor that can be selected from acceleration-sensor(Acceleration), 
+angular-velocity-sensor(Gyro), force/torque-sensor(Force) or camera(Vision).
+</p>
+<p>
+Specify the position and orientation for <i>"translation"</i> and <i>"rotation"</i> relative to the 
+link which this sensor is attached.
+</p>
+
+<p align=center>
+<img src="../img_new/me_sensor_property.png">
+</p>
+
+<h4>Segment properties</h4>
+<p>
+Each segment has following properties.
+</p>
+<i>"centerOfMass"</i>, <i>"inertia"</i> and <i>"mass"</i> each indicates barycenter position, inertial 
+matrix around the barycenter, and mass of this segment. 
+Specify the position and orientation for <i>"translation"</i> and <i>"rotation"</i> relative to the 
+link which this segment belongs.
+<p align=center>
+<img src="../img_new/me_segment_property.png">
+</p>
+
+<h4>Shape properties</h4>
+
+<p>
+Each shape has following properties.<br>
+Specify the position and orientation for <i>"translation"</i> and <i>"rotation"</i> relative to the 
+segment which this shape belongs.
+</p>
+
+<p align=center>
+<img src="../img_new/me_shape_property.png">
+</p>
+Since primitive shape has a property according to each feature, edit of size, a color, etc. is possible for it. 
+
+<h3>Saving the model</h3>
+
+<p>
+Right-click the robot-item at the top of the item tree; a menu will be popped-up as shown below. 
+Select <i>"save as"</i>; file saving dialog box will be displayed. Provide the model file saving 
+location and file name; then press OK. The created model file will be saved in VRML97 format which 
+is supported in OpenHRP.
+
+</p>
+<p align=center>
+<img src="../img_new/me_save.png">
+</p>
+
+<h3>Warning</h3>
+
+<ul>
+ <li>
+  <p>Although now it is possible to edit various properties using PropertyView, it does not have any 
+     control on property editing. Current PropertyView allows to edit any property and input any 
+     format of data, without caring the property's input conditions. (For instance, a user may enter 
+     string format data into a property that should actually contain numarical data, by mistake). 
+     This may cause to occur errors on simulation, if user does not notice these kind of mistakes. 
+  </p>
+  <p>We are now planning to implement an exclusive view to avoid these kind of problems in future. 
+     Until please pay beware to input property values in correct format.
+  </p>
+ </li>
+ <li>
+  <p>You can not start simulation, right after you edit the model. Once you edit, save the model in 
+     VRML format and reload again into the simulation.
+  </p>
+ </li>
+</ul>
+
+
+<h2>Model making tutorial</h2>
+
+<p>
+In this section we explain step-by-step procedure of how to create the cart model placed in 
+<i>"sample/model/simple_vehicle"</i> directory.
+</p>
+<p align=center>
+<img src="../img_new/me_simple_vehicle.png">
+</p>
+
+<ol>
+ <li>
+  <p>First be prepare the shape data. The robot is composed of body part, three wheels and a 
+     camera. We can use same shape data for wheels, because all three wheels are equal in shape. 
+     We have preprared 3 types of shape data for robot bady, wheels and camera and saved them as 
+     model files called <i>"body.wrl", "wheel.wrl"</i> and <i>"camera.wrl"</i>. If you select any 
+     of the item (link, sensor or shape) in ItemView, its local coordinate system will be displayed 
+     with red, green and blue lines. Origin of this coordinate sysytem represents item position and 
+     red, green, blue lines represent X, Y, Z axes respectively.
+  </p>
+  <p align=center>
+  <img src="../img_new/me_body.png">
+  <img src="../img_new/me_wheel.png">
+  <img src="../img_new/me_camera.png">
+ </p>
+ </li>
+
+ <li>
+  <p>Now right-click the "Model" item folder in ItemView and select <i>"create"</i> from the menu; 
+     model item will be created.
+  </p>
+  <p align=center>
+  <img src="../img_new/me_create_robot.png">
+  <img src="../img_new/me_create_robot2.png">
+  </p>
+ </li>
+
+ <li>
+  <p>Even a default name is automatically assigned to the model, here we rename the model and 
+     assign as "simple_vehicle" to make it easy to understand.Right-click the generated 
+     <i>"newmodel0"</i> and select <i>"rename"</i>. A dialog box to enter the new name will be 
+     appeared; enter the new name as "simple_vehicle".
+  </p>
+  <p align=center>
+  <img src="../img_new/me_rename_robot.png">
+  <img src="../img_new/me_rename_robot2.png">
+  </p>
+ </li>
+
+<li>Right-click the generated root link and select <i>"add segment"</i> and name a segment "root_segment".
+Furthermore, right-click this segment and select <i>"add shape fromVRML97"</i>.
+File-select dialog box will be appeared. Select the model file <i>"simple_vehicle/body.wrl"</i>, which contains shape data of robot body and 
+press OK. <i>"body.wrl"</i> will be loaded and displayed in 3DView. 
+<p align=center>
+<img src="../img_new/me_select_add_segment.png">
+<img src="../img_new/me_select_add_shape.png">
+<img src="../img_new/me_body.png">
+<img src="../img_new/me_create_body.png">
+</p>
+
+</li>
+
+ <li>
+  <p>Next we add camera, which is the sensor fixed to the robot body. Right-click the <i>"root"</i> 
+     link and select <i>"add sensor"</i> from menu. A dialog box to enter the sensor name will be 
+     appeared; enter as "Camera".
+  </p>
+  <p align=center>
+  <img src="../img_new/me_add_sensor.png">
+  <img src="../img_new/me_add_sensor2.png">
+  </p>
+ </li>
+
+ <li>
+  <p>Sensor is generated as ForceSensor by default. Select <i>"Camera"</i> item and change the 
+     sensor <i>type</i> to <i>"Vision"</i> in PropertyView.
+  </p>
+  <p>Still the Camera is buried inside the robot body, since it is 
+     placed at the origin of the parent node by default. Select the Camera and change the 
+     <i>"translation"</i> and <i>"rotation"</i> to (0.0 -0.3 0.1) and (0 0.7071 0.7071 3.1415) 
+     respectively. And change the <i>"id"</i> to '0'.
+  </p>
+  <p align=center>
+  <img src="../img_new/me_change_sensor_type.png">
+  <img src="../img_new/me_change_sensor_type2.png">
+  </p>
+ </li>
+
+ <li>
+  <p>Sensor may have shape if necessary. Right-click the Camera and select 
+     <i>"add shape from VRML97"</i> from the menu. File-select dialog box will be appeared and 
+     select the model file <i>"camera.wrl"</i> which contains shape data of camera.
+  </p>
+  <p align=center>
+  <img src="../img_new/me_add_camera_shape.png">
+  <img src="../img_new/me_add_camera_shape2.png">
+  </p>
+ </li>
+
+ <li>
+  <p>Still the robot body is partially buried in the floor. Changing the <i>"translation"</i> 
+     property of <i>"root"</i> to (0.0 0.0 0.1) will place the robot body on the floor. Set the 
+     <i>"mass"</i> and <i>"inertia"</i> of <i>"root"</i> to (10.0) and 
+     (0.1 0.0 0.0 0.0 0.1 0.0 0.0 0.0 0.5) respectively.
+  </p>
+  <p align=center>
+  <img src="../img_new/me_root_property.png">
+  <img src="../img_new/me_root_segment_property.png">
+  <img src="../img_new/me_root.png">
+  </p>
+ </li>
+
+
+ <li>
+  <p>There are 3 more links to joint with robot(root) to complete the cart model, those are 
+     right-wheel, left-wheel and the steering wheel. Right-click on <i>"root"</i> 
+     and select <i>"add joint"</i> from the menu. Add each item naming "WheelR", "WheelL" and 
+     "Steering" respectively.
+  </p>
+  <p align=center>
+  <img src="../img_new/me_add_joints.png">
+  </p>
+ </li>
+
+ <li>
+  <p>Front-wheel comes in front svn addof Steering. Therefore right-click on <i>"Steering"</i>, 
+     select <i>"add joint"</i> from menu and add "WheelC".
+  </p>
+  <p align=center>
+  <img src="../img_new/me_add_wheelc.png">
+  </p>
+ </li>
+
+<li>
+Add a segment to Steering, WheelC, WheelR, and WheelL. 
+<p align=center>
+<img src="../img_new/me_add_segments.png">
+</p>
+</li>
+
+ <li>
+  <p>WheelC, WheelR and WheelL all has same wheel shape defined as <i>"wheel.wrl"</i>. Therefore 
+  right-click on each wheel item, select <i>"add shape from VRML97"</i> from menu and add shapes.
+  </p>
+  <p align=center>
+  <img src="../img_new/me_final_tree.png">
+  <img src="../img_new/me_add_wheels.png">
+  </p>
+ </li>
+
+ <li>
+  <p>Set the property values of Steering, Steering_segment, WheelC, WheelC_segment, WheelR, WheelR_segment, WheelL, WheelL_segment as shown in following figures 
+     respectively, and you are done.
+  </p>
+  <p align=center>
+<img src="../img_new/me_steering_property.png">
+<img src="../img_new/me_steering_segment_property.png">
+</p>
+<p align=center>
+<img src="../img_new/me_wheelc_property.png">
+<img src="../img_new/me_wheelc_segment_property.png">
+</p>
+<p align=center>
+<img src="../img_new/me_wheelr_property.png">
+<img src="../img_new/me_wheelr_segment_property.png">
+</p>
+<p align=center>
+<img src="../img_new/me_wheell_property.png">
+<img src="../img_new/me_wheell_segment_property.png">
+</p>
+ </li>
+
+ <li>
+  <p>Finally save the created model as a model file of VRML97 format. Right-click on 
+     <i>"simple_vehicle"</i> and select <i>"save as"</i> from menu. File saving dialog box will be 
+     appeared. Move to the location where you want to save the model file and enter the file name 
+     to save. There you have created the the cart model.
+  </p>
+ </li>
+
+</ol>
+
+<h2>Combination of a model </h2>
+<p>
+Since one set of cart model was created, let's create the robot which connected one more set of the same cart model. 
+</p>
+<ol>
+<li@>
+Right-click the first robot's route link and select <i>"add robot"</i>.
+If you chose the file saved previously, one more robot will overlap and will be displayed. 
+<p align=center>
+<img src="../img_new/me_add_robot.png">
+<img src="../img_new/me_add_robot1.png">
+</p>
+</li>
+
+<li>
+Rewritten the property of the 2nd robot's route link. 
+First, set the type of a route link to fixed. 
+Next, the value of translation is adjusted and keep a robot from overlapping. 
+It is completion. 
+Please save at a file. 
+<p align=center>
+<img src="../img_new/me_add_robot_property.png">
+<img src="../img_new/me_add_robot_final.png">
+
+</p>
+</li>
+</ol>
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

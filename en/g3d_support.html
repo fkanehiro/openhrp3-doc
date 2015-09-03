@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Installing 3D Graphics Driver on Ubuntu</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Installing 3D Graphics Driver on Ubuntu</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+
+<p>
+Since OpenHRP is a 3D-graphics based application, it is highly important to have 
+<a href="http://www.gentoo.org/doc/en/dri-howto.xml" target="_blank">"3d-Acceleration"</a> 
+feature supported graphics-driver installed on your system. Depending on the graphics-chip 
+you have, the installation procedure of the graphics-driver is different as described below.
+</p>
+
+
+Note:
+<ol>
+  <li>
+    <p>
+    Fundamentally, OpenHRP works even if not 3D-acceleration enabled. But it may cause to 
+    slower the graphics and not to perform smoothly. However, this behavior is highly 
+    depends on the performance of the hardware equipements on your pc such as CPU, RAM 
+    and the brand of the graphics chip you are using. On some systems, it may work smoothly 
+    without giving any problems, while even the basic operations of OpenHRP might not 
+    perform on some systems.
+    </p>
+  </li>
+  <li>
+    <p>
+    Please be aware that, old graphics chips may not support 3D-acceleration feature.
+    </p>
+  </li>
+</ol>
+<br>
+
+<h2 id="intel">Intel onboard chipsets</h2>
+
+<p>
+Basically it is not necessary to install drivers for Intel chipsets, because the driver 
+comes as manufacture provided by default. When comaparing with other brands, general 
+functionality of Intel chipset is suppressed to the minimum. But the 3D acceleration 
+feature must already be enabled at the first start of pc.
+</p>
+<br>
+
+
+<h2 id="nvidia">Installing drivers for NVIDIA chipsets</h2>
+
+<p>
+3D-acceleration feature is not supported by the open-source driver called "nv", that comes 
+deafult with Ubuntu. Therefor you have to install the restricted driver called "nVidia".
+Following describes the installation procedure:
+</p>
+
+<ol>
+  <li >
+    Browse to "System" > "Administration" > "Hardware Drivers" (On Ubuntu7.10 and previous 
+    versions this comes as "Restricted driver Manager"). If you are asked for 
+    password, enter the login password. 
+    <p align="center"><a href="../img_new/trouble/g3d_NVIDIA1_en.png">
+    <img src="../img_new/trouble/g3d_NVIDIA1_en.png" width="50%"></a></p>
+  </li>
+  <li >
+    Within the "Hardware Drivers" dialog box, enable "NVIDIA accelerated 
+    graphics driver" by clicking the checkbox along with.
+    <p align="center"><a href="../img_new/trouble/g3d_NVIDIA2_en.png">
+    <img src="../img_new/trouble/g3d_NVIDIA2_en.png" width="60%"></a></p>
+  </li>
+  <li >
+    When you are asked for confirmation, click on "Enable driver".
+    <p align="center"><a href="../img_new/trouble/g3d_NVIDIA3_en.png">
+    <img src="../img_new/trouble/g3d_NVIDIA3_en.png" width="60%"></a></p>
+  </li>
+
+  <li >You will be asked for restart and just do it.</li>
+</ol>
+<br>
+
+<p>Now we are going to change visual effects settings.</p>
+
+<ol start="5">
+  <li >
+    Browse to "System" > "Preferences" > "Appearance" menu option. select "Visual Effects" 
+    tab, in the "Appearance Preferance" dialog box.
+  </li>
+  <li >
+    Select the radio-button along with "Extra:". After few seconds you will be asked for 
+    confirmation. Click on "Keep settings" to confirm the change.
+    <p align="center"><a href="../img_new/trouble/g3d_NVIDIA4_en.png">
+    <img src="../img_new/trouble/g3d_NVIDIA4_en.png" width="60%"></a></p>
+    <p align="center"><img src="../img_new/trouble/g3d_NVIDIA5.png"></p>
+  </li>
+</ol>
+
+<p>
+Installation completed. You can experience the difference with visual effects by opening, 
+closing and moving windows on the desktop.
+</p>
+<br>
+
+
+<h2 id="ati">Installing drivers fro ATI chipsets</h2>
+
+<p>
+Normally it is difficult to install proper drivers for ATI chipsets. Perhaps it may 
+work fine with default driver settings, in some systems. But actually, you have to 
+install following drivers called "fglrx" and "XGL", to enable 3D-acceleration.
+</p>
+
+<h3 id="fglrx">Installing fglrx driver</h3>
+
+<p>
+On Ubuntu systems, installtion procedure is same as with NVIDIA chipsets. But the driver
+installing with this procedure is called "fglrx"(Restricted driver for ATI chipsets), which 
+is supported only with comparatively latest ATI chipsets. Supported graphics chips are 
+shown in table below.
+</p>
+
+<table border="1" align="center">
+ <tr><th colspan="2">fgrlx supported chips</th></tr>
+  <tr>
+  <th>Chipset</th>
+  <th>Model</th>
+ </tr>
+ <tr>
+  <th>Mobility Radeon</th>
+  <td>X1800, X1600, X1400, X1300,<br>
+  	  X800, X700, X600, X300,<br>
+  	  9800, 9600, 9550, 9500</td>
+ </tr>
+ <th>Radeon Xpress</th>
+  <td>200M series, 200 series,<br>
+  	  1250 IGP</td>
+ </tr>
+ <th>Radeon</th>
+  <td>X1900, X1800, X1600, X1300,<br>
+  	  X850, X800, X700, X600,<br>
+  	  X550, X300, 9800, 9700,<br>
+  	  9600, 9550, 9500</td>
+ </tr>
+</table>
+<br>
+
+<p>Here goes the installation procedure.</p>
+<ol>
+  <li>
+    <p>First, update to the latest kernal and reboot.</p>
+  </li>
+  
+  <li>
+    <p>
+    Open "Hardware Drivers" dialog box by "System" > "Administration" > "Hardware Drivers" 
+    menu option. The restricted driver will be detected automatically and displayed as 
+    "ATI accelerated graphics driver"
+    </p>
+  </li>
+  
+  <li>
+    <p>
+    Click on checkbox to enable the driver. Drivers' download and installation will be 
+    start automatically.
+    </p>
+  </li>
+  
+  <li>
+    <p>
+    When the driver installation completed, you will be asked for confirmation, and click 
+    on "Enable Driver".
+    </p>
+  </li>
+  
+  <li>
+    <p>Fglrx driver will be enabled after rebooting.</p>
+    <p align="center"><img src="../img_new/trouble/g3d_ATI1_en.png"><br>
+    Status after installation completed and restarted
+    </p>
+  </li>
+</ol>
+
+<h3 id="xgl">XGL installation</h3>
+
+<p>
+Fglrx itself does not support 3d-graphics. To start 3D-graphics on your applications, 
+you have to install a program called "XGL". XGL can be easily installed on ubuntu, by 
+running following command in command-line. Then relogin ubuntu and XGL will be enabled.</p>
+
+<pre>$ sudo apt-get install xserver-xgl</pre><br>
+
+<ol>
+<p>=> For more about XGL installation, visit 
+<a href="http://translate.google.co.jp/translate?u=http%3A%2F%2Fblog.livedoor.jp%2Fvine_user%2Farchives%2F51126612.html&sl=ja&tl=en&hl=en&ie=UTF-8" target="_blank">here</a><br>
+<em>[Installing CompizFusion] > Step 1-3</em>
+</p>
+</ol>
+<br>
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

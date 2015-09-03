@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>How to form the shape data of a model into a bounding box</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">How to form the shape data of a model into a bounding box</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Overview</h2>
+<p>
+If the model for simulations is created from an actual robot's CAD data, etc., form data will be too detailed and the computation time of a simulation will become excessive. 
+In such a case, the computation time of a simulation is shortened by transposing form data to simple bounding box (Below, it is written as BBox.) form. 
+You can specify the minimum number of BBox with which form data is replaced for every link. 
+Therefore, if you specify many number of BBox to the link which collides, calculation accuracy can be improved, if you specify the few number of BBox to the link which does not collide, calculation can be speeded up.  
+</p>
+<h2>Specification of the minimum number of BBox </h2>
+<p>
+First, please load a model and choose link(①).<br />
+If a property view is displayed, NumOfAABB is displayed as "original data". 
+This shows that conversion of form data is not performed. <br />
+Please input the minimum number of BBox into NumOfAABB(②).A model loader changes the form data of a model so that it may become beyond this input value. <br />
+The value which can be inputted is from 1 to the maximum number determined with the Axis Aligned Bounding Box tree created from the original form. 
+An input value is too large when a value cannot be changed. <br />
+Moreover, if you are going to input into a link without form data, it is displayed as "no shape Data" and cannot input. <br />
+("original data" cannot be inputted with a property view. Please reload a model to return form data. )<br />
+Please set up NumOfAABB of other links similarly. <br />
+Click the BBox display button of 3D view(③). BBox form is expressed as a white line. If you click once again, a display will disappear. 
+</p>
+<img src="../img_new/BBoxModel1.jpg">
+<p>
+The following messages will be displayed, if you click a BBox display button when there is a link to which the value of NumOfAABB is not set. </p>
+<img src="../img_new/BBoxModel2.jpg">
+<p>
+If you click "OK", unset up link will be set as 1 and BBox form will be displayed. Your click of "Cancel" will not display BBox form.<br />
+Even if you choose "Cancel", the value of already set-up NumOfAABB is not changed. <br />
+A message is displayed to all the models loaded. Please choose "Cancel" for the model which does not need to be changed into BBox. 
+</p>
+
+<h2>A simulation and a collision check </h2>
+<p>
+Please operate it like usual. The data used for an collision check is the value set up by NumOfAABB. 
+Form data is changed, if the value of NumOfAABB is set up even if the BBox display has disappeared. 
+Moreover, one model cannot have the link changed into BBox, and a link with the original form. 
+Please use one of whether NumOfAABB of all the links is "original data", or the value is set to all. 
+Therefore, when you change a model into BBox, in order to set a value to all the links, please turn ON a BBox display. 
+</p>
+
+<h2>Saveing of a setup </h2>
+<p>
+Please save a project. A setup is saved at a project file. 
+</p>
+
+<h2>The model loaded from the same model file </h2>
+<p>
+All the models loaded from the same model file are similarly changed into BBox. 
+For example, when RobotA and RobotB are loaded from the file "PA10.main.wrl", 
+if a setup of NumOfAABB of the link J1 of RobotA is changed, a setup of NumOfAABB of the link J1 of RobotB is also changed. <br />
+Moreover, if RobotC is newly loaded from the file "PA10.main.wrl", the same value as the NumOfAABB value of each link of already loaded RobotA (RobotB) is set as RobotC.
+Furthermore, if RobotA is reloaded, RobotB and RobotC will also be reloaded and it will return to the original form data. <br />
+When a model is loaded by a project file, a setup of the model described at the end is effective. 
+</p>
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

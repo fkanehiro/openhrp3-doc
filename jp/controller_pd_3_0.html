@@ -1,0 +1,540 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>コントローラ作成ガイド(歩行パターン)(Ver.3.0.7)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">コントローラ作成ガイド(歩行パターン)(Ver.3.0.7)</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2> 概要 </h2>
+<p>
+歩行パターンファイルに基づきPD制御によってロボットを歩行させるSamplePDを例にして、OpenRTMコンポーネントとしてコントローラを作成する方法を説明します。<br>
+OpenHRPソースパッケージに用意されているサンプルコード(SamplePD.h、SamplePD.cpp)を参照しながらコンポーネントを作成する過程を追っていきます。<br>
+説明で省いた部分のコードはrtc-templateが作成した雛形に相当する部分となります。<br>
+rtc-templateを用いたOpenRTMコンポーネントの雛形作成については<a href=#rtc_template>「スケルトンの作成」</a>にて後述いたします。<br>
+</p>
+
+<h2>コード解説</h2>
+
+<h3> SamplePD.h </h3>
+<p>
+Controller/rtc/SamplePD/SamplePD.h をご覧ください。
+</p>
+<p>
+SamplePD::onActivated と SamplePD::onExecute が宣言されていることを確認してください。
+雛形作成時には SamplePD::onInitialize 以外の仮想関数がコメントアウトされています。
+これらの仮想関数をオーバーライドすることでコントローラ特有の振る舞いを定義することができます。
+</p>
+<p>
+コントローラが使用する種々のメンバが追加されています。
+</p>
+<pre>
+private: 
+  int dummy; 
+  std::ifstream angle, vel, gain; // 関節角度、 関節角速度、ゲイン値
+  double *Pgain;                  // Pゲインの配列
+  double *Dgain;                  // Dゲインの配列
+  std::vector&lt;double&gt; qold;       // ひとつ前の関節角度を保持
+</pre>
+<p>
+Windows環境でも実行する場合は、DLL版のビルドに対応するためSamplePDInitメソッドをOpenRTMで定義されたDLL_EXPORTマクロで修飾します。
+</p>
+<pre>
+extern "C"
+{
+
+  DLL_EXPORT void SamplePDInit(RTC::Manager* manager);
+
+};
+</pre>
+
+<h3> SamplePD.cpp </h3>
+<p>
+ヘッダファイルのインクルードとマクロの定義を行います。
+</p>
+<pre>
+#include &lt;iostream&gt;
+
+#define DOF (29)       // 自由度
+#define TIMESTEP 0.002 // シミュレーションのステップ
+
+// 各種ファイル群
+#define ANGLE_FILE "etc/angle.dat"  // 関節角度
+#define VEL_FILE   "etc/vel.dat"    // 関節角速度
+#define GAIN_FILE  "etc/PDgain.dat" // PDゲイン値
+</pre>
+<p>
+SamplePD.hで宣言したメソッドを実装します。
+</p>
+<p>
+SamplePD::SamplePDでコンストラクタを呼んだ後、歩行パターンファイルを開き、ゲインファイルからPDゲイン値を変数に取り込みます。
+</p>
+<pre>
+SamplePD::SamplePD(RTC::Manager* manager)
+  : RTC::DataFlowComponentBase(manager),
+    // &lt;rtc-template block="initializer"&gt;
+    m_angleIn("angle", m_angle),
+    m_torqueOut("torque", m_torque),
+    
+    // &lt;/rtc-template&gt;
+    dummy(0),
+    qold(DOF)
+{
+
+...
+
+  Pgain = new double[DOF];
+  Dgain = new double[DOF];
+
+  // 関節角度ファイルを開く
+  if (access(ANGLE_FILE, 0)){
+    std::cerr << ANGLE_FILE << " not found" << std::endl;
+  }else{
+    angle.open(ANGLE_FILE);
+  }
+
+  // 関節角速度ファイルを開く
+  if (access(VEL_FILE, 0)){
+    std::cerr << VEL_FILE << " not found" << std::endl;
+  }else{
+    vel.open(VEL_FILE);
+  }
+
+  // ゲインファイルを開き配列に代入
+  if (access(GAIN_FILE, 0)){
+    std::cerr << GAIN_FILE << " not found" << std::endl;
+  }else{
+    gain.open(GAIN_FILE);
+    for (int i=0; i&lt;DOF; i++){
+      gain >> Pgain[i];
+      gain >> Dgain[i];
+    }
+    gain.close();
+  }
+
+  // トルク, 関節角度ポートの長さをロボットの自由度分確保
+  m_torque.data.length(DOF);
+  m_angle.data.length(DOF);
+}
+</pre>
+<p>
+SamplePD::~SamplePDでファイルのクローズと配列の解放を行います。
+</p>
+<pre>
+  if (angle.is_open()) angle.close();
+  if (vel.is_open()) vel.close();
+  delete [] Pgain;
+  delete [] Dgain;
+</pre>
+<p>
+RTC::ReturnCode_t SamplePD::onActivatedでは初期化処理を行います。
+</p>
+<pre>
+RTC::ReturnCode_t SamplePD::onActivated(RTC::UniqueId ec_id)
+{
+  std::cout << "on Activated" << std::endl;
+  angle.seekg(0);
+  vel.seekg(0);
+
+  // 関節角度InPortの値をアップデート
+  m_angleIn.update();
+
+  // １フレーム前の値を保持する
+  for(int i=0; i &lt; DOF; ++i){
+    qold[i] = m_angle.data[i];
+  }
+
+  return RTC::RTC_OK;
+}
+</pre>
+<p>
+RTC::ReturnCode_t SamplePD::onExecuteメソッドでシミュレーションのステップ毎の振る舞いを処理します。
+</p>
+<pre>
+RTC::ReturnCode_t SamplePD::onExecute(RTC::UniqueId ec_id)
+{
+  // 関節角度InPortの値をアップデート
+  m_angleIn.update();
+
+  // 各関節の角度と角速度を更新
+  static double q_ref[DOF], dq_ref[DOF];
+  if(!angle.eof()){
+    angle >> q_ref[0]; vel >> dq_ref[0];// skip time
+    for (int i=0; i&lt;DOF; i++){
+      angle >> q_ref[i];
+      vel >> dq_ref[i];
+    }
+  }
+  
+  // 各関節のtorque値を決定
+  for(int i=0; i&lt;DOF; i++){
+    double q = m_angle.data[i];
+    double dq = (q - qold[i]) / TIMESTEP;
+    qold[i] = q;
+    
+    m_torque.data[i] = -(q - q_ref[i]) * Pgain[i] - (dq - dq_ref[i]) * Dgain[i];
+  }  
+  
+  //トルクを出力
+  m_torqueOut.write();
+  
+  return RTC::RTC_OK;
+}
+</pre>
+
+<h2> ファイル </h2>
+Controller/rtc/SamplePD/以下のパターンファイルと設定ファイルについて説明します。
+<h3> 歩行パターンファイル </h3>
+<p>
+コードでいうところのANGLE_FILEマクロ、VEL_FILEマクロに相当するファイルです。<br>
+歩行パターンファイルのフォーマットについて説明します。以下が一行分のファイルのフォーマットです。
+</p>
+<pre>
+時刻  &lt;JointID=0 の関節のデータ&gt;  &lt;JointID=1 の関節のデータ&gt;  …  &lt;JointID=nの関節のデータ&gt;
+</pre>
+<p>
+一行が１フレームに相当し、デリミッタはtabです。<br>
+時刻は開始時刻からの相対時間、関節のデータはangle.datの場合角度、vel.datの場合角速度に相当します。<br>
+例えばサンプルの場合、14秒間6701フレームの29個の関節データが表現されています。<br>
+</p>
+<h3> ゲインファイル </h3>
+コードでいうところのGAIN_FILEマクロに相当するファイルです。<br>
+PD制御のゲインを記録します。<br>
+そのフォーマットはJointID行にPゲイン、Dゲインの任意個をスペースでわけて書くこととし、具体的には以下のとおりとします。
+<pre>
+Pゲイン Dゲイン (&lt;= JointID = 0)
+Pゲイン Dゲイン (&lt;= JointID = 1)
+...
+Pゲイン Dゲイン (&lt;= JointID = n)
+</pre>
+
+<h3> rtc.conf </h3>
+<p>
+設定ファイル Controller/rtc/SamplePD/rtc.conf をご覧ください。<br>
+RTコンポーネントとしての設定が記述されています。
+</p>
+<p>
+環境に合わせてネームサーバの場所を記述します。
+<pre>
+corba.nameservers: localhost:2809
+</pre>
+特に,
+<ul>
+  Make.vars, bin/unix/config.sh &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Unix 環境)<br>
+  OpenHRP.vsprops, bin/dos/config.bat &nbsp;&nbsp;(Windows 環境)<br>
+</ul>
+の<a href="./howtomake_3_0.html#NS_HOST">NS_HOST</a>、<a href="./howtomake_3_0.html#NS_PORT">NS_PORT</a>がデフォルト値で無い場合は変更にあわせる必要があります。
+</p>
+<p>
+ログファイル作りの有無を設定します。
+</p>
+<ul>
+  <li>ログファイル作りを無効にする場合
+    <ul>
+    <pre>logger.enable:NO</pre>
+    </ul>
+  </li>
+  <li>ログファイル作りを有効にする場合
+    <ul>
+    <pre>logger.enable:YES</pre>
+    </ul>
+  </li>
+  <p>
+  ログファイルの作り先（パス）と名前形式を設定します。<br>
+  以下の例のようにパスを直接記述することも可能です。
+  </p>
+  <ul><pre>logger.file_name: D:\\Temp\\rtc%p.log</pre></ul>
+  <p>
+  ログレベルの設定です。
+  </p>
+  <ul>
+    <pre>logger.log_level: TRACE</pre>
+  </ul>
+</ul>
+<p>
+以下の内容は基本的には変更しないでください。
+</p>
+<pre>
+naming.formats: %n.rtc
+manager.modules.load_path: .
+exec_cxt.periodic.rate: 1000000
+manager.modules.abs_path_allowed: yes
+exec_cxt.periodic.type: SynchExtTriggerEC
+</pre>
+<p>
+RTコンポーネントの設定オプションに関する詳しい説明は、OpenRTM マニュアルの 
+<a href="http://www.openrtm.org/openrtm/ja/content/%E3%82%B3%E3%83%B3%E3%83%95%E3%82%A3%E3%82%AE%E3%83%A5%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E5%9F%BA%E7%A4%8E%E7%B7%A8" target="_blank">コンフィギュレーション</a>
+で確認してください。
+</p>
+
+<h2> コントローラブリッジの設定と起動 </h2>
+<p>
+各コンポーネント毎に実装を分離する目的は、開発における保守性・可搬性の向上です。<br>
+コントローラブリッジは、シミュレーション対象のモデルと各OpenRTMコンポーネント間の入出力を介するプロセスになります。<br>
+ここでは、コントローラブリッジの起動とコンポーネントとの接続設定を説明します。
+</p>
+<h3> Linuxの場合 </h3>
+<p>
+起動スクリプトController/rtc/SamplePD/SamplePD.shをご覧ください。<br>
+<pre>
+#!/bin/sh
+
+CONTROLLER_BRIDGE_DIR=../../bridge
+if [ -z $NS_HOST ]; then
+    if [ -z $NS_PORT ]; then
+        . $CONTROLLER_BRIDGE_DIR/../../bin/unix/config.sh
+    fi
+fi
+$CONTROLLER_BRIDGE_DIR/ControllerBridge \
+--config-file bridge.conf \
+--name-server $NS_HOST:$NS_PORT
+</pre>
+Controller/bridgeディレクトリとController/SamplePDディレクトリの相対位置が変わった場合、
+CONTROLLER_BRIDGE_DIRを適宜に変更することでControllerBridgeへの参照が対応するように
+なっています。<br>
+環境変数 NS_HOST、NS_PORTが定義されていない場合、bin/unix/config.shより取得するようになっています。
+</p>
+<h3> Windowsの場合 </h3>
+<p>
+起動スクリプトController/rtc/SamplePD/SamplePD.batをご覧ください。<br>
+<pre>
+SET CONTROLLER_BRIDGE_DIR=..\..\bridge
+@echo off
+if "%NS_HOST%" == "" (
+    if "%NS_PORT%" == "" (
+        call %CONTROLLER_BRIDGE_DIR%\..\..\bin\dos\config.bat
+    )
+)
+@echo on
+
+%CONTROLLER_BRIDGE_DIR%\ControllerBridge ^
+--config-file bridge.conf ^
+--name-server %NS_HOST%:%NS_PORT%
+</pre>
+SamplePD.shと同様にController/bridgeディレクトリとController/SamplePDディレクトリの相対位置が変わった場合、
+ControllerBridgeが参照できるようにCONTROLLER_BRIDGE_DIRの変更によって対応するようになっております。<br>
+パス名にスペースが入る際はダブルクォテーションで囲ってください。<br>
+環境変数 NS_HOST、NS_PORTが定義されていない場合、bin/dos/config.batより取得できるようにします。<br>
+Windows環境における当バッチファイルの実行において注意点があります。<br>
+それは、Linux環境と違いomninamesサーバをサービスとして登録しない場合が多いので、そのようなときは事前にomninamesサーバを起動しておく必要があります。<br>
+マニュアルによるomninamesサーバの起動方法は<a href="http://www.openrtm.org/openrtm/ja/node/185" target="_blank">RTコンポーネント作成(VC++版)</a>「ネームサーバの起動」項目を参照してください。<br>
+もしくは、事前にGrxUIを起動していただければGrxUI動作中は、omninamesサーバが動作します。<br>
+ただしGrxUIによるomninamesサーバの起動は、GrxUIを終了するとomninamesサーバも終了しますので注意が必要です。
+</p>
+<h3>起動オプションについて</h3>
+<p>
+<b>config-file</b><br>
+起動オプションを設定したファイルを指定します。<br>
+上述では、bridge.conf設定ファイルを使用します。
+</p>
+<p>
+<b>name-server</b><br>
+ネームサーバーのホストとポート番号を指定します。<br>
+上述では、ホスト名に環境変数NS_HOSTをポート番号に環境変数NS_PORTを割り当てます。
+</p>
+<p>
+起動オプションの詳細、その他の起動オプションについては<a href="./controller_bridge_3_0.html">「コントローラーブリッジ使用マニュアル」</a>をご覧ください。
+</p>
+
+<h3> プロジェクトファイルの読み込みと実行 </h3>
+
+<p>
+GrxUIからSamplePD.xmlを読み込み動作を確認します。
+</p>
+<ol>
+  <li>メニューの File→Load Project を選択してOpen Project File ダイアログからSamplePD.xmlを読み込みます。</li>
+  <li>「start simulation」ボタンを押下します。</li>
+  <p align="left">
+   <img src="../img_new/um_3_0/Simulation_Button.png" align="top"><br>
+   図1 : start simulation」ボタン
+  </p>
+  <li>図2 ダイアログのNoボタンを押下します。</li>
+  <p align="left">
+   <img src="../img_new/um_3_0/GrxUI_RestartDlg.png" align="top"><br>
+   図2 : 「Restart the Controller」 ダイアログ
+  </p>
+</ol>
+
+<p>
+GrxUIの詳細については<a href="./OpenHRP3_GrxUI_20080611_3.pdf">「GrxUI」</a>をご覧ください。
+</p>
+<br>
+
+<name id=rtc_template></name>
+<h2> スケルトンの作成 </h2>
+コンポーネントのスケルトン作成について説明します。
+コマンドライン上でも作成できますが設定項目が多いので、スクリプト用いた作成手法を環境毎に説明します。
+</p>
+<p>
+このスクリプトの実行によってangleという名前のInPort、torqueという名前のOutPortを備えたSamplePDコンポーネントのスケルトンを生成します。
+</p>
+
+<h3> Linuxの場合 </h3>
+<p>
+以下のようなシェルスクリプトを用意します。
+</p>
+<pre>
+#!/bin/sh
+
+rtc-template -bcxx \
+--module-name=SamplePD --module-desc="SamplePD component" \
+--module-version=0.1 --module-vendor=AIST --module-category=Generic \
+--module-comp-type=DataFlowComponent --module-act-type=SPORADIC \
+--module-max-inst=1  \
+--inport=angle:TimedDoubleSeq \
+--outport=torque:TimedDoubleSeq
+</pre>
+<p>
+rtc-template(Linux C++版)に関する詳しい説明は、OpenRTM マニュアルの 
+<a href="http://www.openrtm.org/openrtm/ja/node/171" target="_blank">RTコンポーネント作成</a>
+で確認してください。
+</p>
+<h3> Windowsの場合 </h3>
+<p>
+以下のようなバッチを用意します。
+</p>
+<pre>
+"C:\Program Files\OpenRTM-aist\0.4\utils\rtc-template\rtc-template.py" -bcxx ^
+--module-name=SamplePD --module-desc="SamplePD component" ^
+--module-version=0.1 --module-vendor=AIST --module-category=Generic ^
+--module-comp-type=DataFlowComponent --module-act-type=SPORADIC ^
+--module-max-inst=1 ^
+--inport=angle:TimedDoubleSeq ^
+--outport=torque:TimedDoubleSeq
+</pre>
+<p>
+バッチの実行によって、VC++用のソリューションファイル、VC++ 2008用のプロジェクトファイルを生成します。
+実行後、rtc-templateが自動生成した copyprops.bat を実行してください。
+</p>
+<p>
+rtc-template(Windows VC++版)に関する詳しい説明は、OpenRTM マニュアルの 
+<a href="http://www.openrtm.org/openrtm/ja/node/185" target="_blank">RTコンポーネント作成(VC++版)</a>
+で確認してください。
+</p>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

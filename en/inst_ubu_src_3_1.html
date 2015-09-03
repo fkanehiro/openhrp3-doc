@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Installing OpenHRP3 on Ubuntu Linux</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Installing OpenHRP3 on Ubuntu Linux</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Table of contents</h2>
+<ul type="1">
+ <li><a href="#check_env">Before you begin</a></li>
+ <li><a href="#prepare">Preparation of compile</a></li>
+  <ol type="I">
+   <li><a href="#extract">Extracting OpenHRP3 source package</a></li>
+   <li><a href="#install_script">Running Package Installation Script</a></li>
+  </ol>
+ <li><a href="#compile">Compile</a></li>
+  <ol type="I">
+   <li><a href="#cmake">Execution of CMake</a></li>
+   <li><a href="#main_compile">Compiling OpenHRP3</a></li>
+  </ol>
+ <li><a href="#install_grxui">Installation of Eclipse and GrxUI plug-in</a></li>
+   <ol type="I">
+    <li><a href="#install_eclipse">Installation of Eclipse</a></li>
+    <li><a href="#install_eclipse">Installation of GrxUI plug-in</a></li>
+  <ul type="disc">
+   <li><a href="#install_grxui_jar">Installation of compiled GrxUI plug-in</a></li>
+   <li><a href="#install_grxui_build">Installation of creating GrxUI plug-in from a source code</a></li>
+    <ol type="A">
+     <li><a href="#config_eclipse">Eclipse settings</a></li>
+     <li><a href="#install_grxui_src">GrxUI plug-in's Import / Compile / Export / Install</a></li>
+      <ol type="i">
+       <li><a href="#install_grxui_import">Import</a></li>
+       <li><a href="#install_grxui_compile">Compile</a></li>
+       <li><a href="#install_grxui_export">Export</a></li>
+       <li><a href="#install_grxui_install">Install</a></li>
+      </ol>
+    </ol>
+  </ul>
+</ul>
+
+<ul  type="disc">
+ <li><a href="#note">Note</a></li>
+ <ul  type="disc">
+  <li><a href="#bin_unix">Abolishing bin/dos</a></li>
+  <li><a href="#java_level">Java compliance level</a></li>
+ </ul>
+</ul>
+
+<h2 id="check_env">1. Before you begin</h2>
+
+<p>
+Since OpenHRP is an application based on 3D Graphics, it is necessary to confirm whether 
+your pc is aware of handling 3D Graphics properly, before you begin installation. To 
+confirm that, open a Terminal window and run following command;
+</p>
+
+<pre>
+$ glxinfo | grep rendering
+</pre>
+<p> </p>
+
+<ul>
+  <li><p>
+  If the result is: "direct rendering: Yes"<br>
+  Your system is capable of handling 3D graphics. Please proceed to the next section.</p>
+  </li>
+  <li><p>
+  If the result is: "direct rendering: No"<br>
+  You have to install a graphics driver, that supports 3D acceleration feature.</p>
+  
+  <ul>
+    <li><a href="./g3d_support.html">How to install graphics driver</a></li>
+  </ul>
+  
+  <p>Note:</p>
+  <ol>
+    <li>
+     <p>
+     Depending on the graphics board, sometimes the above procedure may not be applicable for your 
+     system.Even in this case, basically OpenHRP itself is working.But the 3D visualizations 
+     may become slower and would not perform effectively, due to the inactivity of 3D acceleration. 
+     </p>
+    </li>
+    <li>
+     <p>
+     Regarding the graphics board, we can assure that the boards having nVidia chipsets, 
+     would support 3D acceleration feature well in Linux platfoems.
+     </p>
+    </li>
+    <li>
+     <p>
+     For Ubuntu guest platforms running on virtual machine environments, we have confirmed that the 
+     3D graphics works fine even without installing a proper graphics driver.
+     </p>
+    </li>
+  </ol>
+  </li>
+</ul>
+<br>
+
+<h2 id="prepare">2. Preparation of compile</h2>
+<h4 id="extract">Extracting OpenHRP3 source package</h4>
+
+<p>
+To install OpenHRP3, we use a script included in source package. To run the script, first 
+you have to extract the downloaded source package(OpenHRP-xxx.zip).
+</p>
+<p>
+Note:<br>
+Here, the phrase 'xxx' stands for the version of OpenHRP3, such as '3.1.0'. 
+When you read, please substitute the version of the file you downloaded, with 'xxx'.
+</p>
+
+<p>
+You may extract OpenHRP3 source, to a directory at anywhere you want. In this example, 
+we extract to the 'OpenHRP' directory in our home directory. Open a Terminal window, and 
+run the following commands, to extract source package.
+</p>
+
+<p>
+<pre>
+$ cd 
+$ mkdir OpenHRP
+$ cd OpenHRP
+$ unzip &lt;<i>source package download path</i>&gt;/OpenHRP-xxx.zip 
+</pre>
+<p>
+With these operations you will have OpenHRP3 source extracted to a new directory called 
+'OpenHRP-xxx' under 'OpenHRP' directory in your users home directory.<br>
+</p>
+<br>
+
+
+<h4 id="install_script">Running Package Installation Script</h4>
+
+<p>
+There is a directory called 'util', in OpenHRP3 source directory.
+Run 'installPackages.sh' script in this directory, with the parameters described below.
+</p>
+
+<pre>
+$ cd ~/OpenHRP/OpenHRP-xxx/util
+$ ./installPackages.sh packages.list.ubuntu.10.04
+</pre>
+<p>
+If you are using Ubuntu-9.10, change the option to 'pakages.list.ubuntu.9.10'. Similarly 
+change the option to 'pakages.list.ubuntu.9.04', if it is Ubuntu-9.04 .
+</p>
+
+<p>
+If you are asked for license agreement during the installation,
+please do agree at all time you are asked.<br>
+Select 'Y'(Yes) for every confirmations.
+</p>
+
+<p>
+This operation installs most of the 
+<a href="./required_programs.html">required softwares to compile/run OpenHRP</a>.
+</p>
+
+<p>
+Note:<br>
+When you have already installed OpenRTM1.1.0-RC3, Please perform this script after executing the following command to delete OpenRTM1.1.0-RC3. 
+</p>
+<pre>
+$ sudo dpkg -r openrtm-aist-doc openrtm-aist-example openrtm-aist-dev openrtm-aist
+$ sudo apt-get clean
+$ sudo apt-get update
+</pre>
+<p>
+Note:<br>
+When you have already installed OpenRTM, please comment out the appointed package of a packages.list.ubuntu.XX.XX file. 
+</p>
+
+<h2 id="compile">3. Compile</h2>
+<h4 id="cmake">Execution of CMake </h4>
+
+<p>
+In OpenHRP3, compile properties are configured by "cmake".
+</p>
+
+<p>
+First, open a terminal and move to the OpenHRP3 source directory.
+</p>
+
+<pre>
+$ cd ~/OpenHRP/OpenHRP-xxx
+</pre>
+
+<p>
+Now we launch cmake using following command;
+</p>
+
+<pre>
+$ cmake .
+</pre>
+<p>
+<span style="color: red">Note:<br>
+When two or more OpenRTM are installed, please specify OPENRTM_DIR explicitly. 
+Please set up by ccmake as follows.</span>
+</p>
+<p>
+With this verion of OpenHRP3 it bacame unnecessary to set macros for the default installation.
+However, if you made changes on CMAKE_INSTALL_PREFIX field or dependant files and library path,
+run following command and set the macro values as suitable.
+</p>
+
+<pre>
+$ ccmake .
+</pre>
+
+<p>
+If you made changes on macros in ccmake window, 
+press 'c' to reconfigure the settings, and 'g' to generate Makefiles.
+</p>
+<br>
+
+<h4 id="main_compile">Compiling OpenHRP3</h4>
+
+<p>
+Move to OpenHRP3 source directory and run 'make' command.
+</p>
+
+<pre>
+$ make
+$ sudo make install
+$ sudo ldconfig
+</pre>
+
+<p>
+If the required softwares have been installed properly and the configuration of Make.vars 
+has been done correctly according to the instructions of this page, OpenHRP3 execution files 
+and scripts will be generated soon.
+</p>
+
+<h2 id="install_grxui">4. Installation of Eclipse and GrxUI plug-in</h2>
+<h3 id="install_eclipse">Installation of Eclipse</h3>
+
+<p>
+GrxUI is an Eclipse plug-in and it supports with Eclipse-3.4 . 
+Download Eclipse All-in-one package from 
+<a href="./download.html">Download</a>
+and extract to an appropriate folder. 
+</p>
+<pre>
+tar xzvf peclipse342_hrpdependencies_linux_ja_20120220.tar.gz
+</pre>
+
+In addition, when you install each plug-in from the SDK package of eclipse, 
+please refer to <a href="./required_programs.html#eclipse">the Eclipse relation of required softwares to compile/run OpenHRP.</a><br>
+</p>
+
+<h3 id="install_grxui_plugin">Installation of GrxUI plug-in</h3>
+<p>
+Installation of GrxUI on Eclipse plug-in has 
+the method of installing compiled GrxUI plug-in and the method of compiling from sauce code by Eclipse. 
+<ul>
+ <li><a href="#install_grxui_jar">Installation of compiled GrxUI plug-in</a>
+ </li>
+ <li><a href="#install_grxui_build">Installation of creating GrxUI plug-in from a source code </a>
+</a>
+ </li>
+</ul>
+</p>
+<h4 id="install_grxui_jar">Installation of compiled GrxUI plug-in</h4>
+<br>
+<p>
+It is the method of installing a compiled jar file in Eclipse. <br>
+Please move to GrxUIonEclipse-project-0.9.8/plugins/Eclipse3.4_RTM1.1_LINUX from the directory of OpenHRP. <br>
+If you are using OpenRTM-aist-1.0.0, please moves to Eclipse3.4_RTM1.0. (1.1.0 is installed when you use a package installation script.)
+Please copy com.generalrobotix.ui.grxui_0.9.8.jar to the plugins directory of Eclipse. <br><br>
+Installation is completion now. Please start GrxUI with reference to <a href="./init_grxui.html">Starting and initial setting of GrxUI</a>
+</p>
+<br>
+
+<h4 id="install_grxui_build">Installation of creating GrxUI plug-in from a source code </h4>
+
+<p>
+<span style="color: red">※ If your OS are ubuntu12.04 or later, and you use Python Script, you need to install Jython2.2.1. Please install as follows. If you do not correspond, please go to <a href="#config_eclipse">Starting Eclipse</a>.</span>
+</p>
+<h5>Install Jython2.2.1</h5>
+<ul type="1">
+<li>Please download jython_installer-2.2.1.jar from <a href="http://www.jython.org/downloads.html">"Jython Download Page"</a></li>
+<li>Move to the directory to which the file was saved and run java with the -jar option. 
+<pre>
+$ java -jar jython_installer-2.2.1.jar
+</pre>
+</li>
+<li>Please follow the display of an installation windows. Choose "standard" in "installation type", specify the directory of an installation place in "target directory".</li>
+<li>If installation is completed, move to the directory which developed the sauce of OpenHRP3 and start CMake. 
+<pre>
+$ ccmake .
+</pre>
+<li>Change a setup of Jyton as follows. 
+<pre>
+ JYTHON        (jython2.2.1 Install Directory)/bin/jython
+ JYTHON_HOME   (jython2.2.1 Install Directory)
+ JYTHON_JAR    (jython2.2.1 Install Directory)/jython.jar
+</pre>
+</li>
+<li>press 'c' to reconfigure the settings, and 'g' to generate Makefiles.</li>
+</ul>
+
+<h5 id="config_eclipse">Starting Eclipse</h5>
+Please start Eclipse with reference to <a href="./init_grxui.html">Starting and initial setting of GrxUI</a>.
+
+<h5 id="config_eclipse">Eclipse settings</h5>
+<p>
+Now we configure, the encoding type of workspace.<br>
+Select "General" -&gt; "Workspace" and click "Other" in "Text file encoding".<br>
+The nearby menu will be activated and select "UTF-8" in it.<br>
+Click "Apply" to save the settings, and "OK" to close the window.
+</p>
+
+<h5 id="install_grxui_src">GrxUI plug-in's Import / Compile / Export / Install</h5>
+<h6 id="install_grxui_import">Import</h6>
+<p>
+Select "Window" -&gt; "Open Perspective" -&gt; "Other" from menubar.<br>
+Select "Plug-in Development" and click "OK".<br>
+You can see the perspective has been changed from "Java" to "Plug-in Development" 
+at the top-right corner.
+</p>
+<p>
+Select "File" -&gt; "Import" from menubar. Project import wizard will be opened.<br>
+Select "General" -&gt; "Existing Projects into Workspace" and click "Next".<br>
+Click the "Browse" button next to "Select root directory" textbox and select 
+"GrxUIonEclipse-project-0.9.8" directory that located in OpenHRP-3.1.0(&beta;) 
+source directory.<br>
+Confirm that "com.generalrobotix.ui.grxui" is checked in the "Projects" list and click "Finish".
+</p>
+
+<h6 id="install_grxui_compile">Compile</h6>
+<p>
+When you complete the above process, the projejt will be build automatically. You can see 
+the prograss bar indicator at the right-bottum corner of the status bar. It will be 
+disappeared when the project build is completed.
+When a compile error occurs, please refer to <a href="#java_level">here</a>.
+</p>
+
+<h6 id="install_grxui_export">Export</h6>
+<p>
+Select "File" -&gt; "Export" from menubar. Project export wizard will be opened.<br>
+Select "Plug-in Development" -&gt; "Deployable plug-ins and fragments" and click "Next".<br>
+Check "com.generalrobotix.ui.grxui(0.9.8)" in "Available Plug-ins and Fragments" list.<br>
+Then select "Destination" tab and specify an appropriate directory to export the plug-in; 
+then click "Finish".<br>
+This will create "plugins" directory inside the specified directory. The 
+"com.generalrobotix.ui.grxui_0.9.8.jar" that generates inside the "plugins" directory,
+is supposed to be the GrxUI plug-in.
+</p>
+
+<h6 id="install_grxui_install">Install</h6>
+<p>
+Exit from Eclipse and copy the generated GrxUI plug-in directory to the "eclipse/plugins".
+Installation is completion now. Please start GrxUI with reference to <a href="./init_grxui.html">Starting and initial setting of GrxUI</a>
+</p>
+
+<h3 id="note">Note</h3>
+<h4 id="bin_unix">Abolishing bin/dos</h4>
+<p>
+Using of <i>bin/dos</i> folder in OpenHRP3 program directory is abolished starting 
+from OpenHRP3.1.0(&beta;2). Therefore if you upgraded from a prior version 
+of OpenHRP3, you may delete <i>bin/dos</i> folder at the path where you specified 
+in CMAKE_INSTALL_PREFIX field. It will not be deleted by,
+<pre>
+$ make clean
+</pre>
+command. You will have to delete it manually.<br>
+Default path to <i>bin/dos</i> is at <i>"/usr/local/bin/unix"</i>.
+</p>
+
+<h4 id="java_level">Java compliance level</h4>
+<p>
+When the compile error of Java occurs, the Java compliance level may be wrong. <br>
+Select "Window" -&gt; "Preferences" from menubar.<br>
+Select "Java" -&gt; "Compiler" and set "Compiler compliance level" to "6.0" or higher.<br>
+Click "Apply" to save the settings.<br>
+Here you will be asked whether to rebuild the project and click "Yes".
+</p>
+
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

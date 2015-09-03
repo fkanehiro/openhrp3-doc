@@ -1,0 +1,492 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>WindowsにおけるOpenHRPのインストール(Ver.3.0.8)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">WindowsにおけるOpenHRPのインストール(Ver.3.0.8)</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+
+<h2 id="env_set">環境構築</h2>
+<p>
+まず、以下の手順で
+<a href="./required_programs.html">OpenHRPのコンパイル/実行に必要なソフトウェア</a>
+をインストールしていきます。
+</p>
+
+<p>
+いずれのソフトウェアも、バージョン等が合うものをすでにインストールされている場合は、それをお使いいただければ結構です。
+それぞれのインストール先も、お好みに合わせて変えてもかまいません。
+ただし、インストール先がインストーラのデフォルトでない場合には、
+下記で説明する<a href="#compile_property">コンパイル時のプロパティ</a>を
+インストール先に合わせて設定しなければならないことにご注意ください。
+</p>
+
+
+<h3 id="vc9install">Visual C++ コンパイラのインストール</h3>
+
+<p>
+Windows 用の C++ コンパイラは Visual C++ 2008 に対応しています。
+(バージョン 3.0.0 より、Visual C++ 2005 には対応しておりませんので、ご注意ください。)
+</p>
+
+マイクロソフトより無償配布されている Express Edition も使用可能です.
+Express Edition をご使用の場合、下記のリンクからダウンロードしてインストーラの案内に従って
+インストールしてください。インストーラの設定項目は特に変更しなくてもOKです。</p>
+<ul>
+ <li><a href="http://www.microsoft.com/japan/msdn/vstudio/2008/product/express/" target="_blank">
+Visual C++ 2008 Express Edition 日本語版</a></li>
+</ul>
+
+<h3>JDK のインストール</h3>
+
+<p>
+<a href="http://java.sun.com" target="_blank">http://java.sun.com/</a>のJava SE のダウンロードページより、
+JDKのWindows版をダウンロードしてください。
+JDKのバージョンは今のところ JDK5, JDK6 系列で動作を確認しています。
+</p>
+
+<p>
+ダウンロードしたファイルを実行すると、JDKのインストーラが起動しますので、
+インストーラの案内に従ってインストールしてください。
+インストーラの設定項目は特に変更しなくてもOKです。
+</p>
+<br>
+
+<h3>その他の依存ソフトウェアの導入</h3>
+
+<p>
+OpenHRPバージョン3.0.3より上述以外の依存ソフトウェアをまとめてダウンロード・インストールする、
+環境構築インストーラを開発しました。新規にシステムへ導入される場合、当サイトの
+<a href="./download.html#download_others">「関連ソフトウェアのダウンロード」</a>にて；
+</p>
+
+<ul>
+ <li>Windows用 環境構築インストーラ(3.0.7用): Package-1.0.1.zip</li>
+ <p>
+ をダウンロードしてご利用ください。<br>
+ ただし動作には、Windows Installer 3.1以降、.NET Framework 3.5 以降が必須です。
+ </p>
+ <ul>
+  <li>
+  Windows Installer 3.1はWindowsの更新を行えば自動的に導入されますが、解説とマニュアルによる
+  インストールは<a href="http://support.microsoft.com/kb/893803/ja" target="_blank">このページ</a>
+  を参照してください。
+  </li>
+  <li>
+  .NET Framework 3.5はVC++の更新を行えば自動的に導入されますが、解説とマニュアルによるインストール
+  は<a href="http://www.microsoft.com/downloads/details.aspx?familyid=AB99342F-5D1A-413D-8319-81DA479AB0D7&displaylang=ja" target="_blank">このページ</a>
+  を参照してください。
+  </li>
+ </ul>
+</ul>
+
+<p>
+個別にインストールする場合は、<a href="./install_windows_dependencies.html">「Windowsにおける依存
+ソフトウェアのインストール」</a>を参考にして、以前のように各個インストールしてください。
+</p>
+
+<p>
+Package-1.0.1.zipをダウンロードして解凍するとPackageディレクトリが展開されます。<br>
+Packageディレクトリ内の install.cmd、
+</p>
+<blockquote>
+.&yen;Package&yen;Install.cmd
+</blockquote>
+<p>
+を実行すれば依存ソフトウェアをダウンロードしてインストールします。<br>
+ただし、OSがVistaの場合、図１のように管理者権限で実行してください。
+</p>
+<p align="center">
+<img src="../img_new/install/admin_execute.png"><br>
+図１：管理者権限実行
+</p>
+<br>
+<p>
+途中図２のPyYAMLのインストーラーがGUIとして起動します。
+特に設定項目を変更する必要はないのでデフォルトのまま"次へ"のボタンや"完了"ボタンを押下してください。
+</p>
+<p align="center">
+<img src="../img_new/install/pyyaml_installer.png"><br>
+図２：PyYAMLインストーラ<br>
+</p>
+<br>
+<p>
+インストールが正常に終了すると、
+</p>
+<p align="center">
+<img src="../img_new/install/installer_success.png"><br>
+図３：正常終了<br>
+</p>
+<p>
+のように表示して終了します。<br>
+インストールが正常に終了したらPackageディレクトリを削除しても構いません。
+</p>
+<p>
+以上の作業でインストールされる依存ソフトウェアは以下の通りです。
+<ul>
+ <li>OpenRTM-aist Ver.1.0.0-RELEASE</li>
+ <li>python Ver.2.4.4</li>
+ <li>PyYAML Ver.3.05</li>
+ <li>Jython Ver.2.2.1</li>
+ <li>tvmet Ver.1.7.2</li>
+ <li>CLAPACK Ver.3.1.1</li>
+ <li>Boost Ver.1.35.0</li>
+</ul>
+</p>
+<br>
+
+
+<h2 id="extract_package">OpenHRPパッケージの展開 </h2>
+
+<p>
+当サイトの<a href="./download.html#download_openhrp3">「OpenHRP3 本体のダウンロード」</a>
+で承諾ボタンを押下していただいて、OpenHRPのソースアーカイブをダウンロードし適当なディレクトリ
+に解凍してください。
+</p>
+
+<p>
+（注）<br>
+OpenHRP ホームディレクトリーのパスにユニコード文字(マルチバイト文字)などが含まれていると実行中
+に不具合が発生しますので、展開先のパス名にはユニコード文字(マルチバイト文字)、カンマ、スペース、カッコが含まないような
+展開先を選択してください。（特に「デスクトップ」などのところにおくとパスにユニコード文字が含まれて
+しまいますのでご注意ください。）
+</p>
+<br>
+
+
+<h2 id="compile">Visual C++ によるコンパイル</h2>
+
+<h3>プロパティシートのコピー</h3>
+OpenHRPを展開したディレクトリに移動して、
+copyprops.batを開きます(図４)。<br>
+環境変数 RTM_ROOT の値によってrtm_config.vspropsファイルのコピー元のディレクトリが決定されます。<br>
+rtm_config.vspropsがディレクトリ上にコピーされます(図４)。<br>
+<p align="center">
+<img src="../img_new/install/vc++2008_copy_rtm_config.png"><br>
+図４：rtm_config.vspropsのコピー
+</p>
+<p>
+使用するOpenRTMのバージョンを切り替える場合は、
+<a href="./tips.html#switch_rtm">Windows環境でOpenRTM-aist-0.4.2とOpenRTM-aist-1.0.0を切り替えて使用する方法</a>
+を参考にして再度このセクション以下の作業を行なってください。
+</p>
+<h3>プロジェクトファイルのオープン</h3>
+
+<p>
+OpenHRPを展開したディレクトリに移動して、
+OpenHRP.slnを開きます（図４）。
+</p>
+
+<p align="center">
+<img src="../img_new/install/vc++2008_start.png"><br>
+図５：起動先
+</p>
+
+<p>
+図５のように Visula Studio 上で OpenHRP のプロジェクトを開きます。
+</p>
+<br>
+
+<a name="compile_property">
+<h3>コンパイル用プロパティ設定</h3>
+</a>
+
+<p>
+<ol>
+<li>プロパティマネージャーを選択し、</li>
+<li>‘＋’記号をクリックしてツリーを展開し、OpenHRPをダブルクリックします。</li>
+</ol>
+</p>
+
+<p align="center">
+<img src="../img_new/install/vc++2008_property_manager.png"><br>
+図６：プロパティマネージャ
+</p>
+<br>
+
+<p>
+図７のプロパティページが表示されます。
+</p>
+
+<p align="center">
+<img src="../img_new/install/vc++2008_property_page.png"><br>
+図７：プロパティページ
+</p>
+
+<p>
+インストールしたライブラリ等の参照先を設定します。
+<ol>
+<li value="3">ユーザマクロを選択します。</li>
+<li>マクロの値を、インストールしたソフトウェアのバージョンやインストール先に合わせて設定します。
+そのために以下の各設定項目についての説明を参考にしてください。
+</p>	
+
+<p>
+<table border="1">
+ <tr><th colspan="2">実行方法に関する設定項目</th></tr>
+ <tr>
+  <th>DYNAMICS_ENGINE</th>
+  <td>使用する動力学サーバの選択。ut (東大版), aist (産総研版) のいずれかを指定します。（※）</td>
+ </tr>
+ <tr>
+  <th>NS_HOST</th>
+  <td>ミドルウェア(CORBA,OpenRTM)のネームサーバのホストです。通常は localhost です。（※）</td>
+ </tr>
+ <tr>
+  <th>NS_PORT</th>
+  <td>ミドルウェア(CORBA,OpenRTM)のネームサーバのポート番号です。通常は初期値です。（※）</td>
+ </tr>
+ <tr>
+  <th>J3D_REND</th>
+  <td>Java3Dのレンダラーを指定します。空白の場合はOpenGLを使用することになります。DirectX3Dを使用する場合は、-Dj3d.rend=d3d をセットしてください。（※）</td>
+ </tr>
+
+ <tr><th colspan="2">プログラミング言語環境に関する設定項目</th></tr>
+ <tr>
+  <th>JDK_DIR</th>
+  <td>JDKのインストール先ディレクトリ。（※）</td>
+ </tr>
+ <tr>
+  <th>JYTHON_DIR</th>
+  <td>Jythonのインストール先ディレクトリ。(jython.jarがあるディレクトリ)（※）</td>
+ </tr>
+
+<tr><th colspan="2">ライブラリに関する設定項目</th>
+ <tr>
+  <th>J3DHOME</th>
+  <td>Java3Dのインストール先ディレクトリ。空白の場合は同名の環境変数に %OPENHRPHOME%/client/gui/Java3D/1.4.1/Windows を代入します。（※）</td>
+ </tr>
+ <tr>
+  <th>JMFHOME</th>
+  <td>JMFのインストール先ディレクトリ。空白の場合は同名の環境変数に %OPENHRPHOME%/client/gui/JMF2.1.1e/Windows を代入します。（※）</td>
+ </tr>
+ <tr>
+  <th>OB_DIR</th>
+  <td>omniORBのインストール先ディレクトリ。</td>
+ </tr>
+ <tr>
+ <tr>
+  <th>OMNIORB4_LIBVER</th>
+  <td>omniDynamic ライブラリファイルのバージョン番号<br>
+  		例：omniORB-4.1.2 の場合 '412'
+  </td>
+ </tr>
+ <tr>
+  <th>OMNI_TRDVER</th>
+  <td>omnithread ライブラリファイルのバージョン番号<br>
+  		omniORB-4.0.7 の場合 '32'<br>
+  		omniORB-4.1.2 の場合 '33'
+  </td>
+ </tr>
+ <tr>
+  <th>BOOST_INC_DIR</th>
+  <td>boostライブラリのインクルードパス。</td>
+ </tr>
+ <tr>
+  <th>BOOST_LIB_DIR</th>
+  <td>boostライブラリのライブラリファイルパス。</td>
+ </tr>
+ <tr>
+  <th>TVMET_DIR</th>
+  <td>tvmetライブラリのインストール先ディレクトリ</td>
+ </tr>
+ <tr>
+  <th>CLAPACK_DIR</th>
+  <td>CLAPACKのインストール先ディレクトリ</td>
+ </tr> 
+<tr>
+  <th>OPENRTM_DIR</th>
+  <td>OpenRTM-aist のインストール先ディレクトリ</td>
+ </tr>
+<tr>
+  <th>OPENRTM_LIBVER</th>
+  <td>OpenRTM-aist ライブラリファイルのバージョン番号<br>
+		Ex：OpenRTM-aist-0.4.2 -> 042</td>
+ </tr>
+ <tr><th colspan="2">作業先に関する設定項目</th></tr>
+ <tr>
+  <th>INSTALL_DIR</th>
+  <td>OpenHRPのヘッダーファイルやライブラリのコピー先を指定します。
+   OpenHRPのホームディレクトリでよければ、$(SolutionDir)のままにしておきます。</td>
+ </tr>
+</table>
+</p>
+<br>
+（※）： 運用時の変更は、bin/dos/config.batで行ないます。
+</li><br>
+<li>ＯＫボタンを押して設定を保存します。</li>
+</ol>
+
+<p>
+なお、上記のプロパティの設定は、OpenHRPソースフォルダトップにある "OpenHRP.vsprops" というXMLファイルに
+記述されていますので、Visual C++ のIDEを起動する前にこのファイルを直接編集してもOKです。
+</p>
+
+
+<h3 id="build" >ビルドの実行</h3>
+
+<p>
+プロパティを正しく設定できたら、以下のようにしてビルド（コンパイル）できます。
+</p>
+<p align="center">
+<img src="../img_new/install/vc++2008_build.png"><br>
+図８：ビルド
+</p>
+
+<ol>
+ <li>ソリューションエクスプローラを選択します。</li>
+ <li>Releaseを選択します。</li>
+ <li>ビルドメニューからソリューションのビルドを選択します。</li>
+ <li>ビルドが開始され結果が表示されます。</li>
+</ol>
+
+<p>
+最後に、<br>========== ビルド:  29 正常終了、0 失敗、1 更新、0 スキップ ==========<br><br>
+などと表示されます。失敗が０ならば成功です。<br>
+バージョンによってはこの正常終了数が異なることがありますが、失敗が０である点が重要です。<br>
+正常にコンパイルできなかった場合、環境構築が
+正しくできているかを確認してください。<br>
+その際、Visual C++ の「エラー一覧」ウィンドウを表示させて、
+具体的なエラー内容をチェックするとよいでしょう。<br>
+(「エラー一覧」ウィンドウは、メニューの「表示」-「その他のウィンドウ」-「エラー一覧」を
+クリックすることで、通常Visual C++ウィンドウの下部に「出力」などと並んで表示されます。）<br><br>
+</p>
+
+
+<p>
+ビルドに成功したら、<a href="./simulate_sample_3_0.html">サンプルシミュレーションの実行</a>
+を行って、正常にビルドできていることを確認してください.
+</p>
+
+<p>
+また、INSTALL_DIRで指定したディレクトリにはOpenHRPのライブラリが生成されています。
+今後OpenHRPを利用したプログラムを作成・実行するときのために、パスを通しておくとよいでしょう。
+</p>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

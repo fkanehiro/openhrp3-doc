@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Guide for Building Controller (Generation)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Guide for Building Controller (Generation)</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2> Overview </h2>
+<p>
+Here we show the procedure how to make a program that drives upper-torso by using a simple motion generation. We generate a motion to rotate both elbows and move them.
+</p>
+<h2> Various files </h2>
+<h3> Gain file </h3>
+You define the gain of PD controller. 
+In the format, P-Gain and D-Gain assume to be written with separating each by any spaces in the JointID's line. Concretely you describe as follows:
+<pre>
+P-Gain  D-Gain (<= JointID = 0)
+P Gain  D-Gain (<= JointID = 1)
+...
+P-Gain  D-Gain (<= JointID = n)
+</pre>
+<h3>  Generating Skeleton </h3>
+<p>
+Generate a skeleton of the component using rtc-template. 
+</p>
+<blockquote>
+rtc-template -bcxx \ <br>
+    --module-name=SampleGen --module-desc='SampleGen component' \ <br>
+    --module-version=0.1 --module-vendor=AIST --module-category=Generic \ <br>
+    --module-comp-type=DataFlowComponent --module-act-type=SPORADIC \ <br>
+    --module-max-inst=1  \ <br>
+    --inport=angle:TimedDoubleSeq \ <br>
+    --outport=torque:TimedDoubleSeq
+</blockquote>
+<p>
+As a result, the skeleton of the SampleGen component with one Inport named angle and one OutPort named torque has been generated.</p>
+
+<h2> Programming </h2>
+<h3> SampleGen.h </h3>
+<p>
+Please modify "private" member as follows:
+
+<pre>
+ private:
+  int dummy;
+  double *Pgain; //P-Ggain
+  double *Dgain; //D-Gain
+  std::ifstream gain; // Gain file
+
+  std::vector<double> qold; // For angular velocity calculation
+  std::vector<double> qorg; // Initial posture
+</pre>
+<h3> SampleGen.cpp </h3>
+<p>
+First, you declare header file etc.
+</p>
+<pre>
+#include &lt;iostream&gt;
+
+#define DOF (29) // Degree of freedom
+#define TIMESTEP 0.002 // Step of simulation
+
+#define GAIN_FILE  "etc/PDgain.dat" // Gain file
+
+#define ELBOW (0.1) // Joint angle moved to one step
+</pre>
+<p>
+Also initialize "qorg" that represents initial posture, and "qold" that maintains the previous value for the differentiation in SampleGen::SampleGen.
+</p>
+<pre>
+SampleGen::SampleGen(RTC::Manager* manager)
+  : RTC::DataFlowComponentBase(manager),
+    // &lt; rtc-template block="initializer" &gt;
+    m_angleIn("angle", m_angle),
+    m_torqueOut("torque", m_torque),
+    qold(DOF),
+    qorg(DOF),
+    // &lt; /rtc-template &gt;
+    dummy(0)
+</pre>
+<p>
+Next, read gain file and describe the length of port by SampleGen::SampleGen.
+</p>
+<pre>
+  // Read gain file
+  Pgain = new double[DOF];
+  Dgain = new double[DOF];
+  if (access(GAIN_FILE, 0)){
+    std::cerr << GAIN_FILE << " not found" << std::endl;
+  }else{
+    gain.open(GAIN_FILE);
+    for (int i=0; i&lt;DOF; i++){
+      gain >> Pgain[i];
+      gain >> Dgain[i];
+    }
+    gain.close();
+  }
+
+  // The length of each port specifies the degree of freedom.
+  m_torque.data.length(DOF);
+  m_angle.data.length(DOF);
+</pre>
+
+<p>
+Implement method declared in SampleGen.h.
+</p>
+<p>
+Below is SampleGen::onActivate. It records the initial angles in this part.
+</p>
+<pre>
+RTC::ReturnCode_t SampleGen::onActivated(RTC::UniqueId ec_id)
+{
+  std::cout << "on Activated" << std::endl;
+
+  m_angleIn.read();
+	
+  for(int i=0; i &lt; DOF; ++i){
+    qold[i] = m_angle.data[i];
+    qorg[i] = m_angle.data[i];
+  }
+	
+  return RTC::RTC_OK;
+}
+</pre>
+<p>
+Below is SampleGen::onExecute that is called in every step of a simulation. It makes joint LARM_ELBOW and joint RARM_ELBOW rotate. Other joints maintain the initial posture.
+</p>
+<pre>
+RTC::ReturnCode_t SampleGen::onExecute(RTC::UniqueId ec_id)
+{
+  double q_ref, dq_ref;
+
+  // Read port
+  m_angleIn.read();
+
+  for (int i=0; i &lt; DOF; i++){
+    if (i == 22 || i == 9) {
+      // In case of the LARM_ELBOW or RARM_ELBOW,
+      // move ELBOW(0.1)
+      q_ref = m_angle.data[i] + ELBOW;
+      dq_ref = ELBOW;
+    }
+    else {
+      // Other joints still stop.
+      q_ref = qorg[i];
+      dq_ref = 0.0;
+    }
+
+    // PD Control
+    double q = m_angle.data[i];
+    double dq = (q - qold[i]) / TIMESTEP;
+    qold[i] = q;
+    
+    m_torque.data[i] = -(q - q_ref) * Pgain[i] - (dq - dq_ref) * Dgain[i];
+  }
+
+  // Write to port
+  m_torqueOut.write();
+
+  return RTC::RTC_OK;
+}
+</pre>
+<h3> SampleGenComp.cpp </h3>
+To run controller synchronizing with the time of the simulation world, OpenHRPExecutionContext that are original ExecutionContext are used in OpenHRP. It is necessary to register this ExecutionContext to the component manager to be available. Therefore, add one line to the initialization area like this:
+<pre>
+  // Set module initialization proceduer
+  // This procedure will be invoked in activateManager() function.
+  manager->setModuleInitProc(MyModuleInit);
+
+  OpenHRPExecutionContext::init(manager); // Add this line
+
+  // Activate manager and register to naming service
+  manager->activateManager();
+</pre>
+
+<h2> Configuration file </h2>
+<h3> bridge.conf </h3>
+You can set the component OpenHRP uses as a controller.
+<p>
+Please create the following contents as rtc.conf.
+</p>
+<p>
+First, set the component name of a connection target.
+</p>
+<p>
+You use the 0th instance of the SampleGen component.
+</p>
+<pre>
+[ComponentName]
+SampleGen0.rtc
+</pre>
+<p>
+Map all joint angles of robot to array angle as input. 
+</p>
+<pre>
+[ArrayMappingIn]
+angle JOINT_VALUE
+</pre>
+<p>
+Map all joint torques to array torque. 
+</p>
+<pre>
+[ArrayMappingOut]
+torque JOINT_TORQUE
+</pre>
+<p>
+Map array angle to angle of InPort, and map array torque to torque of OutPort.
+</p>
+<pre>
+[PortNameMapping]
+angle angle
+torque torque
+</pre>
+<h3> rtc.conf </h3>
+<p>
+You describe the configuration of RT-Component. Please describe the following contents. 
+</p>
+<p>
+Describe the location of the name server according to your environment. 
+</p>
+<pre>
+corba.nameservers: localhost:2809
+</pre>
+<p>
+Below is the setup for the log level.
+</p>
+<pre>
+logger.log_level: TRACE
+</pre>
+<p>
+Please don't change the following contents basically.
+</p>
+<pre>
+naming.formats: %n.rtc
+manager.modules.load_path: ./
+manager.modules.abs_path_allowed: yes
+exec_cxt.periodic.type: OpenHRPExecutionContext
+</pre>
+<h2> Compile </h2>
+<h3> Linux </h3>
+Please compile as follows:
+<blockquote> 
+$ make -f Makefile.SampleGen
+</blockquote>
+
+<h3> Windows </h3>
+Please compile as follows:
+<blockquote> 
+> nmake /f Makefile.SampleGen
+</blockquote>
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

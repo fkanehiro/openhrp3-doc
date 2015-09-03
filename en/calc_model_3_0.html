@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Model Calculation Manual</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Model Calculation Manual</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2> Overview</h2>
+<p>
+Usually, various simulators such as DynamicsSimulator are used as the CORBA server, but also can be used as a library in OpenHRP3. Here, we will explain how to use it.
+</p>
+
+<h3> Loading model </h3>
+<p>
+loadBodyFromModelLoader () is used to load model. This receives model URL and command line arguments, and loads model using ModelLoader server.
+</p>
+<pre>
+BodyPtr body = loadBodyFromModelLoader(url, argc, argv);
+</pre>
+<p>
+loadBodyFromModelLoader () returns a pointer to Body class as the return values and the type of this return value is BodyPtr. The contents represent the structure of robots as tree structure as follows:
+</p>
+<pre>
+Body 
+  + Link
+</pre>
+<p>
+In Body, robot information and joint list such as model name are contained. There are three ways to retrieve their joints.
+</p>
+<b>How to retrieve by Joint node name</b>
+<p>
+You can retrieve joints that node indicates by passing the node name to the method link of Body class.
+Below is an example of retrieving right elbow of "sample.wrl":
+</p>
+<pre>
+Link* link = body-&gt;link("RARM_ELBOW");
+</pre>
+
+<b>How to retrieve by jointId</b>
+<p>
+You can retrieve joints with jointId by passing jointId to joint method.
+</p>
+<pre>
+Link* link = body-&gt;joint(1);
+</pre>
+
+<b>How to retrieve by linkId</b>
+<p>
+While jointId is an ID in model VRML, linkId is an ID by tree search order of model data. Therefore joints which have no jointId in VRML also have linkId.
+</p>
+<pre>
+Link* link = body-&gt;link(1);
+</pre>
+<p>
+You can retrieve a joint class Link using one of the ways above.
+For example, we show a program to display all joint angles.
+</p>
+<pre>
+for (int i=0; i&lt;body-&gt;numLinks(); i++) {
+  Link* link = body-&gt;link(i);
+  cout &lt;&lt; link-&gt;name &lt;&lt; " : " &lt;&lt; link-&gt;q &lt;&lt; endl;
+}
+</pre>
+
+<h3> Online Viewer </h3>
+<p>
+Online Viewer is a function which can display models via CORBA in "3DView" pane of GrxUI.
+When used by model calculation libraries, use OnlineViewerClient class.
+Here is a concrete way to use.
+</p>
+<pre>
+OnlineViewerClient olv;
+try {
+  // initialize
+  olv.init(argc, argv);
+  // load
+  olv.load( body-&gt;modelName.c_str(), url);
+  olv.clearLog();
+} catch (CORBA::SystemException& ex) {
+  cerr &lt;&lt; "Failed to connect GrxUI." &lt;&lt; endl;
+  return 1;
+}
+</pre>
+<p>
+At first, pass command line arguments to init method for initialization.
+Next specify model name and URL, and load the model. Here assuming the model has been loaded in body by loadBodyFromModelLoader() on ahead, we get the name by Body::modelName.
+At last, clear the log.
+</p>
+<p>
+After initialization, update the contents to display.
+Do this by copying data retrieved through Body-Link structure to WorldState. The next snippet of code presupposes a sample humanoid has been loaded in a library/OnlineViewer.
+</p>
+<pre>
+// create WorldState
+WorldState world;
+world.characterPositions.length(1);
+
+// CharacterPosition for SampleRobot
+world.collisions.length(0);
+CharacterPosition& robot = world.characterPositions[0];
+robot.characterName = CORBA::string_dup(body-&gt;modelName);
+world.time = 0;
+
+// copy Link to WorldState
+int n = body-&gt;numLinks();
+robot.linkPositions.length(n);
+for (int i=0; i&lt;n; i++) {
+  Link* link = body-&gt;link(i);
+  setVector3(link-&gt;p, robot.linkPositions[i].p);
+  setMatrix33ToRowMajorArray(link-&gt;R, robot.linkPositions[i].R);
+}
+
+// Update
+olv.update(world);
+</pre>
+
+<h3> Forward Kinematics Calculation </h3>
+<p>
+Edit the member q of Link class which represents a joint angle, and invokes Body class::calcForwardKinematics(), then the value is calculated.
+For example, to calculate a posture rotating 90 degrees at right elbow, write code like this:
+</p>
+<pre>
+Link* elbow = body-&gt;link("RARM_ELBOW");
+elbow-&gt;q += M_PI/2;
+body-&gt;calcForwardKinematics();
+</pre>
+
+<h3> Inverse Kinematics Calculation </h3>
+<p>
+Steps like this  follow:
+<ol>
+<li>Set a path</li>
+<li>Set target position vector and rotation matrix</li>
+<li>Perform inverse kinematics calculation</li>
+</ol>
+Invoking Body::getJointPath method sets a path. Pass links of source and destination. The next code shows how to get a path from its waist to its right ankle.
+</p>
+<pre>
+Link* waist = body-&gt;link("WAIST");
+Link* ankle = body-&gt;link("RLEG_ANKLE_R");
+JointPathPtr path = body-&gt;getJointPath(waist, ankle);
+</pre>
+<p>
+Set up a position vector and a rotation matrix of the destination link, and perform inverse kinematics calculation.
+</p>
+<pre>
+// move the ankle joint up linearly
+vector3 p = ankle-&gt;p;
+p(2) += 0.01;
+matrix33 R = identity&lt;matrix33&gt;();
+// inverse kinematics calculation
+path-&gt;calcInverseKinematics(p, mat)
+</pre>
+<p>
+This sets up a set of joints included in the path to make the ankle joint reside target position/posture.
+</p>
+<h2> Samples </h2>
+<p>
+The next program moves a leg by inverse kinematics and shows its process in OnlineViewer.
+</p>
+<h3>Source code</h3>
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;string&gt;
+#include "hrpModelHeaders.h"
+#include "OnlineViewerClient.h"
+
+using namespace std;
+using namespace OpenHRP;
+
+enum {X, Y, Z};
+#define deg2rad(x)       (M_PI/180*(x))
+
+int
+main(int argc, char* argv[])
+{   
+  int i;
+  string url = "file://";
+  // specify the URL of the model with -url
+  for(i=0; i &lt; argc; i++){
+    if( strcmp(argv[i], "-url") == 0 && i+1 &lt; argc) url += argv[i+1];
+  }
+
+  // load the model
+  BodyPtr body = loadBodyFromModelLoader(url.c_str(), argc, argv);
+  if(body == NULL){
+    cerr &lt;&lt; "ModelLoader: " &lt;&lt; url &lt;&lt; " cannot be loaded" &lt;&lt; endl;
+    return 0;
+  }
+  
+  body-&gt;calcForwardKinematics();
+
+  // Set up OnlineViewer
+  OnlineViewerClient olv;
+  try {
+    olv.init(argc, argv);
+    olv.load( body-&gt;modelName.c_str(), url.c_str());
+    olv.clearLog();
+  } catch (CORBA::SystemException& ex) {
+    cerr &lt;&lt; "Failed to connect GrxUI." &lt;&lt; endl;
+    return 1;
+  }
+
+  // bend it firstly to avoid singularity
+  body-&gt;joint(1)-&gt;q = deg2rad(-10);
+  body-&gt;joint(3)-&gt;q = deg2rad(20);
+  body-&gt;joint(4)-&gt;q = deg2rad(-10);
+  body-&gt;calcForwardKinematics();
+
+  // set up a path from its waist to its ankle
+  Link* waist = body-&gt;link("WAIST");
+  Link* ankle = body-&gt;link("RLEG_ANKLE_R");
+  JointPathPtr path = body-&gt;getJointPath(waist, ankle);
+
+  // create WorldState
+  WorldState world;
+  world.characterPositions.length(1);
+
+  // CharacterPosition for SampleRobot
+  world.collisions.length(0);
+  CharacterPosition& robot = world.characterPositions[0];
+  robot.characterName = CORBA::string_dup("SampleRobot");
+
+  // time is 0
+  world.time=0;
+
+  while (1) {
+    // forward the time
+    world.time+=0.001;
+
+    // move a little
+    vector3 p = ankle-&gt;p;
+    matrix33 R = ankle-&gt;R;
+    p(2) += 0.01;
+
+    // stop when fail to calculate inverse kinematics
+    if (!path-&gt;calcInverseKinematics(p, R)) {
+      break;
+    }
+
+    // copy Link to WorldState
+    int n = body-&gt;numLinks();
+    robot.linkPositions.length(n);
+    for (int i=0; i&lt;n; i++) {
+      Link* link = body-&gt;link(i);
+      setVector3(link-&gt;p, robot.linkPositions[i].p);
+      setMatrix33ToRowMajorArray(link-&gt;R, robot.linkPositions[i].R);
+    }
+
+    // update OnlineViewer
+    olv.update(world);
+  }
+}
+</pre>
+<h3>Compile</h3>
+<h4> Linux </h4>
+<p>
+Create a Makefile. Here, we name the program move_ankle.
+</p>
+<pre>
+all: move_ankle
+
+# specify the location of top directory of OpenHRP
+TOP = ../../../
+
+include $(TOP)Make.rules
+
+CXX_FLAGS += -I../../corba -I$(BOOST_INC_DIR) -I$(TVMET_INC_DIR) \ 
+  -I$(DYNAMICSSIMULATOR)/server -DTVMET_OPTIMIZE -Ipathlib/include -I$(GRXUI)/corba
+
+DYN_FLAGS = -I$(DYNAMICSSIMULATOR)/server -I$(BOOST_INC_DIR) -I$(TVMET_INC_DIR) \
+  -I$(JDK_DIR)/include -I$(JDK_DIR)/include/$(ARCH) -I$(DYNAMICSSIMULATOR)/corba
+
+DYN_LIBS = $(LPOPT)$(DYNAMICSSIMULATOR)/server $(LIBOPT)hrpModel3$(LIBSFX) \ 
+  $(DYNAMICSSIMULATOR)/server/convCORBAUtil.o $(DYNAMICSSIMULATOR)/server/ModelLoaderUtil.o \
+  $(DYNAMICSSIMULATOR)/corba/OpenHRPCommon.o $(DYNAMICSSIMULATOR)/corba/CollisionDetector.o \
+  $(DYNAMICSSIMULATOR)/corba/DynamicsSimulator.o $(DYNAMICSSIMULATOR)/corba/ViewSimulator.o \
+  $(DYNAMICSSIMULATOR)/corba/ModelLoader.o $(GRXUI)/corba/OnlineViewerClient.o \
+  $(GRXUI)/corba/OnlineViewer.o
+
+%.o: %.cpp
+	$(CXX) $(CXX_FLAGS) -g -fno-inline $(DYN_FLAGS) $(OBJOPT)$@ $<
+
+move_ankle : move_ankle.o
+	$(LINK) $(OUTOPT) $@ $^ $(LINK_FLAGS) $(OB_LIBS) $(DYN_LIBS)
+clean:
+	rm *.o move_ankle
+</pre>
+<p>
+Write this content in Makefile, and compile.
+</p>
+<pre>
+% make
+</pre>
+
+<h4> Windows </h4>
+<p>
+Create a new empty project.
+In Property Manager, add OpenHRP_user_release(debug).vsprops, a property sheet in home directory of OpenHRP.
+Perform build from its build menu.
+</P>
+<p>
+Please refer to move_ankle.sln. under sample\move_ankle.
+</p>
+
+<h3>Execution</h3>
+<h4> Linux </h4>
+<p>
+Execution is performed via a shell script.
+Write the next lines in move_ankle.sh.
+</p>
+<pre>
+#!/bin/sh
+# specify the location of top directory of OpenHRP
+export TOP=../../..
+. $TOP/bin/unix/config.sh
+export LD_LIBRARY_PATH=.:$OB_DIR/lib:$JDK_DIR/jre/lib/i386/client:$OPENHRPHOME/DynamicsSimulator/server
+export MODEL_URL=$OPENHRPHOME/etc/sample.wrl
+./move_ankle $NS_OPT -url $MODEL_URL
+</pre>
+<p>
+Append execution attributes.
+</p>
+<pre>
+chmod +x move_ankle.sh
+</pre>
+<p>
+Run it. Please make sure GrxUI has started, OnlineViewer and others are registered in a name service.
+</p>
+<pre>
+./move_ankle.sh
+</pre>
+
+<h4> Windows </h4>
+<p>
+Execution is performed via a batch file.
+Write the next lines in move_ankle.bat.
+Specify the location of top directory of OpenHRP to TOP variable.
+</p>
+<pre>
+set TOP=..\..
+call %TOP%\bin\dos\config.bat
+move_ankle %NS_OPT% -url /%OPENHRPHOME%etc\sample.wrl
+</pre>
+<p>
+Run it. Please make sure GrxUI has started, OnlineViewer and others are registered in a name service.
+</p>
+<pre>
+move_ankle.bat
+</pre>
+
+<h2> Using dynamics servers</h2>
+<p>
+You can perform forward/inverse kinematics calculation, using model calculation libraries we have described. However, when you want to do advanced calculations such as collision check and dynamics calculations, you need to use a dynamics server directly. Here we will explain how to write a program which moves both hands closely by inverse kinematics and judges whether they touch each other by collision check.
+</p>
+<h3> Getting servers </h3>
+<p>
+See <a href="scheduler.html#corbainit">CORBA initialization and getting various servers</a> in <a href="scheduler.html">Scheduler creation manual</a> to get various servers: NamingService, ModelLoader, OnlineViewer, DynamicsSimulato, and set them up initially.</p>
+<p>
+However, for initial configuration of DynamicsSimulator, please specify the next initial posture and collision check pair.
+</p>
+<h4> Initial posture </h4>
+<p>
+Specify the next array as its initial posture.
+</p>
+<pre>
+double init_pos[] = {0.00E+00, -3.60E-02, 0, 7.85E-02, -4.25E-02, 0.00E+00,
+		     1.75E-01, -3.49E-03, 0, -1.57E+00, 0.00E+00, 0.00E+00,
+		     0.00E+00, 0.00E+00, -3.60E-02, 0, 7.85E-02, -4.25E-02,
+		     0.00E+00, 1.75E-01, 3.49E-03, 0, -1.57E+00, 0.00E+00,
+		     0.00E+00, 0.00E+00, 0, 0, 0};
+</pre>
+<p>
+Set this array init_pos to its joint angle.
+</p>
+<pre>
+DblSequence q;
+q.length(DOF);
+for (int i=0; i&lt;DOF; i++) {
+  q[i] = init_pos[i];
+}
+dynamicsSimulator->setCharacterAllLinkData("robot", DynamicsSimulator::JOINT_VALUE, q);
+</pre>
+<h4> Setting of collision check pair </h4>
+<pre>
+DblSequence6 dc, sc;
+dc.length(0);
+sc.length(0);
+
+dynamicsSimulator-&gt;registerCollisionCheckPair
+   ("robot",
+    "RARM_WRIST_R",
+    "robot",
+    "LARM_WRIST_R",
+     0.5,
+     0.5,
+     dc,
+     sc);
+</pre>
+<p>
+This indicates to perform collision check between the joints of both hands.
+</p>
+<h3> Preparation of inverse kinematics calculation </h3>
+<p>
+Record its initial posture and move a little at once. First, prepare initial postures of both hands. Also, prepare the variable dp which represents how much to move.
+</p>
+<pre>
+double RARM_p[] = {0.197403, -0.210919, 0.93732};
+double RARM_R[] = {0.174891, -0.000607636, -0.984588,
+		   0.00348999, 0.999994, 2.77917e-06,
+		   0.984582, -0.00343669, 0.174892};
+
+double LARM_p[] = {0.197403, 0.210919, 0.93732};
+double LARM_R[] = {0.174891, 0.000607636, -0.984588,
+		   -0.00348999, 0.999994, -2.77917e-06,
+		   0.984582, 0.00343669, 0.174892};
+double dp;
+</pre>
+<h3> Simulation loop </h3>
+<p>
+Simulation loop executes the following three processings.
+</p>
+<h4> Inverse kinematics calculation </h4>
+<p>
+Move one step to close both hands.
+</p>
+<pre>
+LinkPosition link;
+link.p[0] = RARM_p[0];
+link.p[1] = RARM_p[1] + dp;
+link.p[2] = RARM_p[2];
+for (int i=0; i&lt;9; i++) 
+  link.R[i] = RARM_R[i];
+dynamicsSimulator-&gt;calcCharacterInverseKinematics(CORBA::string_dup("robot"),
+						  CORBA::string_dup("CHEST"),
+						  CORBA::string_dup("RARM_WRIST_R"),
+						  link);
+
+
+
+link.p[0] = LARM_p[0];
+link.p[1] = LARM_p[1] - dp;
+link.p[2] = LARM_p[2];
+for (int i=0; i&lt;9; i++) 
+  link.R[i] = LARM_R[i];
+dynamicsSimulator-&gt;calcCharacterInverseKinematics(CORBA::string_dup("robot"),
+						  CORBA::string_dup("CHEST"),
+						  CORBA::string_dup("LARM_WRIST_R"),
+						  link);							
+
+dynamicsSimulator-&gt;calcWorldForwardKinematics();
+dp += 0.001;
+</pre>
+<h4> Updating OnlineViewer </h4>
+<p>
+Update display contents in OnlineViewer. It is different from a scheduler that updates time manually because time is not changed.
+</p>
+<pre>
+dynamicsSimulator-&gt;getWorldState(state);
+state-&gt;time = dp*10;
+onlineViewer-&gt;update(state);
+</pre>
+<h4> Collision Check </h4>
+<p>
+When there are one or more collision points for the pair of joints which we have registered before, we quit the simulation loop.
+</p>
+<pre>
+if (state-&gt;collisions.length() &gt; 0) {
+  if (state-&gt;collisions[0].points.length() &gt; 0) {
+    break;
+  }
+}
+</pre>
+<h2> Notice </h2>
+<h3> Alias </h3>
+<p>
+Alias is when the assigned variable is also used in the right expression, so the value of the valuable causes interference during calculation. Since interference make the result inappropriate.
+See these links about tvmet, ublas, and their implementation.
+</p>
+<p><a href="http://tvmet.sourceforge.net/notes.html#alias">Addressing alias in tvmet</a></p>
+<p><a href="http://www.boost.org/libs/numeric/ublas/doc/operations_overview.htm#noalias">Addressing alias in ublas</a></p>
+<p>
+By default, tvmet does not assume interference, and it performs well. You have to care interference enough. When interference occurs, introduce a temporary variable, or wrap alias() on the assigned variable.
+</p>
+<p>
+On the other hand, ublas assumes interference by default, there is not such a problem in general. However its performance gets lost in a case where there is no interference. In such a case, wrap noalis() on the assigned variable not to copy uselessly.
+</p>
+<h3> Expression Template </h3>
+<p>
+Expression Template is to record a expression itself when the expression is given, not to calculate then, deferring to calculate until the calculation is needed.
+For example, an expression, a*b+c is recorded as a template like this:
+</p>
+<pre>
+Add&lt; Multiple &lt; a , b &gt; , c &gt;
+</pre>
+<p>
+You must care an order to calculate. Supposing n dimension square matrixes A, B, C, D, consider to assign multiply A, B, C to D.
+</p>
+<pre>
+matrix<int> D(prod(A, prod(B, C)));
+matrix<int> D(prod(A, matrix<int>(prod(B, C))));
+</pre>
+<p>
+You can consider these two differences. 
+First the second statement does not store an intermediate value in a temporary area, but the first statement stores B*C and they do multiply.
+The first statement calculates a intermediate value and store the result in a temporary area, and again calculate a final result, so there are 2 matrix calculation and 2n^3 multiplies.
+The second does not store a intermediate value and actual calculation performs when the final result is stored in D, so its calculation goes like this:
+</p>
+<p align="center">
+<img src="../img_new/et_matrix.gif" width="350">
+</p>
+<p>
+Quantity of this multiply is calculated for one element of D in (n+1)n, but D has n dimension and the number of its elements is n^2, so it needs (n+1)n^3. Therefore these statements have different orders, and the second is slower than the first.
+When using Expression Template, please notice such a difference of orders.
+</p>
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

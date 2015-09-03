@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Sample Simulation</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Sample Simulation</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Launching GrxUI</h2>
+
+<p>
+With OpenHRP 3.1 series, GrxUI that is GUI of OpenHRP3, comes as an Eclipse plugin.
+And therefore Launching GrxUI is some what different from the earlier versions of 
+OpenHRP3. Go through following steps to start GrxUI.
+</p>
+
+<p>
+Start Eclipse, and select <i>'Window'</i> -> <i>'Open Perspective'</i> -> <i>'Other'</i> 
+from menubar. Open "GrxUI" perspective and, GrxUI will be launched upon Eclipse.
+</p>
+<br>
+
+
+<h2 >Running simulation</h2>
+<h3 > Opening a Project </h3>
+
+<p>
+To open a project, select <a href=um_grxui_menu.html><i>'GrxUI'</i></a> -> <i>'Load Project'</i> 
+from menubar.
+</p>
+
+<p>
+"Open Project File" dialog box will be opened. Select any project file and then press 
+"Open" button. (The standard collection of project files could be different from version 
+to version.)
+</p>
+
+
+<h3> Simulation </h3>
+
+<p>
+Once the project is loaded, simulation can be started using "start simulation" button, or 
+selecting <a href=um_grxui_menu.html><i>'GrxUI'</i></a> -> <i>'start simulation'</i>, from menubar.
+</p>
+<p>
+Does the simulation model in the left-lower corner of GrxUI window, started animating?
+</p>
+<p>
+In our latest version, we have prepared some other simulation samples. Please try the 
+following model too.
+</p>
+<p>
+If the each of the following model animates as it was expected, and the simulation 
+completed wihtout showing error messeges, the installation of OpenHRP3 is succeeded.
+</p>
+
+<ul>
+ <li>FallingBoxes.xml
+  <ul>
+   <li>The simulation of some box falling on the floor.</li>
+  </ul>
+ </li>
+ <li>SamplePD.xml
+  <ul>
+   <li>The simulation of walking robot.</li>
+  </ul>
+ </li>
+ <li>SampleLF.xml
+  <ul>
+   <li>The simulation of a robot lifting a box.</li>
+  </ul>
+ </li>
+ <li>SampleSV.xml
+  <ul>
+   <li>The simulation of a cart moving on the floor.</li>
+  </ul>
+ </li>
+ <li>PA10Sample.xml
+  <ul>
+   <li>The simulation of the robot arm "PA10", lifting a box.<br>
+   (Model data of "PA10" was provided by Mitsubishi Heavy Industries,LTD)</li>
+  </ul>
+ </li>
+</ul>
+
+<h4 id="ubuntu904">When a sample cannot be performed in the environment after Ubuntu9.04 </h4>
+<p>
+Please refer to troubleshooting of the following link places.
+<a href="./troubleshooting.html#error_ipv6_localhost">RTC on "GrxUI on Eclipse" does not work on Ubuntu-9.04 (On Linux)</a>
+</p>
+
+
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

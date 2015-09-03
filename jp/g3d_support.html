@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>X-Windows における3Dグラフィックドライバの導入</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">X-Windows における3Dグラフィックドライバの導入</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+
+<p>
+OpenHRP では3Dグラフィックスを利用するため、
+<a href="http://www.gentoo.org/doc/en/dri-howto.xml" target="_blank">
+「3Dアクセレレーション機能」</a>を持つグラフィックチップのドライバを導入する必要があります
+(注)。お使いのグラフィックチップによって、グラフィックドライバの導入方法が変わりますので、
+以下のように設定してください。
+</p>
+
+
+（注） 
+<ol>
+	<li><p>
+	基本的は「3Dアクセレレーション機能」が有効になっていなくても、OpenHRP が動作します。しかし、
+	グラフィックスの動作が遅くなり、スムーズに動作しない可能性があります。<br>
+	この動作はパソコンの CPU やメモリなどのハードウェア機器の性能と、グラフィックチップの種類によって
+	変わっていきます。例えば、全然問題なくスムーズに動作する場合もあれば、OpenHRP の基本動作さえ
+	しない場合もあります。</p>
+	</li>
+	<li>
+	<p>	古いグラフィックチップだと3Dアクセレレーション機能がサポートしない場合もありますので、予めにご了承ください。</p>
+	</li>
+</ol>
+<br>
+
+<h2 id="intel">Intel 型オンボードチップの場合</h2>
+
+<p>
+Intel 型ですと、基本的にドライバを導入する必要はありません。機能は最小限に抑えられているものの、
+最初の起動段階ですでに3Dアクセレレーション機能が有効になっているはずです。
+</p>
+<br>
+
+
+<h2 id="nvidia">NVIDIA 型チップへのドライバインストール</h2>
+
+<p>
+インストール直後に自動設定される 「nv」 というオープンソースのドライバには、3Dアクセレレーション機能が
+付いていません。そのため 「nVidia」 という制限付きドライバの導入が必要となります。
+これから、その導入手法について説明します。
+</p>
+
+<ol>
+	<li >「システム」 → 「システム管理」 → 「制限付きドライバの管理」 をクリックして「制限付きドライバ」
+	を開きます。パスワード入力を求められたら、ログイン時に入力するパスワードを入力します。
+	<p align="center"><a href="../img_new/trouble/g3d_NVIDIA1.png">
+	<img src="../img_new/trouble/g3d_NVIDIA1.png" width="40%"></a></p></li>
+
+	<li >「制限付きドライバ」が開いたら、「ドライバ」の「NVIDIAの高性能グラフィックドライバ」の
+	「有効にする」	の項目にチェックをします（□をクリック）。
+	<p align="center"><img src="../img_new/trouble/g3d_NVIDIA2.png"></p></li>
+
+	<li >確認が出たら、「ドライバを有効にする(E)」をクリックします。
+	<p align="center"><img src="../img_new/trouble/g3d_NVIDIA3.png"></p></li>
+	
+	<li >再起動を求められるので、言われた通りに再起動します。</li>
+</ol><br>
+
+<p>それでは本題に入ります。</p>
+
+<ol start="5">
+	<li >システム→設定→外観の設定を開き、視覚効果タブを開きます。</li>
+	
+	<li >Extraの左にある○をクリックします。少し待つとこれで本当にいいか聞かれますので「Keep settings」
+	をクリックします。
+	<p align="center"><img src="../img_new/trouble/g3d_NVIDIA4.png"></p>
+	<p align="center"><img src="../img_new/trouble/g3d_NVIDIA5.png"></p></li>	
+</ol>
+
+<p>これで導入できました。ウインドウを開いたり閉じたり、動かしたりしたら、視覚効果が有効になっている
+のを確認できるでしょう。</p>
+<br>
+
+
+<h2 id="ati">ATI 型チップへのドライバインストール</h2>
+
+<p>一般に ATI 型のチップでは導入が難しいです。場合によって設定なしで動くこともありますが、
+基本的に下記の fglrx と XGL の導入が必要とします。
+</p>
+
+<h3 id="fglrx">fglrx ドライバのインストール</h3>
+
+<p>Ubuntu なら nVIDIA ドライバと同じ手順で導入できます。ただし、この方法でインストールされるドライバは
+、fglrx という ATI 用の制限付きドライバであり、比較的新しいグラフィックチップでしか使えません。対応している
+グラフィックチップは、下記に示すものに限られます。</p>
+
+<table border="1" align="center">
+ <tr><th colspan="2">fgrlx 対応チップ</th></tr>
+  <tr>
+  <th>チップ</th>
+  <th>モデル</th>
+ </tr>
+ <tr>
+  <th>Mobility Radeon</th>
+  <td>X1800, X1600, X1400, X1300,<br>
+  	  X800, X700, X600, X300,<br>
+  	  9800, 9600, 9550, 9500</td>
+ </tr>
+ <th>Radeon Xpress</th>
+  <td>200M series, 200 series,<br>
+  	  1250 IGP</td>
+ </tr>
+ <th>Radeon</th>
+  <td>X1900, X1800, X1600, X1300,<br>
+  	  X850, X800, X700, X600,<br>
+  	  X550, X300, 9800, 9700,<br>
+  	  9600, 9550, 9500</td>
+ </tr>
+</table>
+<br>
+
+<p>それでは、導入方法について説明します。</p>
+<ol>
+	<li><p>まず、アップデートして最新カーネルで再起動します。</p></li>
+	
+	<li><p>「システム」 → 「システム管理」 → 「制限つきドライバの管理」と辿ります。<br>
+	すると「ATIの高性能グラフィックドライバ」というのが自動認識で表示されるはずです。</p></li>
+	
+	<li><p>「有効にする」というチェックボックスにチェックを入れます。<br>
+	ドライバのダウンロードとインストールが自動的に始まります。</p></li>
+	
+	<li><p>インストール完了後、「ドライバを有効にしますか？」と訊かれますので、
+	「Enable Driver」をクリックして下さい。</p></li>
+	
+	<li><p>その後、再起動すれば fglrx ドライバが有効になります。</p>
+	<p align="center"><img src="../img_new/trouble/g3d_ATI1.png"><br>
+	インストールが完了し、再起動した後の状態</p></li>
+</ol>
+
+<h3 id="xgl">XGL のインストール</h3>
+
+<p>さらに、fglrx は、そのままでは3Dグラフィックをサポートしません。fglrx ドライバで、
+3Dグラフィックスを利用するアプリケーションを起動するには、XGL というプログラムが必要となります。
+
+XGL のインストールは簡単です。端末で下記のコマンドを実行して、ログインしなおせば、それだけで 
+XGL が有効になっているはずです。</p>
+
+<pre>$ sudo apt-get install xserver-xgl</pre><br>
+
+<ol>
+<p>※　XGL の導入について詳しくは、
+<a href="http://blog.livedoor.jp/vine_user/archives/51126612.html" target="_blank">こちら</a><br>
+<em>【CompizFusionの導入方法】 → ステップ１～３</em>
+</p>
+</ol>
+<br>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

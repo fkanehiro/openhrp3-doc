@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Release Note Ver.3.1.0(&beta;2)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Release Note Ver.3.1.0(&beta;2)</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Release Note Ver.3.1.0(&beta;2)</h2>
+<p>
+Basic changes and updates from version 3.1.0(&beta;) to 3.1.0(&beta;2):
+
+<ul>
+  <li>Added documentation for PD_HGtest.</li>
+  <li>Abolished using bin/unix, bin/dos directories.</li>
+  <li>LoggerView is now supported frame-by-frame playback.</li>
+  <li>LoggerView is fixed to support forward/reverse playback at "1/64" speed.</li>
+  <li>
+   Simulating model could not be displayed when simulation was started, 
+   while LoggerView slider was at a middle possition of the track. 
+   This problem has now been resolved.
+  </li>
+  <li>
+   Fixed the problem with GraphView, that not updating graph according to 
+   the elapsed time.
+  </li>
+  <li>Fixed the problem with GraphView, that graphs could not be added/deleted.</li>
+  <li>
+   Free joints that are not viewed on GraphView, can now be selected
+   and excluded using view-selecting combo box.
+  </li>
+  <li>
+   When launching GrxUI, a list box that allows to select robot name, 
+   appeares at the top of RobotStateView, and disappeared when project 
+   loading is completed. This problem has now been resolved.
+  </li>
+  <li>
+   Fixed the problem of not displaying joint values, when model was set to 
+   hidden on RobotStateView.
+  </li>
+  <li>
+   Robot could not be selected from list, when multiple models are loaded in 
+   RobotStateView. This issue has now been resolved.
+  </li>
+  <li>
+   Handled the exception that occured when ServerManagerView was closed 
+   and restarted.
+  </li>
+  <li>
+   3DView display did not advance, when focus was moved from GrxUI perspective 
+   to another. This problem has now been fixed.
+  </li>
+  <li>
+   Fixed the problem that GrxUI perspective could not be loaded in newly 
+   opened Eclipse Windows.
+  </li>
+  <li>
+   When multiple Eclipse windows were opened and if GrxUI perspective loaded 
+   window was not closed using "X" button, eclipse could not be launched next 
+   time. This problem has now been fixed.
+  </li>
+  <li>
+   Fixed the issue that objects could not be rebinded from NameServer, when 
+   GrxUI perspective was closed and reloaded.
+  </li>
+  <li>
+   NameServer went shutdown if ProcessManagerView was closed when NameServer 
+   life cycle is synchronous with GrxUI. This issue has now been fixed.
+  </li>
+  <li>The problem with starting PD_HGtest is fixed.</li>
+  <li>
+   Increasing list fields in controllerTabView and collisionTabView of 
+   OpenHRPView, caused difficulties to operate the interface at the bottom.
+   This issue has now been fixed.
+  </li>
+  <li>
+   Even the WorldState's item properties were updated in PropertyView, the 
+   change was not reflected in OpenHRPView. This issue has now been resolved.
+  </li>
+  <li>
+   Fixed the problem with WorldStateItem becoming "not selected" when it 
+   was delete. 
+  </li>
+  <li>Fixed the malfunction of inverse kinematics related 3DView button.</li>
+  <li>
+   Item's name change was not reflected until the focus moved to another item.
+   This issue has now been fixed.
+  </li>
+  <li>
+   When AIST dynamics server engine is used to simulate a collision check 
+   between cylinder model and plane model, cylinder model was sinked in 
+   plane model. This issue has now been fixed.
+  </li>
+  <li>The problem with saving logs is resolved.</li>
+  <li>The problem with saving Python script is resolved.</li>
+  <li>
+   Logs is set to be stored in heap memory, until we complete testing heap 
+   resources of JavaVM. This step was taken for improving processing speed.
+  </li>
+  </ul>
+<div align="right">09-06-2009</div>
+</p>
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

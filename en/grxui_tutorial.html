@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Simulation Tutorial</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Simulation Tutorial</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h3>Introduction</h3>
+  <p>
+  In <a href="simulate_sample.html">Install > Sample Simulation</a>, we loaded its sample project(SampleRobotPD.xml) and checked operations of OpenHRP3.<br>
+  Here we show the procedure how to make your own project and do simulation.<br>
+  <p>
+  To make OpenHRP3 available, you need to make a robot model and controller. In this procedure, we use the same names as SampleRobotPD.xml for our descriptions:
+  <br>
+   Robot model: OpenHRP3/etc/sample.wrl <br>
+   Controller:  OpenHRP3/Controller/server/PDcontroller <br>
+  <br>
+  <br>
+  PDcontroller is a controller which reads and runs the next files:<br>
+  <br>
+  PD gain file: OpenHRP3/Controller/server/etc/PDgain.dat <br>
+  Walking pattern file: OpenHRP3/Controller/server/etc/angle.dat <br>
+  <br>
+  </p>
+
+<h3><a name="2">Launch GrxUI</a></h3>
+  <p>
+  You can launch GrxUI by this command:<br>
+  <br>
+  $ cd src/OpenHRP3/bin/unix/ <br>
+  $ ./GrxUI.sh <br>
+  </p>
+
+  <p align="center">
+  <img src="../image/grxui/initialwindow.png"> <br>
+  fig.1: Initial Window
+  </p>
+
+<h3>Load of models you use and initial set up</h3>
+  Models are loaded on ItemView as described in fig.2.<br>
+  <p align="center">
+  <img src="../image/grxui/loadmodel1.png" align="top"> 
+  <img src="../image/grxui/loadmodel2.png" align="top"> <br>
+  fig.2: load models
+  </p>
+  <br>
+
+  Some View which deals with model items distingush robot models and environmental models, which are switched by the context menu of Item View as in fig.3.<br>
+  <p align="center">
+  <img src="../image/grxui/loadmodel3.png" align="top"> 
+  <img src="../image/grxui/loadmodel4.png" align="top"> <br>
+  fig.3: Robot model to Environmental model
+  </p>
+
+  <br>
+  Loaded modeles are displayed on <b>3DView</b>, and their position, attitude, and joint angle become editable.<br>
+  Content you have edited is set in a property of each model as its initial condition.<br>
+  You can see joint angles which you are editing in <b>RobotStateView</b>.<br> 
+  <p align="center">
+  <img src="../image/grxui/editmodel1.png" align="top"> 
+  <img src="../image/grxui/editmodel2.png" align="top"> <br>
+  fig.4: 3DView and RobotStateView
+  </p>
+  In the joint angle edit mode <img src="../image/grxui/joint_rotation.png">, you can rotate each joint by your mouse operations, in addition you adjust joint angels by your cursor key operations.<br>
+  Here, you set it up to the initial position of the movement file which is loaded by PDcontroller. Please set up seeing the joint angle in the left upper figure.<br>
+  <br>  
+  You also use <b>PropertyView</b> to enter values directly and edit joint angles.<br>
+  <br>  
+
+<h3>Set up of controllers</h3>
+  <p>
+  If you hava robot models, you can associate them with controllers on OpenHRP/Controller tab.<br>
+  <br>
+  <b>Controller</b><br>
+  Specify CORBA object id of the controller which will be connected.<br>
+  This time, use "PDcontroller".<br>
+  <br>
+  <b>Control Time[s]</b><br>
+  Specify the execution cycle of controllers.<br>
+  This time, since the movement pattern is 0.002[s], use 0.002.<br>
+  </p>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/editmodel3.png" align="top"> <br>
+  fig.5: Edit Controller Settings
+  </p>
+
+<h3>Setup of the collision detection pairs</h3>
+  <p>
+  You can edit the collision detection pairs on OpenHRP/Collision tab.<br>
+  Once you press <b>Add</b> button which exists at center left side, lower half of Collision tab becomes operatable.<br>
+  If you cannot press <b>Add</b> button, firstly please make sure that models are loaded. <br>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/editcollision1.png" align="top"> <br>
+  fig.5: Edit Collision Pair
+  </p>
+  <p>
+  Select models from comboxes <b>Object1</b> and <b>Object2</b>, and specify links which collision detections are occured at <b>Link1</b> and <b>Link2</b>.<br>
+  If you select none at <b>Link</b>, all links in th model are targeted for collision detections.<br>
+  </p>
+  <p>
+  In this example, we specify collision detections between robot model sample and environmental model longfloor.<br>
+  Select sample and longfloor from Object1 and Object2 respectively, and press <b>OK</b> button.<br>
+  </p>
+
+<h3>Setup of execution condition</h3>
+  On OpenHRP/Simulation, you configure simulation time and so on.<br>
+  Configurated items are stored in WorldState item, so create  WorldStateItem at first.<br>
+  <p align="center">
+  <img src="../image/grxui/createworldstate1.png" align="top"> 
+  <img src="../image/grxui/createworldstate2.png" align="top"> 
+  <img src="../image/grxui/createworldstate4.png" align="top"> <br>
+  fig.6: create WorldStateItem
+  </p>
+
+  <b>Total Time[s]</b><br>
+  Sample controller reads the walking pattern file which has created on ahead, and drives a robot.<br>
+  Since the execution time of the pattern file is 13.4, specify the value as 13.4.<br>
+  <br>
+  <b>Integration Step[s]</b><br>
+  Similarly, the time step of the pattern file is 0.002, specify 0.002 here.<br>
+  <br>
+
+  <b>Loggin Step[s]</b><br>
+  Change to Logging Step will reduce file access by recording result, so simulation time can be cut down too.<br>
+  Here, we specigy 0.002[s] the same value as Integration Step. If the value of Loggin Step[s] is under one of Integration Step, the value of Integration Step will be used instead.<br>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/editsimconf.png" align="top"> <br>
+  fig.7: Edit Collision Pair
+  </p>
+  <p>
+
+<h3>Save of project</h3>
+  States of each item which has been set up by now, can be saved in a project file.
+  Select File->Save Project from the menu to save.
+  </p>
+  <p align="center">
+  <img src="../image/grxui/saveproject1.png" align="top"> <br>
+  fig.10: Edit Collision Pair
+  </p>
+  
+  Then, when the dialog of the next figure is displayed, choose whether you save screen configurations.
+  </p>
+  <p align="center">
+  <img src="../image/grxui/saveproject3.png" align="top"> <br>
+  fig.11: Edit Collision Pair
+  </p>
+
+<h3>Setup of Process Manager</h3>
+  In the sample project SampleRobotPD.xml, descriptions are added to run OpenHRP3/bin/unix/PDController.sh automatically when its simulation is started.<br>
+  Currenty, this configuration cannot be set on GUI.<br>
+  Thus, after you save your project, please open the project file by a text editor, add the following line in it.<br>
+  <br>
+
+  &lt;process id="PDcontroller" com="$(BIN_DIR)/PDController$(BIN_SFX)" dir="$(BIN_DIR)/" hasshutdown="true" autostart="false"/&gt;<br>
+  <br>
+  Once the line is added, please reload the project for the change to be effected. <br>
+  <br>
+
+<h3>Start of Simulation</h3>
+  Please press the button to start the simulation, which is enclosed in as red box.<br>
+  Model items and CollisionPair items which are selected on Item View at the point you press this button are effective during the simulation.<br>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/startsimulation1.png" align="top"> <br>
+  fig.8: Edit Collision Pair
+  </p>
+  If the controller which has been set up on OpenHRP/Controller tab is not running, OpenHRP tries to launch it automatically.<br>
+  In this case, if it is successful to connect the controller, the simulation starts to run.<br>
+  If it fail to connct, the dialog of the next figure will be displayed to choose one of options:<br>
+    1. Wait a little more.<br>
+    2. Start the simulation without a controller.<br>
+    3. Cancel.<br>
+  <br>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/startsimulation2.png" align="top"> <br>
+  fig.9: Edit Collision Pair
+  </p>
+
+<h3>Stop and Quit of Simulation</h3>
+  Simulation Start button <img src="../image/grxui/sim_start.png" align="top"> changes to Stop/Quit button
+  <img src="../image/grxui/sim_stop.png" align="top">
+  during simulation.<br>
+  When Stop/Quit button is pressed, the simulation is stopped and the dialog which answers whether you want to quit appears.<br>
+  If you press <b>OK</b> button in this dialog, the simulation will quit.<br>
+  <br>
+
+<h3>Use of playback function</h3>
+  Simulation results can be played back by using Play, Slow, Forward, Rewind buttons which exist on upper window , and so on.<br>
+  Simulation results are stored in a WorldState item, and the data at the time which is on the slider is displayed on several views such as 3DView, Graph, RobotStat.<br>
+  <br>
+
+<h3>Graph function</h3>
+  Items which are display on graphs are stored in a GraphContents item.<br>
+  At first, create a GraphContents item on Item View.<br>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/creategraphitem1.png" align="top">
+  <img src="../image/grxui/creategraphitem2.png" align="top"> <br>
+  fig.10: Create Graph Contents
+  </p>
+
+  Next, press <b>Series</b> button on Graph view, and select items to be displayed.<br>
+  You can select those items after simulations.<br>
+  Items which you have registered are displayed during playbacks or next simulations.<br>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/editgraphitem1.png" align="top"> <br>
+  fig.10: Create Graph Contents
+  </p>
+  <br>
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

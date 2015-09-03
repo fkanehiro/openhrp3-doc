@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>OpenHRP View</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">OpenHRP View</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>OpenHRP View概要</h2>
+<p>
+OpenHRP Viewを構成する各種要素について説明します。<br>
+OpenHRP Viewはsimulation, controller, collisionの3つのタブから構成されます．
+</p>
+<h3>simulationタブ</h3>  
+<p align=center>
+<img src="../img_new/um_015.png"><br>
+simulationタブ
+</p>
+
+<ul>
+<ol>
+<li>Total Time[s]<br>
+シミュレーションを行う総時間を秒単位で指定します。
+</li>
+<li>Integration Step[s]<br>
+積分タイムステップを秒単位で指定します。
+</li>
+<li>Logging Step[s]<br>
+ロギングタイムステップを秒単位で指定します。
+</li>
+<li>Integration Method<br>
+積分方法を指定します。
+</li>
+<li>Gravity[m/s^2]<br>
+重力加速度を指定します。
+</li>
+<li>Forward Dynamice<br>
+順動力学計算の有無を指定します。
+</li>
+<li>View Simulation<br>
+視野画像シミュレーションを行うか否かを指定します。このチェックボックスにチェックを入れると，シミュレーション対象のロボットや環境オブジェクトに<a href=create_model.html#VISIONSENSOR>VisionSensorノード</a>が取り付けられていた場合に視野画像生成が行われ，シミュレーション開始と同時に視野画像を表示するウィンドウが表示されます．逆にこのチェックボックスにチェックが入っていない場合，VisionSensorノードが取り付けられたモデルのシミュレーションを行っても視野画像の生成は行われません．
+</li>
+</ol>
+</ul>
+
+<h3>controllerタブ</h3>  
+<p align=center>
+<img src="../img_new/um_016.png"><br>
+controllerタブ
+</p>
+
+<ul>
+<ol>
+<li>Robot Name<br>
+ロボット名の一覧です。
+</li>
+<li>Controller<br>
+コントローラーの一覧です。CORBA IDで表示されます。
+</li>
+<li>Control Time[s]<br>
+制御周期の一覧です。
+</li>
+<li>Working Dir.<br>
+ワークディレクトリの一覧です。
+</li>
+<li>Setup Command<br>
+起動コマンドの一覧です。
+</li>
+<li>Detach ボタン<br>
+クリックすることで選択した行を削除します。
+</li>
+<li>Edit ボタン<br>
+クリックすることで選択した行をEditできる様にします。
+</li>
+<li>Controller<br>
+コントローラーをCORBA IDリストボックスから選択します。
+</li>
+<li>Control Time[s]<br>
+制御周期を秒単位で指定します。
+</li>
+<li>Working Dir.<br>
+ワークディレクトリを指定します。$(環境変数名)の形で環境変数が使えます。
+</li>
+<li>Setup Command<br>
+起動コマンドを指定します。$(環境変数名)の形で環境変数が使えます。
+</li>
+</ol>
+</ul>
+
+<h3>collisionタブ</h3>  
+<p align=center>
+<img src="../img_new/um_017.png"><br>
+collisionタブ
+</p>
+<ul>
+<ol>
+<li>Object1<br>
+collisionペア(その1)のObjectの一覧です。
+</li>
+<li>Link1<br>
+collisionペア(その1)のLinkの一覧です。
+</li>
+<li>Object2<br>
+collisionペア(その2)のObjectの一覧です。
+</li>
+<li>Link2<br>
+collisionペア(その2)のLinkの一覧です。
+</li>
+<li>SDModel<br>
+Spring Damper Modelが有効かどうかの一覧です。
+</li>
+<li>Add ボタン<br>
+collisionペアを追加します。
+</li>
+<li>Remove ボタン<br>
+選択されたcollisionペアを削除します。
+</li>
+<li>Edit ボタン<br>
+選択されたcollisionペアを編集します。
+</li>
+<li>Add Allボタン<br>
+組み合わせられるcollisionペアを全て追加します。
+</li>
+<li>Object1<br>
+collisionペア(その1)のObjectをリストボックスから選択します。
+</li>
+<li>Link1<br>
+collisionペア(その1)のLinkをリストボックスから選択します。選択しない場合はすべてのLinkが対象となります。
+</li>
+<li>Object2<br>
+collisionペア(その2)のObjectをリストボックスから選択します。
+</li>
+<li>Link1<br>
+collisionペア(その2)のLinkをリストボックスから選択します。選択しない場合はすべてのLinkが対象となります。
+</li>
+<li>Spring Damper Model<br>
+スプリングダンパーモデルを指定するときにチェックします。
+</li>
+<li>Spring Constant<br>
+スプリングダンパーモデルが指定された場合、バネ定数を入力します。
+</li>
+<li>Damper Constant<br>
+スプリングダンパーモデルが指定された場合、ダンパー定数を入力します。
+</li>
+<li>Static<br>
+静摩擦係数を入力します。スプリングダンパーモデルが指定されない場合に有効です。
+</li>
+<li>Sliding<br>
+動摩擦係数を入力します。スプリングダンパーモデルが指定されない場合に有効です。
+</li>
+</ol>
+</ul>
+
+
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

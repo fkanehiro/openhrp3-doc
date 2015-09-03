@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>サンプルシミュレーション</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">サンプルシミュレーション</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>GrxUIの起動</h2>
+
+<p>
+OpenHRP3のGUIであるGrxUIを起動スクリプトを用いて起動します。
+起動スクリプトは、OpenHRP3を展開したディレクトリの、
+<ul>
+ <li>bin/unix/GrxUI.sh (Linuxの場合)</li>
+ <li>bin/dos/GrxUI.bat (Windowsの場合)</li>
+</ul>
+になります。
+</p>
+
+<p>
+Windowsの場合、上記のファイルをエクスプローラよりダブルクリックすることにより
+起動するのが簡単です。本サイトから提供する OpenHRP3 バイナリパッケージ(msi) を
+用いた場合、「スタート」→「すべてのプログラム」→「OpenHRP3」のメニュの下に 
+GrxUI.bat 起動スクリプトへのショートカットが貼り付けられますので、それを利用して
+起動することもできます。
+</p>
+
+<p>
+Linuxの場合も、Windowsと同様にファイルブラウザからダブルクリックしてもよいですし、
+コマンドラインから、
+<pre>
+cd OpenHRP3のディレクトリ
+cd bin/unix
+./GrxUI.sh
+</pre>
+としてもよいでしょう。
+</p>
+<br>
+
+<h2 >シミュレーションの実行  </h2>
+<h3 > プロジェクトを開く </h3>
+<p>
+"File" - "Load Project"より、プロジェクトを開きます。
+</p>
+<p align="center">
+<img src="../img_new/um_3_0/GrxUI_LoadProject.jpg"><br>
+図1: Load Project
+</p>
+<p>
+以下のようなファイル選択ダイアログが表れますので、
+適当なファイルを読み込んでみましょう。
+（なお、標準で入っているサンプルプロジェクトはバージョンによって
+以下とは異なる可能性があります。）
+</p>
+<p align="center">
+<img src="../img_new/um_3_0/GrxUI_LoadProject2.jpg"><br>
+図2: Open Project File
+</p>
+<h3> シミュレーション </h3>
+<p>
+プロジェクトを読み込んだら、
+"start simulation"ボタンでシミュレーションを開始します。
+</p>
+<p align="center">
+<img src="../img_new/um_3_0/GrxUI_StartSimulation.jpg"><br>
+図3: start simulation
+</p>
+<p>
+GrxUIウィンドウの左下でシミュレーション対象のモデルが動作するアニメーションが
+表示されたでしょうか？
+</p>
+
+<p>
+最新版では、
+以下のようなシミュレーションサンプルがありますので、試してみてください.
+以下に示す動作が実現していれば、インストールはうまくいったと考えてよいでしょう。
+<ul>
+ <li>FallingBoxes.xml
+  <ul>
+   <li>複数の箱が同時に床に落ちるシミュレーション</li>
+  </ul>
+ </li>
+ <li>SamplePD.xml
+  <ul>
+   <li>サンプルロボットの歩行シミュレーション。</li>
+  </ul>
+ </li>
+ <li>SampleLF.xml
+  <ul>
+   <li>サンプルロボットが箱を持ち上げるシミュレーション。</li>
+  </ul>
+ </li>
+ <li>SampleSV.xml
+  <ul>
+   <li>車輪型機構が床の上で車輪を使って移動するシミュレーション。</li>
+  </ul>
+ </li>
+ <li>PA10Sample.xml
+  <ul>
+   <li>ロボットアーム"PA10"が箱をつかんで持ち上げるシミュレーションです。<br>
+       (PA10のモデルデータは三菱重工業（株)からご提供いただきました。)</li>
+  </ul>
+ </li>
+</ul>
+
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

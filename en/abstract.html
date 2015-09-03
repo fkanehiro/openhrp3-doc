@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Overview of Simulations</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Overview of Simulations</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Formation of OpenHRP</h2>
+<p>
+OpenHRP is a software that formed as a distributed network system which consists of following 
+server group. However, all the operations correspond to these servers are handled by GrxUI, the 
+standard front-end GUI of OpenHRP. Therefore noramlly users won't have to worry about the existance 
+of these servers.
+</p>
+
+<h3>Servers</h3>
+<h4>DynamicsSimulator</h4>
+<p>
+The DynamicsSimulatorr calculates the forward dynamics of the link system, integrates the 
+obtained acceleration of the joint,and updates the joint speed and joint value. It can 
+handle arbitrary open-link-mechanisms and close-link-mechanicsms. Moreover, when it 
+detects a collision between links, and if there is relative velocity between the links, 
+first it adjust the relative velocity to zero via collision calculation, and then 
+calculates the necessary contact-power not to develope relative acceleration. A part of 
+the result of dynamics calculation can be taken out as sensor output. 
+</p>
+
+<h4>CollisionDetector</h4>
+<p>
+The CollisionDetector server detects contact between the robot and the environment using e geometric 
+model expressed as triangle mesh. It is 
+called from the DynamicsSimulator server during the simulation execution. 
+<a href="http://www.codercorner.com/Opcode.htm" target="_blank">OPCODE</a> is used as the 
+collision detection algorithm. User of DynamicsSimulator server does not need to call the 
+CollisionDetector server directly, but it is called from the DynamicsSimulator if necessary.
+Then the CollisionDetector calculates the contacts and the vector of the reaction-force.
+</p>
+
+<h4>ModelLoader</h4>
+<p>
+ModelLoader server loads model files which contain robot shape(link structure) and mechanism. 
+It goes through the text based model file and convert the data structure in to manageable format 
+upon programming environment. ModelLoader can be used all over the system.
+</p>
+
+<h4>VisionSimulator</h4>
+<p>
+The VisionSimulator server simulates the visual sensor(camera) attached to the robot.
+</p>
+
+<h4>Controller</h4> 
+<p>
+The Controller used to mount the control program of the robot. It links with each robot and 
+manipulate the robot behavior during the simulation. Developing a Controller allows the 
+user to simulate an original user-defined control program. 
+</p>
+
+<h3>CORBA</h3>
+<p>
+OpenHRP has a distributed object system implementation developed based on CORBA (Common 
+Object Request Broker Architecture). Because all the servers are implemented as CORBA 
+objects in OpenHRP, it is possible to run each server on separate machines and distribute 
+the calculation load. Since the communication between servers is done by CORBA, OpenHRP 
+has a platform independent system configuration. Therefore we succeeded with developing 
+each server on most appropriate programming language and OS, and finally connecting them 
+together. Currently, Windows and Linux versions of OpenHRP are available.
+</p>
+<p>
+The IDL files which describe the interface of each server, is necessary to use a server. 
+In OpenHRP, these IDL files are placed in <i>"idl/OpenHRP"</i> directory. When IDL files 
+are given to IDL compiler, it can generate the stubs and skeletons for each programming 
+language.
+</p>
+<br>
+
+<h2>About running simulation</h2>
+<p>
+The following three elements are necessary to run the simulation on OpenHRP.
+</p>
+
+<h3>Model</h3>
+<p>
+The model expresses dynamics parameters and the shape of the robot and the environment 
+on the simulator, by using VRML file. For more details about file format, please refer 
+<a href="./create_model.html">"Robot, Environmental Model Define Format"</a> and about 
+building models, refer <a href=howtoeditmodel.html>"Building Models using GrxUI"</a>.
+</p>
+
+<h3>Controller</h3>
+<p>
+The program that operates the robot represents by model, is controller. 
+The operation-control rules/regulations are defined here. In OpenHRP, the controller is 
+created using <a href="http://www.is.aist.go.jp/rt/" target="_blank">OpenRTM</a>. For more 
+details on this procedure, please refer 
+<a href="./controller_pd.html">"Controller Building Guide (Walking Pattern)"</a>.
+</p>
+
+<h3> Project </h3>
+<p>
+As described above, GrxUI controls models and controllers by becoming a client of various 
+servers. Then, the script that directs this control is called "Project". Project script is 
+edited by GrxUI. For more details about projects, please refer 
+<a href="./create_project.html">"Creating Simulation Project"</a>.
+</p>
+
+<h4> Simulation </h4>
+<p>
+The Simulation allows to configure the simulation environment settings such as duration of 
+simulation execution, gravity settings, etc.
+</p>
+
+<h4> WorldState </h4>
+<p>
+The WorldState sets up the time interval which records a result. 
+</p>
+
+<h4> Model </h4>
+<p>
+This refers to the same model we explained above. But here you decide which model to use, 
+whether to set as environment-model or robot-model and set joint angles, etc.
+</p>
+
+<h4> Collision-Pair </h4>
+<p>
+The collision-pair specifies the collision calculation. You can select, between which models 
+or which links the collision calculation to be done with.
+</p>
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

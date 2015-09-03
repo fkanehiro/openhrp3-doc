@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>User's Manual</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">User's Manual</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Overview of simulation</h2>
+<p>
+Here we explain about the various elements that forms OpenHRP.
+</p>
+<ul>
+  <li><a href="./abstract.html">Overview of simulation</a></li
+</ul>
+
+
+<h2>How to use GrxUI user interface</h2>
+<p>
+The following document is about a brief overview of OpenHRP user interface so called 
+"GrxUI" and explains how to use it.
+</p>
+<ul>
+  <li><a href="./overview.html">User interface</a></li>
+</ul>
+
+
+<h2>Guidance for creating a model</h2>
+<p>
+This section describes about how to create a model that uses for simulation.
+First, we show the procedure of creating a model and then explain what type of models 
+actually being used, by taking a sample robot as example.
+</p>
+<ul>
+  <li><a href="./create_model.html">Overview of VRML model</a></li>
+  <li><a href="./sample_model.html">Sample Humanoid Robot</a></li>
+  <li><a href="./howtoeditmodel.html">Creating models using GrxUI</a></li>
+</ul>
+
+<h2>Guidance for creating a project</h2>
+<p>
+This section describes about how to create a project.
+</p>
+<ul>
+ <li><a href="./create_project.html">Creating simulation project</a></li>
+</ul>
+
+<h2>Guidance for building a controller</h2>
+<p>
+In OpenHRP, a control program that outputs instruction value to the robot by reading the 
+sensor value from the robot, is called "Controller". Following sections describe how to 
+build a controller.
+</p>
+
+<h3>Sample Controller</h3>
+<p>
+Here we describe about a sample controller called "SamplePD", that makes a sample robot 
+walk according to the pattern-file.
+</p>
+<ul>
+  <li><a href="./controller_pd.html">Building a controller</a></li>
+  <li><a href="./create_bridge.html">Creating a configuration file of a controller</a></li>
+</ul>
+
+<h3>Controller-Bridge</h3>
+<p>
+In this section we discuss about controller-bridge, that helps to use the controller you built, 
+on the simulator.
+</p>
+<ul>
+  <li><a href="./controller_bridge.html">How to use controller-bridge</a></li>
+</ul>
+
+<h3>Making periodically execute RT component synchronized with simulation time</h3>
+<p>
+To properly simulate a periodically executing RT component that uses real-time OSs' functinality 
+such as as in ART-Linux, the RT component has to be executed periodically based on the clock in 
+simulation world. Here we describe how to make such an RT component.
+</p>
+<ul>
+  <li><a href="./howtomakertc.html">Making periodically execute RT component synchronized with simulation time</a></li>
+</ul>
+
+
+<h2>Practical samples</h2>
+
+<p>
+Here we introduce a practical sample, that reveals cooperate work of OpenHRP and RTC.
+</p>
+
+<ul>
+  <li><a href="./view_simulation.html">How to use view-simulation</a></li>
+  <li><a href="./joystick_sample.html">Joystick connection sample</a></li>
+  <li><a href="./PD_HG_simulation.html">High-gain mode and torque-control mode coorperated simulation</a></li>
+  <li><a href="./notDynamicsSample.html">The simulation which does not perform dynamics calculation </a></li>
+  <li><a href="./range_sensor.html">Distance sensor simulation using RangeSensor node</a></li>
+  <li><a href="./pathplanner.html">Move operation design tutorial </a></li>
+  <li><a href="./BBoxModel.html">How to form the shape data of a model into a bounding box </a></li>
+  <li><a href="./springJoint.html">The method of spring damper modeling of a joint</a></li>
+  <li><a href="./ExtraJoint.html">The simulation using a virtual joint</a></li>
+</ul>
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

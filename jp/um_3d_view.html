@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>3D View</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">3D View</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>3D View概要</h2>
+<p>
+3D Viewを構成する各種要素について説明します。
+</p>
+<p align=center>
+<img src="../img_new/um_014.png">
+</p>
+
+<ul>
+<ol>
+<li>go home of eye pos. ボタン<br>
+クリックすることで 3DViewの視点をホームポジションに戻します。<br>
+右クリックするとメニューが表示され、現在の視点をホームポジションに設定したり、デフォルトの設定に戻したりすることができます。<br>
+ホームポジションはプロジェクトファイルに保存されます。<br>
+</li>
+<li>Type選択<br>
+3D ViewのTypeを下記から選択できます。
+<ul>
+<li>Room</li>
+<li>Walk</li>
+<li>Front</li>
+<li>Back</li>
+<li>Left</li>
+<li>Right</li>
+<li>Top</li>
+<li>Bottom</li>
+</ul>
+</li>
+<li>Rotation Mode ボタン<br>
+クリックすることでRotation Modeに切り替えます。<br>
+3DViewをドラッグして回転させて視点を移動します。
+</li>
+<li>Zoom Mode ボタン<br>
+クリックすることでZoom Modeに切り替えます。<br>
+3DViewをドラッグしてズームして視点を移動します。
+</li>
+<li>Pan Mode ボタン<br>
+クリックすることでPan Modeに切り替えます。<br>
+3DViewをドラッグして水平垂直移動して視点を移動します。
+</li>
+<li>Polygon/Wire Frame ボタン<br>
+クリックすることで Polygon ⇔ Wire Frame 表示を切り替えます。
+</li>
+<li>show/hide z=0 plane ボタン<br>
+クリックすることで show z=0 plane ⇔ hide z=0 plane 表示を切り替えます。<br>
+Z軸が0の位置へのメッシュの表示の制御です。
+</li>
+<li>show/hide Collision ボタン<br>
+クリックすることで show Collision ⇔ hide Collision 表示を切り替えます。<br>
+干渉チェック法線の表示の制御です。
+</li>
+<li>hide/show Distance ボタン<br>
+クリックすることで hide Distance ⇔ show Distance 表示を切り替えます。<br>
+干渉チェックペアの最短距離の表示の制御です。
+</li>
+<li>nocheck/check Intersection ボタン<br>
+クリックすることで nocheck Intersection ⇔ check Intersection 表示を切り替えます。<br>
+干渉チェックペアの干渉確認の表示の制御です。
+</li>
+<li>hide/show Center of Mass ボタン<br>
+クリックすることで hide Center of Mass ⇔ show Center of Mass 表示を切り替えます。<br>
+重心位置の表示の制御です。
+</li>
+<li>hide/show Center of Mass on floor ボタン<br>
+クリックすることで hide Center of Mass on floor ⇔ show Center of Mass on floor 表示を切り替えます。<br>
+重心位置の環境モデルへの投影表示の制御です。
+</li>
+<li>set Background Color ボタン<br>
+クリックすることで "色の設定"ダイアログボックスが表示され Background Colorを変更できます。<br>
+</li>
+<li>Capture ボタン<br>
+クリックすることで3DViewの静止画をPNG形式で保存することができます。<br>
+</li>
+<li>record ボタン<br>
+クリックすることで3DViewの動画をMOV形式で保存することができます。拡張子は明示的に付けてください。<br>
+後述のMovie Playerを使わない場合、QuickTime Playerで再生できます。
+<p align=center>
+<img src="../img_new/um_028.png">
+</p>
+"OK"をクリックすると、続いてVideo Formatの選択画面となります。<br>
+<p align=center>
+<img src="../img_new/um_029.png">
+</p>
+"OK"をクリックすると、Logの最初に戻って録画が始まります。再度"record"ボタンをクリックするか、Logの最後まで再生すると録画が止まります。
+</li>
+<li>movie player ボタン<br>
+クリックすることでMovie Playerを起動します。<br>
+<p align=center>
+<img src="../img_new/um_030.png">
+</p>
+</li>
+<li>hide/show Vision Sensor ボタン<br>
+クリックすることで hide Vision Sensor ⇔ show Vision Sensor 表示を切り替えます。<br>
+Vision Sensorがある場合、表示の制御をします。
+</li>
+<li>Modelのバウンディングボックス表示ボタン<br>
+詳細は<a href="./BBoxModel.html">モデルの形状データをバウンディングボックス化する機能の使い方</a>をご覧ください。
+</li>
+
+<li>restore model properties ボタン<br>
+クリックすることで Modelへの変更を元に戻します。<br>
+</li>
+<li>Object Transelation ボタン<br>
+クリックすることで ３D画面を編集（並行移動）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+モデルをクリックすると、選択されたモデルが緑のボックスで表示され、マウスのドラッグで並行移動できます。
+</li>
+<li>Object Rotation ボタン<br>
+クリックすることで ３D画面を編集（回転）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+モデルをクリックすると、選択されたモデルが緑のボックスで表示され、マウスのドラッグで回転できます。
+</li>
+<li>Joint Rotation ボタン<br>
+クリックすることで ３D画面を編集（関節の回転）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+リンクをクリックすると、選択されたリンクが赤のボックスで表示され、マウスのドラッグで回転できます。
+</li>
+<li>Set Fitting Source ボタン<br>
+クリックすることで ３D画面を編集（接触先の選択）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+接触させたいリンクをクリックすると、赤い矢印が表示されます。
+</li>
+<li>Set Fitting Destination ボタン<br>
+クリックすることで ３D画面を編集（接触させる物体の選択）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+接触させたい場所をクリックすると、青い矢印が表示されます。
+</li>
+<li>Fit ボタン<br>
+クリックすることで(23)で設定したモデルと(24)で設定したモデルを接触させます。<br>
+</li>
+<li>Set From Joint ボタン<br>
+クリックすることで ３D画面を編集（逆運動学基準リンクの選択）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+基準となるリンクをクリックすると、赤いボックスが表示されます。
+</li>
+<li>IK Rotation ボタン<br>
+クリックすることで ３D画面を編集（逆運動学　回転）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+リンクをクリックすると、選択されたリンクが赤のボックスで表示され、マウスのドラッグで回転できます。
+</li>
+<li>IK Translation ボタン<br>
+クリックすることで ３D画面を編集（逆運動学　並行）モードに変更します。<br>
+もう一度クリックするとビューモードに戻ります。<br>
+リンクをクリックすると、選択されたリンクが赤のボックスで表示され、マウスのドラッグで並行移動できます。
+</li>
+<li>３D画面の状態を表示します。
+ビューモードと編集モードがあります。
+</li>
+<li>(31)と合わせて、３D画面のクリッピング距離を設定します。<br>
+クリッピング距離とは、物体が描画される視点からの最短距離と、最長距離のことです。<br>
+この範囲外の物体は描画されません。特に大きな物体や小さな物体を表示する場合は必要に応じて変更してください。
+</li>
+</ol>
+</ul>
+
+
+
+
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

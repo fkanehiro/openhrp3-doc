@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>仮想関節を用いたシミュレーション</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">仮想関節を用いたシミュレーション</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>概要</h2>
+
+<p>
+別々のモデルのリンク間に仮想関節を設定すると、指定したリンク間に拘束力を発生させることができます。2つのリンクはボールジョイントで接続されていると考え、指定した並進方向に拘束力を発生させます。<br>
+これを用いると、図１のように鉄棒にロボットをぶら下がらせるようなことができます。<br>
+<p align="center">
+<img src="../img_new/ExtraJoint.png"><br>
+図１ : Extra Joint Sample
+</p>
+ここでは、仮想関節を設定する手順を説明します。<br>
+</p>
+
+<h2>ExtraJointアイテムの作成</h2>
+<p>
+他のシミュレーションと同様にアイテムを設定してプロジェクトを作成します。<br>
+アイテムビューのExtraJointフォルダを右クリックし、メニューから”作成”を選択します。<br>
+作成されたExtraJointアイテムを選択すると、プロパティビューに内容が表示されますので、ここで編集します。<br>
+プロパティの意味は以下の通りです。<br>
+</p>
+
+<div>
+<table border="1">
+<tr><td>name</td><td>仮想関節の名前を指定します。</td></tr>
+<tr><td>link1Name</td><td>ボールジョイントを受けているリンク名を指定します。</td></tr>
+<tr><td>link2Name</td><td>ボールジョイントが付いているリンク名を指定します。</td></tr>
+<tr><td>object1Name</td><td>link1Nameのモデル名を指定します。</td></tr>
+<tr><td>object2Name</td><td>link2Nameのモデル名を指定します。</td></tr>
+<tr><td>link1LocalPos</td><td>link1Nameリンクの拘束位置をそのリンクのローカル座標で指定します。</td></tr>
+<tr><td>link2LocalPos</td><td>link2Nameリンクの拘束位置をそのリンクのローカル座標で指定します。</td></tr>
+<tr><td>jointType</td><td>拘束する軸数を指定します。xyz：互いに直交する3軸　xy：jointAxisで指定した軸に直交する２軸　z：jointAxisで指定した１軸</td></tr>
+<tr><td>jointAxis</td><td>link1Nameリンクのローカル座標で単位ベクトルを指定します。ベクトルの意味は、jointTypeの指定で変わります。</td></tr>
+</table>
+</div>
+
+<h2>サンプルの実行</h2>
+GrxUIを起動し、プロジェクトExtraJoint.xmlをloadします。<br>
+シミュレーションを開始してください。<br>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

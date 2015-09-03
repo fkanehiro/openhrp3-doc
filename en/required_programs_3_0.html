@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Required Software to Compile/Run OpenHRP</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Required Software to Compile/Run OpenHRP</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Overview</h2>
+
+<p>
+Following list of softwares are required to compile and run OpenHRP.
+These are not included in the OpenHRP main package, so you have to 
+install them separately and make sure to be available in your system.
+</p>
+
+<ul>
+   <li>Middlewares
+    <ul>
+     <li>OpenRTM</li>
+     <li>omniORB</li>
+    </ul>
+   </li>
+
+   <li>Java
+    <ul>
+     <li>Java Development Kit (JDK)</li>
+    </ul>
+   </li>
+
+   <li>C++ Development Tools
+    <ul>
+     <li>Linux:   GCC,Make,etc</li>
+     <li>Windows: Visual C++</li>
+    </ul>
+
+   <li>C++ Libraries
+    <ul>
+     <li>Boost</li>
+     <li>Lapack</li>
+     <li>tvmet</li>
+    </ul>
+   </li>
+
+   <li>Python
+    <ul>
+     <li>Jython</li>
+    </ul>
+   </li>
+</ul>
+
+<p>
+You may install each software according to their distributor's description, 
+or using the package system equipped for your OS (Which are offered in this site).
+</p>
+<p>
+We officially support (<a href="./install_ubuntu_3_0.html">Ubuntu Linux</a> and
+ <a href="./install_windows_3_0.html">Windows</a> ) operating system platforms.
+Please refer the particular documentation page, for detailed explanation about installing 
+softwares on your platform.
+</p>
+
+<p>
+In the next section, we describe an overview, distribution site and suuported versions
+ for each software.
+</p>
+ 
+<h2>Java</h2>
+
+<p>
+In OpenHRP, some of components such as GrxUI, are written in Java. 
+So you have to configure the Java environment to compile and run those components.
+<p>
+
+<h3>Java Development Kit (JDK)</h3>
+
+This is the environment for Java developement and execution.
+
+<ul>
+ <li>Distribution Site: <a href="http://java.sun.com" target="_blank">http://java.sun.com/</a></li>
+ <li>You can download it from the "Java SE" download page.</li>
+ <li>Supported versions: JDK5 and JDK6</li>
+</ul>
+<br>
+
+<h2>Middlewares</h2>
+
+<p>
+OpenHRP is designed as distributed component system. Therefore you need
+middlewares which forms the basement to run these components.
+</p>
+
+<h3>OpenRTM-aist</h3>
+
+<p>
+OpenRTM-aist is a distributed component middleware designed for building robot systems.
+OpenHRP uses C++ edition of OpenRTM-aist, which is an implementation of AISTs' 
+OpenRTM project team.
+</p>
+
+<ul>
+ <li>Distribution Site: <a href="http://www.is.aist.go.jp/rt/OpenRTM-aist/" target="_blank">http://www.is.aist.go.jp/rt/OpenRTM-aist/</a></li>
+ <li>Supported versions: 0.4.2 or later.</li>
+</ul>
+
+<h3>omniORB</h3>
+
+<p>
+CORBA is another middleware used in OpenHRP. Therefore you need to have omniORB, 
+which is an implementation of CORBA.
+</p><p>
+Howerever, omniORB is also used by OpenRTM-aist, so once you install OpenRTM-aist 
+successfully,omniORB should also be available as well.
+</p>
+<ul>
+ <li>Distribution Site: <a href="http://omniorb.sourceforge.net/" target="_blank">http://omniorb.sourceforge.net</a></li>
+ <li>Supported versions: 4.0.x and 4.1.x series</li>
+ <li>4.0.x : supports 4.0.7 or later</li>
+ <li>4.1.x : recommended series</li>
+</ul>
+<br>
+
+
+<h2>C++ Development Tools</h2>
+
+<p>
+Since some components of OpenHRP are written in C++ language, you need to have
+a C++ development tool, to compile OpenHRP source package.
+Additionally, when you do your own simulations, you can develope your own controller 
+components in C++.
+</p>
+
+<h3>for Linux</h3>
+
+For Linux platforms, following compliers have been checked and confirmed for compiling
+ OpenHRP.
+
+<ul>
+ <li>GCC 3.3</li>
+ <li>GCC 4.1, 4.2</li>
+</ul>
+
+<p>
+Apart from compilers, please make sure whether the command line development tools such as 
+"make" are available in your system.
+</p>
+
+<h3>for Windows</h3>
+
+<p>
+In Windows, we use Visual C++ compiler and we support Visual C++ 2008 at present.
+You can use either the commercial edition or the Express Edition which is distributed 
+for free.
+</p>
+<p>
+Note:<br>
+Please note that OpenHRP versions later than 3.0.0, will not be supported with Visual 
+C++ 2005. Please use Visual C++ 2008 from now on.
+</p>
+<br>
+
+<h2>C++ Libraries</h2>
+
+<h3>Boost Library</h3>
+
+<p>
+This is a collection of C++ libraries.
+It provides rich features to compensate insufficent parts of standard library.
+</p>
+
+<ul>
+ <li>Distribution Site:<a href="http://www.boost.org/" target="_blank">http://www.boost.org/</a>
+ <li>Supported versions: 1.34 or later
+</ul>
+
+
+<h3>LAPACK</h3>
+
+<p>
+LAPACK is a well known library in linear algebra, that used for relatively large matrix
+ and vector calculations.
+</p>
+
+<p>
+LAPACK has number of implementations.
+In OpenHRP, we support the following implementations.
+<ol>
+
+ <li>Original version of LAPACK written in Fortran
+  <ul>
+   <li>Distribution Site:<a href="http://www.netlib.org/lapack" target="_blank">http://www.netlib.org/lapack/</a></li>
+   <li>Recommended version: 3.1 or later.</li>
+  </ul>
+ </li>
+
+ <li>LAPACK converted to C language (CLAPACK)
+  <ul>
+   <li>Distribution Site:<a href="http://www.netlib.org/clapack/index.html" target="_blank">http://www.netlib.org/clapack/</a>)</li>
+  </ul>
+ </li>
+
+ <li>Atlas</li>
+</ol>
+
+<p>
+(1.) Original version of LAPACK can be installed in many Linux distributions using the 
+package system.However, the dynamics server published by Tokyo University does not 
+support with this original version of LAPACK at present.If you are willing to use that 
+server, please use (2.) or (3.) as LAPACK implementation.
+</p>
+
+<p>
+(2.) CLAPACK is written in C language, so it is easier to deal with than the original 
+version(1.). Many Linux distributions provides only the original version of LAPACK 
+with the package system. So when it comes to CLAPACK, we have to compile it by ourselves 
+starting from the source package. For Windows platform, binary package of CLAPACK is 
+also distributed. All you have to do is simply extract to the desired location. So it is 
+more easier to install than the original version. Thus, if you work on Windows, or if you 
+want to run the dynamics server produced by Tokyo University, choose CLAPACK.
+</p>
+
+<p>
+(3.) Atlas seems to be an advanced implementation written in C language.
+Both dynamics servers (Tokyo University product and AIST product) are supported by Atlas.
+Some Linux distributions such as Ubuntu, provides Atlas through its package system.
+</p>
+
+
+<h3>tvmet</h3>
+
+<p>
+Tvmet is also a library for matrix and vector operations, written in C++.
+It is designed for relatively small and fixed size matrix and vector operations.
+By adopting the expression-template method, it improves the calculation efficiency 
+and description readability which uses the operator overloading algorithm.
+
+<ul>
+ <li>Distribution Site:<a href="http://tvmet.sourceforge.net/" target="_blank">http://tvmet.sourceforge.net/</a>
+ <li>Supported versions: 1.7.1 or later
+</ul>
+</p>
+<br>
+
+<h2>Python</h2>
+
+<h3>Jython</h3>
+
+<p>
+Jython is the implementation of Python language, written in Java.
+It can be used to write simulation script and extend GUI.
+</p>
+
+<ul>
+ <li>Distribution Site:<a href="http://www.jython.org/" target="_blank">http://www.jython.org/</a>
+ <li>Supported versions: 2.2.1
+</ul>
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

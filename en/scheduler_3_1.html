@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>How to Create Scheduler(Ver.3.1)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">How to Create Scheduler(Ver.3.1)</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2> Overview </h2>
+<p>
+Here we explain loading model to ModelLoader by GryUI in general and the simulation control in DynamicsServer bycreating a scheduler.
+</p>
+<p>
+Below is the list of steps you go through:
+</p>
+<ol>
+<li>load the model</li>
+<li>Initialize CORBA</li>
+<li>Retrieve NamingService</li>
+<li>Retrieve OnlineViewer and load the model</li>
+<li>Retrieve DynamicsServer and configure simulation</li>
+<li>Retrieve Controller</li>
+<li>Simulation loop</li>
+</ol>
+
+<h3> Load the Model </h3>
+<p>
+First, load a model file using ModelLoader. 
+Please specify the path to the model file of a floor and a robot as Model [0] and model [1]. 
+</p>
+<pre>
+BodyInfo_var floor = loadBodyInfo(Model[0].c_str(), argc, argv);
+BodyInfo_var body = loadBodyInfo(Model[1].c_str(), argc, argv);
+</pre>
+
+<a name="corbainit"></a>
+<h2> Initialize CORBA </h2>
+
+<p>
+Next, you initialize the CORBA ORB and retrieve the reference to the NamingService.
+</p>
+<pre>
+CORBA::ORB_var orb;
+orb = CORBA::ORB_init(argc, argv);
+
+CORBA::Object_var poaObj = orb -> resolve_initial_references("RootPOA");
+PortableServer::POA_var rootPOA = PortableServer::POA::_narrow(poaObj);
+
+PortableServer::POAManager_var manager = rootPOA -> the_POAManager();
+
+CosNaming::NamingContext_var cxt;
+CORBA::Object_var	nS = orb->resolve_initial_references("NameService");
+cxt = CosNaming::NamingContext::_narrow(nS);
+</pre>
+
+<h2> OnlineViewer </h2>
+<p>
+Retrieve  OnlineViewer. 
+</p>
+<pre>
+OnlineViewer_var olv = getOnlineViewer(argc, argv);
+</pre>
+<p>
+In addition, the model is loaded by OnlineViewer.
+</p>
+<pre>
+olv->load(floor->name(), Model[0].c_str());
+olv->load(body->name(), Model[1].c_str());
+olv->clearLog();
+</pre>
+
+<h3> DynamicsSimulator</h3>
+<p>
+You prepare for the following function to retrieve a group of servers.
+</p>
+<pre>
+template &lt;typename X, typename X_ptr&gt;
+X_ptr checkCorbaServer(std::string n, CosNaming::NamingContext_var &cxt)
+{
+  CosNaming::Name ncName;
+  ncName.length(1);
+  ncName[0].id = CORBA::string_dup(n.c_str());
+  ncName[0].kind = CORBA::string_dup("");
+  X_ptr srv = NULL;
+  try {
+    srv = X::_narrow(cxt->resolve(ncName));
+  } catch(const CosNaming::NamingContext::NotFound &exc) {
+    std::cerr << n << " not found: ";
+    switch(exc.why) {
+    case CosNaming::NamingContext::missing_node:
+      std::cerr << "Missing Node" << std::endl;
+    case CosNaming::NamingContext::not_context:
+      std::cerr << "Not Context" << std::endl;
+      break;
+    case CosNaming::NamingContext::not_object:
+      std::cerr << "Not Object" << std::endl;
+      break;
+    }
+    return (X_ptr)NULL;
+  } catch(CosNaming::NamingContext::CannotProceed &exc) {
+    std::cerr << "Resolve " << n << " CannotProceed" << std::endl;
+  } catch(CosNaming::NamingContext::AlreadyBound &exc) {
+    std::cerr << "Resolve " << n << " InvalidName" << std::endl;
+  }
+  return srv;
+}
+</pre>
+<p>
+After getting the specified type from the NamingService, this is handled various exceptions. 
+Retrieve DynamicsSimulatorFactory using this function.
+</p>
+<pre>
+DynamicsSimulatorFactory_var dynamicsSimulatorFactory;
+dynamicsSimulatorFactory =
+  checkCorbaServer &lt;DynamicsSimulatorFactory, DynamicsSimulatorFactory_var&gt; ("DynamicsSimulatorFactory", cxt);
+
+if (CORBA::is_nil(dynamicsSimulatorFactory)) {
+  std::cerr << "DynamicsSimulatorFactory not found" << std::endl;
+}
+
+DynamicsSimulator_var dynamicsSimulator = dynamicsSimulatorFactory->create();
+</pre>
+
+<p>
+Here retrieve DynamicsSimulatorFactory, and then invoke DynamicsSimulator using the create method.
+Next, you initialize the DynamicsSimulator.
+</p>
+<pre>
+dynamicsSimulator->registerCharacter(floor->name(), floor);			    
+dynamicsSimulator->registerCharacter(body->name(), body);
+dynamicsSimulator->init(timeStep, DynamicsSimulator::RUNGE_KUTTA, DynamicsSimulator::ENABLE_SENSOR);
+</pre>
+<p>
+The model of a floor and a robot is registered into DynamicsSimulator. 
+The time of every step of the simulation, the difference method, 
+the activation/deactivation of the sensor are set in the init method. 
+The DynamicsSimulator::EULER that uses the Euler method and the DynamicsSimulator::RUNGE_KUTTA 
+that uses the Runge-Kutta method in the difference method. There are the DynamicsSimulator::ENABLE_SENSOR 
+for activation and the DynamicsSimulator::DISABLE_SENSOR for deactivation in the sensor.
+</p>
+<p>
+Next, set the gravity vector.
+</p>
+<pre>
+DblSequence3 g;
+g.length(3);
+g[0] = 0.0;
+g[1] = 0.0;
+g[2] = world_gravity;
+dynamicsSimulator->setGVector(g);
+</pre>
+<p>
+Next, decide an initial posture of the robot.
+</p>
+<pre>
+Vector3  waist_p;
+Matrix33 waist_R;
+waist_p = 0, 0, 0.7135;
+waist_R = tvmet::identity&lt;Matrix33&gt;();
+DblSequence trans;
+trans.length(12);
+for(int i=0; i<3; i++) trans[i]   = waist_p(i);
+for(int i=0; i<3; i++){
+	for(int j=0; j<3; j++) trans[3+3*i+j] = waist_R(i,j);
+}
+dynamicsSimulator->setCharacterLinkData( body->name(), "WAIST", DynamicsSimulator::ABS_TRANSFORM, trans );
+</pre>
+<p>
+decide an initial angle of the joint.
+</p>
+<pre>
+DblSequence angle;
+angle.length(29);
+angle[0] = 0.0;         angle[1] = -0.0360373;  angle[2] = 0.0;         angle[3] = 0.0785047;
+angle[4] = -0.0424675;  angle[5] = 0.0;         angle[6] = 0.174533;    angle[7] = -0.00349066;
+angle[8] = 0.0;         angle[9] = -1.5708;     angle[10] = 0.0;        angle[11] = 0.0;
+angle[12] = 0.0;        angle[13] = 0.0;        angle[14] = -0.0360373; angle[15] = 0.0;
+angle[16] = 0.0785047;  angle[17] = -0.0424675; angle[18] = 0.0;        angle[19] = 0.174533;
+angle[20] = -0.00349066;angle[21] = 0.0;        angle[22] = -1.5708;    angle[23] = 0.0;
+angle[24] = 0.0;        angle[25] = 0.0;        angle[26] = 0.0;        angle[27] = 0.0;
+angle[28] = 0.0;
+dynamicsSimulator->setCharacterAllLinkData( body->name(), DynamicsSimulator::JOINT_VALUE, angle );
+</pre>
+<p>
+Calculate the forward kinematics once to reflect the posture after setting.
+</p>
+<pre>
+dynamicsSimulator->calcWorldForwardKinematics();
+</pre>
+<p>
+Next, register the collision detection pairs. The collision detection pairs registered here will be done. 
+This pairs the robot with the floor.
+</p>
+<pre>
+DblSequence6 K, C;    
+K.length(0);
+C.length(0);
+dynamicsSimulator->registerCollisionCheckPair(floor->name(),"", body->name() ,"",
+		                                            statFric,slipFric,K,C,culling_thresh);
+</pre>
+<p>
+
+Finally, invoke the initSimulation method.
+</p>
+<pre>
+dynamicsSimulator->initSimulation();
+</pre>
+
+
+
+<h2> Controller </h2>
+<p>
+Controller is acquired by using each Controller name.
+</p>
+<pre>
+Controller_var controller;
+controller = checkCorbaServer &lt;Controller, Controller_var&gt; ("SamplePDController", cxt);
+
+if (CORBA::is_nil(controller)) {
+   std::cerr << "Controller not found" << std::endl;
+}
+</pre>
+<p>
+In this case, Controller named PDcontroller is acquired.
+Initialize the Controller.
+</p>
+<pre>
+controller->setModelName(body->name());
+controller->setDynamicsSimulator(dynamicsSimulator);
+controller->initialize();
+controller->setTimeStep(controlTimeStep);
+</pre>
+<p>
+You start it at the end.
+</p>
+<pre>
+controller->start();
+</pre>
+
+<h2> Simulation loop </h2>
+<p>This is a turned loop when an actual simulation is executed. This simulation loop consists of as follow.
+</p>
+<ol>
+<li>Invoke Controller::input（Robot data is inputted into Controller from DynamicsSimulator. ）</li>
+<li>Invoke Controller::control（Calculation of the output value of Controller ）</li>
+<li>Invoke DynamicsSimulator::stepSimulation　(One step of a simulation）</li>
+<li>Invoke DynamicsSimulator::getWorldState (Read-out of a simulation result )</li>
+<li>Update OnlineViewer　（update OnlineViewer)</li>
+<li>Invoke Controller::output (A control value is outputted to DynamicsSimulator from Controller. ）</li>
+</ol>
+
+<p>
+The code is described as follows:
+</p>
+<pre>
+bool control=false;
+if(controlTime <= time){
+    control=true;
+    j++;
+}
+
+if(control)
+    controller->input();
+
+i++;
+time = timeStep * i;
+controlTime = controlTimeStep * j;
+
+if(control)
+    controller->control();
+               
+// ================== simulate one step ==============
+dynamicsSimulator->stepSimulation();					    
+              
+// ================== viewer update ====================
+try {
+    dynamicsSimulator -> getWorldState( state );
+    olv->update( state );
+} catch (CORBA::SystemException& ex) {
+    return 1;
+}
+
+// ===================== get robot status ===================
+DblSequence_var waist_pR;  // position and attitude
+DblSequence_var waist_vw;  // linear and angular velocities
+dynamicsSimulator->getCharacterLinkData(body->name(), "WAIST", DynamicsSimulator::ABS_TRANSFORM, waist_pR);
+dynamicsSimulator->getCharacterLinkData(body->name(), "WAIST", DynamicsSimulator::ABS_VELOCITY,  waist_vw);
+
+// ================== log data save =====================
+log_file << time << " ";
+log_file << waist_vw[2] << " ";
+log_file << endl;
+
+if(control)
+    controller->output();
+
+if( time > EndTime ) break;
+</pre>
+
+<h2> Execution </h2>
+<ol>
+<li>Start GrxUI. </li>
+<li>Execut OpenHRP/sample/controller/SamplePD/SamplePD.sh (.bat) from a command line.</li>
+<li>Execut OpenHRP/sample/example/scheduler/scheduler.sh (.bat) from a command line.</li>
+</ol>
+<p>
+In the case of Windows, please add (OpenHRP3)/bin to PATH. 
+</p>
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

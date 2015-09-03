@@ -1,0 +1,456 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>GrxUIを用いたモデル作成</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">GrxUIを用いたモデル作成</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>GrxUIを用いたモデル作成</h2>
+<p>
+GrxUIを用いてOpenHRPで使用可能なVRMLモデルを作成する方法を説明します。
+（注意：以下のスクリーンショットと実際の画面では表示される内容が多少異なる場合があります。）
+</p>
+
+<h3>準備するもの</h3>
+<p>
+以下のデータを準備して下さい。
+<ul>
+<li>各リンクの質量、リンク原点相対での重心位置、重心まわりの慣性マトリクス、形状データ。形状データはCAD等から出力した通常の（OpenHRPによる拡張が施されていない）VRML97形式のファイルとしてご用意下さい。</li>
+<li>各リンクの位置関係</li>
+<li>各センサの取り付け位置、姿勢</li>
+</ul>
+</p>
+
+<h3>モデル作成の開始</h3>
+
+<p>
+GrxUIのアイテムビューに表示されている、Modelアイテムを右クリックし、createメニューを選択します。
+</p>
+<p align=center>
+<img src="../img_new/me_create_robot.png">
+</p>
+<p>
+以下のようにロボット（ロボットのアイコン）とそのルートとなるリンク（関節を表すアイコン）が一つ作成されます。
+</p>
+<p align=center>
+<img src="../img_new/me_create_robot2.png">
+</p>
+
+<h3>ツリーの作成</h3>
+<p>
+リンクアイテムを右クリックすると、以下のようなメニューが表示されます。"add joint", "add sensor", "add segment"を選択することでこのリンクの子となるリンク、このリンクに取り付けられているセンサ、このリンクのセグメントデータをそれぞれ設定することができます。また"add robot"を選択することで、既に作成されたモデルファイルを読み込むことができます。
+</p>
+<p align=center>
+<img src="../img_new/me_create_child.png">
+</p>
+これらのメニューを選択して必要なアイテムを追加していくことでロボットのツリーを作成していきます。
+
+<h4>子リンクの追加</h4>
+<p>
+リンクの右クリックで出てくるメニューから"add joint"を選択すると、下のようなダイアログが出てきますので子リンクの名前を入力し、OKを押してください。
+</p>
+<p align=center>
+<img src="../img_new/me_add_joint.png">
+</p>
+
+<h4>センサの追加</h4>
+<p>
+リンクの右クリックで出てくるメニューから"add sensor"を選択すると、下のようなダイアログが出てきますのでセンサの名前を入力し、OKを押してください。
+</p>
+<p align=center>
+<img src="../img_new/me_add_sensor.png">
+</p>
+
+<h4>セグメントの追加</h4>
+<p>
+リンクの右クリックで出てくるメニューから"add segment"を選択すると、下のようなダイアログが出てきますのでセグメントの名前を入力し、OKを押してください。
+</p>
+<p align=center>
+<img src="../img_new/me_add_segment.png">
+</p>
+
+<h4>ロボットの追加</h4>
+<p>
+リンクの右クリックで出てくるメニューから"add robot"を選択すると、ファイルダイアログが出てきますのでファイルを選択してください。<br>
+ファイルは、OpenHRP3のモデル記述方式に従って定義されている必要があります。読み込んだファイルのルートリンクを選択したリンクの子リンクとして追加します。<br>
+読み込んだファイルのルートリンクのjointTypeが"free"になっていると正しくシミュレーションが行えません。以下に説明するプロパティの設定で、必ず"fixed"等、別のタイプに書き換えてください。
+</p>
+
+<h3>形状の追加</h3>
+<p>
+セグメントアイテム、センサアイテムを右クリックすると、以下のようなメニューが表示されます。"add shape from VRML97", "add primitive shape"を選択することで形状データを追加します。
+<p align=center>
+<img src="../img_new/me_add_shape.png">
+</p>
+
+<h4>VRMLファイルによる形状の追加</h4>
+<p>
+"add shape from VRML97"を選択すると、ファイル選択ダイアログが出てきますので、あらかじめ用意した形状データが記録されたVRML97ファイルを選択し、OKを押してください。
+</p>
+
+<h4>プリミティブ形状の追加</h4>
+<p>
+"add primitive shape"を選択すると、さらにBox", "Cone", "Cylinder", "Sphere"のメニューが表示されます。いずれかを選択することで，直方体，円錐，円筒，球といったプリミティブ形状を追加することができます。
+</p>
+<p align=center>
+<img src="../img_new/me_add_primitive_shape.png">
+</p>
+
+<h3>プロパティの入力</h3>
+
+<p>
+リンク、センサ各アイテムを選択すると、Property Viewにそのプロパティが表示されますので、最初に準備したロボットの様々なパラメータを入力していきます。全てのプロパティはSI単位系です。
+</p>
+
+<h4>リンクのプロパティ</h4>
+
+<p>
+各リンクは下図のようなプロパティを持っています。
+</p>
+
+<p align=center>
+<img src="../img_new/me_joint_property.png">
+</p>
+
+<p>
+translation, rotationはこのリンクの親リンクに対する位置、姿勢です。translationには親座標系でのx,y,z方向の各並進量、rotationには親リンクに対する姿勢の回転ベクトル3要素と回転角度の合計4要素を設定します。この位置、姿勢の表現はセンサ、形状に関しても同様です。なお，translation等いくつかのプロパティは表示が煩雑になるのを防ぐために，小数点以下の桁数を制限しています。<br><br>
+centerOfMass, inertia, massはそれぞれこのリンクの重心位置、重心まわりの慣性マトリクス、質量です。ItemView上でリンクアイテムが選択されている時，これらの質量特性の値に応じた楕円体が半透明のオレンジ色で表示されます。これらの値は、編集できません。セグメントアイテムのプロパティで編集します。<br><br>
+encoderPulse, rotorResistor, torqueConstはそれぞれ、モータが1回転したときにエンコーダが出力するパルス数、ロータ抵抗、トルク定数ですが、これらはコントローラが使用する目的で定義されているもので、シミュレーションでは使用されません。<br><br>
+gearRatio, rotorInertiaはこのリンクが親リンクに対して接続されている関節のギヤ比とモータの慣性です。関節をトルク制御する場合にはこれらのパラメータを適切に設定しないと安定にシミュレーションすることが困難になります。<br><br>
+jointAxis, jointId, jointTypeは関節軸の向き、関節番号、関節のタイプです。関節軸の向きはこのリンクの座標系での表現で指定します。関節番号は全関節の情報を並べてベクトルを作る際に、このリンクの情報を何番目に入れるかを指定します。従って番号が重複しないように設定する必要があります。関節のタイプは自由関節(free)、回転関節(rotate)、並進関節(slide)、固定関節(fixed)から選択します。<br><br>
+llimit, ulimit, lvlimit, uvlimitはそれぞれこの関節の可動範囲最小値、可動範囲最大値、速度最小値、速度最大値です。これらもコントローラでの使用を想定したパラメータでシミュレーションでは使用しません。
+</p>
+
+<h4>センサのプロパティ</h4>
+
+<p>
+各センサは下図のようなプロパティを持っています。<br>
+typeはセンサのタイプです。加速度センサ(Acceleration)、角速度センサ(Gyro)、力／トルクセンサ(Force)、カメラ(Vision)から選択します。<br>
+translation, rotationにはこのセンサが取り付けられているリンクに対する相対位置、姿勢を設定します。
+</p>
+<p align=center>
+<img src="../img_new/me_sensor_property.png">
+</p>
+
+<h4>セグメントのプロパティ</h4>
+
+<p>
+各セグメントは下図のようなプロパティを持っています。<br>
+centerOfMass, inertia, massはそれぞれこのセグメントの重心位置、重心まわりの慣性マトリクス、質量です。<br>
+translation, rotationにはこのセグメントのリンクに対する相対位置、姿勢を設定します。
+</p>
+<p align=center>
+<img src="../img_new/me_segment_property.png">
+</p>
+
+<h4>形状のプロパティ</h4>
+
+<p>
+各形状は下図のようなプロパティを持っています。<br>
+translation, rotationにはこの形状が属するリンクに対する相対位置、姿勢を設定します。
+</p>
+<p align=center>
+<img src="../img_new/me_shape_property.png">
+</p>
+プリミティブ形状の場合は、形状に応じたプロパティを持っていますので、サイズや色などの編集が可能です。
+
+<h3>モデルの保存</h3>
+
+<p>
+ツリーのトップにあるロボットアイテムを右クリックすると下のようなメニューが表示されます。ここで"save as"を選択するとファイル選択ダイアログが出てきますので、モデルを保存したい場所、ファイル名を指定してOKボタンを押してください。作成したモデルがOpenHRPで使用可能なVRML97形式で保存されます。
+</p>
+<p align=center>
+<img src="../img_new/me_save.png">
+</p>
+
+<h3>注意点・制限事項</h3>
+
+<ul>
+
+<li> 現状各種プロパティはプロパティビューを用いて入力するようになっていますが、プロパティビューでは本来入力できる値を制限すべきような場合であっても何でも入力できてしまい、それに気づかずにシミュレーションしようとするとエラーが発生します（例えば本来数値を入力すべきところに文字列等が入力できてしまう）。将来的にはプロパティを入力するための専用のビューを作成し、このような問題が発生しないようにする予定ですが、それまでは入力の内容にはご注意下さい。</li>
+
+<li>モデルを編集した後で、そのままシミュレーションを開始することはできません。一旦VRMLファイルにモデルを保存し、再度そのモデルを読み込んで下さい。</li>
+
+</ul>
+
+<h2>モデル作成チュートリアル</h2>
+
+ここではsample/model/simple_vehicleディレクトリに収録されている、車輪型ロボットを例にしてモデルの作成方法を順を追って解説します。
+
+<p align=center>
+<img src="../img_new/me_simple_vehicle.png">
+</p>
+
+<ol>
+<li>形状データを準備します。ロボットは車体と3つの車輪、カメラから構成されますが、車輪は3つとも同じ形状なので、3種類の形状データを用意します。車体、車輪、カメラがそれぞれbody.wrl, wheel.wrl, camera.wrlというファイル名で保存されていることとします。リンク，センサ，形状をItemView上で選択すると，下図のように赤，緑，青の３色の線分で構成される座標系が表示されます。この座標系の原点がこのアイテムの位置，赤，緑，青の3軸がそれぞれX軸，Y軸，Z軸を表します。
+<p align=center>
+<img src="../img_new/me_body.png">
+<img src="../img_new/me_wheel.png">
+<img src="../img_new/me_camera.png">
+</p>
+</li>
+<li>まずアイテムビューのモデルアイテムのフォルダを右クリックしてcreateメニューを選択し、モデルアイテムを作成します。
+<p align=center>
+<img src="../img_new/me_create_robot.png">
+<img src="../img_new/me_create_robot2.png">
+</p>
+</li>
+
+<li>モデルの名前は自動的に生成されますが、わかりやすいようにここではsimple_vehicleに変更します。生成されたnewmodel0を右クリックしてrenameメニューを選択します。名前を入力するダイアログが表示されますので、simple_vehicleに書き換えます。
+<p align=center>
+<img src="../img_new/me_rename_robot.png">
+<img src="../img_new/me_rename_robot2.png">
+</p>
+</li>
+
+<li>作成されたrootリンクを右クリックしてメニューからadd segmentを選択し、root_segmentと名前を付けます。さらにこのセグメントを右クリックしてメニューからadd shape fromVRML97を選択します。ファイル選択ダイアログが表示されますので、車体の形状データである、simple_vehicle/body.wrlを選択します。するとbody.wrlがロードされ3DViewに表示されます。
+<p align=center>
+<img src="../img_new/me_select_add_segment.png">
+<img src="../img_new/me_select_add_shape.png">
+<img src="../img_new/me_body.png">
+<img src="../img_new/me_create_body.png">
+</p>
+
+</li>
+
+<li> 次に車体に固定されたセンサであるカメラを作成します。rootリンクを右クリックしてメニューからadd sensorを選択します。センサ名を入力するダイアログが表示されますので、ここでは"Camera"と入力します。
+<p align=center>
+<img src="../img_new/me_add_sensor1.png">
+<img src="../img_new/me_add_sensor2.png">
+</p>
+</li>
+
+<li>センサはデフォルトで力センサとして作成されますので、まずはセンサのタイプをVisionに変更します。Cameraを選択し、プロパティビューでtypeをVisionに変更して下さい。
+
+センサは親リンクの原点位置に作られますので、このままではカメラは車体に埋もれてしまいます。そこでCameraを選択し、プロパティビューで位置(translation)と姿勢(rotation)をそれぞれ(0.0 -0.3 0.1), (0 0.7071 0.7071 3.1415)に変更します。
+
+またidを0に変更します。
+
+<p align=center>
+<img src="../img_new/me_change_sensor_type.png">
+<img src="../img_new/me_change_sensor_type2.png">
+</p>
+</li>
+
+<li> センサには形状を持たせることもできます。Cameraを右クリックしてメニューからadd shape from VRML97を選択します。ファイル選択ダイアログが表示されますので、カメラの形状データであるcamera.wrlを選択します。
+<p align=center>
+<img src="../img_new/me_add_camera_shape.png">
+<img src="../img_new/me_add_camera_shape2.png">
+</p>
+</li>
+
+<li>現在は車体が半分地面に埋もれているので、rootのプロパティのtranslationを(0.0 0.0 0.1)として地面から浮かせます。またroot_segmentのプロパティの車体の重量(mass)、慣性マトリクス(inertia)をそれぞれ10.0、(0.1 0.0 0.0 0.0 0.1 0.0 0.0 0.0 0.5)とします。
+<p align=center>
+<img src="../img_new/me_root_property.png">
+<img src="../img_new/me_root_segment_property.png">
+<img src="../img_new/me_root.png">
+</p>
+</li>
+
+
+<li>
+車体(root)には右後輪、左後輪、ステアリングという3つのリンクが接続していますので、rootを右クリックしてメニューからadd jointを選択し、それぞれ名前をWheelR, WheelL, Steeringとして追加します。
+<p align=center>
+<img src="../img_new/me_add_joints.png">
+</p>
+</li>
+
+<li>ステアリングの先にさらに前輪がつきますのでSteeringの右メニューからadd jointを選択してWheelCを追加します。
+<p align=center>
+<img src="../img_new/me_add_wheelc.png">
+</p>
+</li>
+
+<li>
+Steering,WheelC, WheelR, WheelLにセグメントを追加します。
+<p align=center>
+<img src="../img_new/me_add_segments.png">
+</p>
+</li>
+
+<li>
+WheelC, WheelR, WheelLは全てwheel.wrlに定義された同じ形状ですので、右クリックメニューからadd shape from VRML97で形状を追加します。
+<p align=center>
+<img src="../img_new/me_final_tree.png">
+<img src="../img_new/me_add_wheels.png">
+</p>
+</li>
+
+<li>
+Steering, Steering_segment, WheelC, WheelC_segment, WheelR, WheelR_segment, WheelL, WheelL_segmentのプロパティをそれぞれ下図のように設定すれば完成です。
+<p align=center>
+<img src="../img_new/me_steering_property.png">
+<img src="../img_new/me_steering_segment_property.png">
+</p>
+<p align=center>
+<img src="../img_new/me_wheelc_property.png">
+<img src="../img_new/me_wheelc_segment_property.png">
+</p>
+<p align=center>
+<img src="../img_new/me_wheelr_property.png">
+<img src="../img_new/me_wheelr_segment_property.png">
+</p>
+<p align=center>
+<img src="../img_new/me_wheell_property.png">
+<img src="../img_new/me_wheell_segment_property.png">
+</p>
+</li>
+
+<li>
+最後に作成したモデルをVRML97形式のファイルに保存します。simple_vehicleを右クリックし、メニューからsave asを選択します。ファイルを選択するダイアログが表示されますので、お好みの場所にディレクトリを移動し、ファイル名を入力して下さい。
+</li>
+</ol>
+
+<h2>モデルの結合</h2>
+<p>
+一台の車輪型ロボットが作成できたので、同じロボットをもう一台連結したロボットを作成してみましょう。
+</p>
+<ol>
+<li　>
+一台目のロボットのルートリンクを選択して右クリックメニューからadd robotを選択します。保存したファイルを選択すると、もう一台のロボットが重なって表示されます。
+<p align=center>
+<img src="../img_new/me_add_robot.png">
+<img src="../img_new/me_add_robot1.png">
+</p>
+</li>
+
+<li>
+２台目のロボットのルートリンクのプロパティを書き換えます。まず、ルートリンクのタイプをfixedにします。
+次に、translationの値を調節して、ロボットが重ならないようにすれば、出来上がりです。ファイルに保存してください。
+<p align=center>
+<img src="../img_new/me_add_robot_property.png">
+<img src="../img_new/me_add_robot_final.png">
+
+</p>
+</li>
+</ol>
+
+
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

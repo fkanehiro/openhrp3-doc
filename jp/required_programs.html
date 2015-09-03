@@ -1,0 +1,446 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>OpenHRPのコンパイル/実行に必要なソフトウェア</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">OpenHRPのコンパイル/実行に必要なソフトウェア</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>概要</h2>
+
+<p>
+OpenHRPをコンパイル・実行させるにあたっては、下記のソフトウェアが必要です。<br>
+これらはOpenHRP本体のパッケージには含まれませんので、別途インストールし、
+システムにおいて利用可能な状態にしておく必要があります。<br>
+ただし、Eclipse関連は<a href="./download.html#all_in_one">全部入りパッケージ</a>を用意いたしましたのでそちらを利用するほうが簡便です。
+</p>
+
+<ul>
+   <li>ミドルウェア
+    <ul>
+     <li>OpenRTM</li>
+     <li>omniORB</li>
+    </ul>
+   </li>
+
+   <li>Java関連
+    <ul>
+     <li>Java Development Kit (JDK)</li>
+    </ul>
+   </li>
+
+   <li>C++開発ツール
+    <ul>
+     <li>CMake</li>
+     <li>Linux:   GCC,Make等</li>
+     <li>Windows: Visual C++</li>
+    </ul>
+
+   <li>C++ライブラリ
+    <ul>
+     <li>Boost</li>
+     <li>Lapack</li>
+     <li>Eigen</li>
+     <li>Collada dom</li>
+    </ul>
+   </li>
+
+   <li>Python 関連
+    <ul>
+     <li>Jython</li>
+    </ul>
+   </li>
+
+   <li>Eclipse関連
+    <ul>
+     <li>Eclipse</li>
+     <li>Java3D-eclipse plugin</li>
+    </ul>
+   </li>
+</ul>
+
+<p>
+それぞれ配布先の説明に従ってインストールしてもよいですし、
+OSに装備されたパッケージシステムなどが利用できる場合は、
+それを利用してインストールしてもOKです。
+</p>
+
+<p>
+以下では各ソフトウェアの概要と配布先について説明します。
+</p>
+<br>
+
+
+<h2>Java関連</h2>
+
+<p>
+OpenHRPではGrxUIなど一部のコンポーネントがJavaで記述されており、
+それらをコンパイル・実行させるためのJava環境が必要になります。
+<p>
+
+<h3>Java Development Kit (JDK)</h3>
+
+Java開発・実行環境です。
+
+<ul>
+ <li>配布先 : <a href="http://java.sun.com" target="_blank">http://java.sun.com/</a></li>
+ <li>Java SE のダウンロードページからダウンロードできます。</li>
+ <li>JDK6にて対応を確認。</li>
+</ul>
+
+<h2>ミドルウェア</h2>
+
+<p>
+OpenHRPは分散コンポーネントシステムとして設計されており、
+これを動作させる基盤となるミドルウェアが必要となります。
+</p>
+
+<h3>OpenRTM-aist</h3>
+
+<p>
+ロボットのシステム構築のために設計された、分散コンポーネントミドルウェアです。
+OpenHRPでは、OpenRTMの産総研による実装であるOpenRTM-aistのC++版を利用します.
+</p>
+
+<ul>
+ <li>配布先 : <a href="http://www.openrtm.org/openrtm/" target="_blank">http://www.openrtm.org/openrtm/</a></li>
+ <li>バージョン1.0.0-RELEASE</li>
+ <li>バージョン1.1.0-RELEASE</li>
+</ul>
+<p>
+<span style="color: red">※ OpenHRP Ver.3.1.0 &beta;4 以降では、OpenRTM-aist 0.4以前のバージョンは公式サポートしておりません。</span>
+</p>
+
+<h3>omniORB</h3>
+
+<p>
+OpenHRPはミドルウェアとしてCORBAも利用しており、
+このためにomniORBというCORBAの実装が必要となります。
+</p><p>
+ただしomniORBはOpenRTM-aistも利用しているため、
+OpenRTM-aistのインストールが正しく行われれば、omniORBも利用可能な状態となっているはずです。
+</p>
+<ul>
+ <li>配布先 : <a href="http://omniorb.sourceforge.net/" target="_blank">http://omniorb.sourceforge.net/</a></li>
+ <li>4.1系列と4.0系列とに対応。</li>
+ <li>4.0系列は4.0.7以降が使用可能。</li>
+ <li>今後は4.1系列を推奨</li>
+</ul>
+<br>
+
+
+<h2>C++ 開発ツール</h2>
+
+<p>
+OpenHRPのコンポーネントのいくつかはC++言語で記述されていますので、
+OpenHRPをソースからコンパイルする際にはC++の開発ツールが必要となります。
+また、ユーザが独自のシミュレーションを行う際に記述するコントローラコンポーネントも
+C++で記述することができます。
+</p>
+
+<h3>Linux の場合</h3>
+
+OpenHRPをコンパイル可能であることが確認されているコンパイラは以下のとおりです。
+
+<ul>
+ <li>GCC : 3.3, 4.1, 4.2</li>
+</ul>
+
+<p>
+コンパイラと合わせて、make などのコマンドライン開発ツールも使用可能な状態としてください。
+</p>
+
+<h3>Windows の場合</h3>
+
+<p>
+Windowsにおいては Visual C++ を使用します.
+現在使用可能なバージョンは  Visual C++ 2010, Visual C++ 2008 になります。
+製品版はもちろん、無償配布されている Express Edition も使用可能です。
+(OpenHRP バージョン 3.0.0 より、2005のサポートは打ちきりました。今後は2010をお使いください。)
+</p>
+<br>
+
+
+<h2>C++ ライブラリ</h2>
+
+<h3>Boost ライブラリ</h3>
+
+<p>
+C++のライブラリ集です。
+標準ライブラリで不足な点を補う豊富な機能を提供しています。
+</p>
+
+<ul>
+ <li>配布先 : <a href="http://www.boost.org/" target="_blank">http://www.boost.org/</a></li>
+ <li>バージョン 1.40 以降で対応を確認。</li>
+</ul>
+
+
+<h3>LAPACK</h3>
+
+<p>
+線形代数のための定番ライブラリで、
+比較的規模の大きな行列・ベクトル演算の際に利用されます.
+</p>
+
+<p>
+LAPACKはいくつかの実装があり、
+OpenHRPでは以下の実装に対応しています。
+<ol>
+
+ <li>Fortranで記述されたオリジナル版LAPACK
+  <ul>
+   <li>配布先 : <a href="http://www.netlib.org/lapack" target="_blank">http://www.netlib.org/lapack/</a></li>
+   <li>バージョン 3.1 以降推奨。</li>
+  </ul>
+ </li>
+
+ <li>C言語に変換されたCLAPACK
+  <ul>
+   <li>配布先 : <a href="http://www.netlib.org/clapack/index.html" target="_blank">http://www.netlib.org/clapack/</a>)</li>
+  </ul>
+ </li>
+
+ <li>Atlas</li>
+</ol>
+
+<p>
+1のオリジナル版Lapackは多くのLinuxディストリビューションで
+パッケージシステムによりインストール可能です。
+ただし、現在のところ東大版動力学サーバはオリジナル版には対応していません。
+東大版動力学サーバを使いたい場合は、2か3のLAPACK実装を使ってください.
+</p>
+
+<p>
+2のCLAPACKはソースがC言語なので、オリジナル版よりも扱いやすい点があります。
+ただし多くのLinuxディストリビューションにおいてLAPACKのパッケージはオリジナル版であり、
+CLAPACKを使う際にはソースからのコンパイルが必要となります。
+一方、Windowsに関してはバイナリ版も配布されており、
+それを展開することでオリジナル版よりも簡単にインストールすることができます。
+従って、Windowsで動かす場合や、東大版動力学サーバを動かしたい場合に、
+CLAPACKを用います。
+</p>
+
+<p>
+3のAtlasはC言語で記述されたより先進的な実装のようです。
+動力学サーバは東大版、産総研版ともに対応しています。
+Ubuntuなど、一部のLinuxディストリビューションでは
+パッケージシステムによるインストールも可能です。
+</p>
+
+<h3>Eigen</h3>
+<p>C++の行列・ベクトル演算ライブラリです. </p>
+<ul>
+ <li>配布先 : <a href="http://eigen.tuxfamily.org/index.php" target="_blank">http://eigen.tuxfamily.org/index.php</a></li>
+ <li>バージョン 3.0 にて対応を確認。</li>
+</ul>
+
+<h3>Collada DOM</h3>
+<ul>
+ <li>配布先 : <a href="http://collada.org/" target="_blank">http://collada.org/</a></li>
+ <li>バージョン 2.3 にて対応を確認。</li>
+</ul>
+
+<h2>Python関連</h2>
+
+<h3>Jython</h3>
+
+<p>
+Javaで記述されたPython言語の実装です。
+シミュレーションのスクリプト記述や、GUIの拡張に利用可能です.
+</p>
+
+<ul>
+ <li>配布先 : <a href="http://www.jython.org/" target="_blank">http://www.jython.org/</a></li>
+ <li>バージョン 2.2.1 にて対応を確認。</li>
+</ul>
+<br>
+
+
+<h2 id="eclipse">Eclipse関連</h2>
+
+<h3>Eclipse</h3>
+<p>
+Eclipseは統合開発環境（IDE）です。
+</p>
+<ul>
+ <li>配布先 : <a href="http://www.eclipse.org/" target="_blank">http://www.eclipse.org/</a></li>
+ <li>バージョン3.4.2にて対応を確認。</li>
+</ul>
+
+<h3>RTCSystemEditor・RTCBuilder</h3>
+<p>
+RTCコンポーネントの作成と操作を行うEclipse用プラグインです。
+</p>
+<ul>
+ <li>配布先 : <a href="http://www.openrtm.org/openrtm/ja/content/%E3%83%84%E3%83%BC%E3%83%AB-0" target="_blank">OpenRTM-aistのダウンロードページ</a></li>
+ <li>バージョン 1.0.0 にて対応を確認。</li>
+ <li>バージョン 1.1.0 にて対応を確認。</li>
+</ul>
+
+<h3 id="java3d_plugin">Java3D-eclipse plugin</h3>
+
+<p>
+Java3DのEclipse用プラグインです。
+<a href="./download.html#all_in_one">Eclipse 全部入りパッケージ</a>には導入済みです。<br>
+Eclipse 環境で Java3D を使ったグラフィックスプログラムを動作可能とします。
+</p>
+<ul>
+  <li>配布先 : <a href="http://sourceforge.net/project/showfiles.php?group_id=186307" target="_blank">Java3D-eclipse plugin</a></li>
+  <li>バージョン 20090302 にて対応を確認。</li>
+  <li>
+    インストール方法
+    <ul>
+      <li>
+        Eclipse 3.2の場合<br>
+        メニューから"ヘルプ"→"ソフトウエア更新"→"検索およびインストール"を選択します。<br>
+        "インストールする新規フィーチャーを検索"を選択し、"次へ"ボタンを押します<br>
+        "新規アーカイブ・サイト"ボタンを押し、ダウンロードしたjava3declipse-20090302.zipを選択します。<br>
+        "ローカル・サイトの編集"ダイアログが表示されるので"OK"ボタンを押します。<br>
+        "検索に含めるサイト"の一覧にチェック付きで追加されたのを確認し、"終了"ボタンを押します。<br>
+        "インストールするフィーチャーの選択"でjava3declipse-20090302.zipを選択し、"次へ"ボタンを押します<br>
+        使用条件を読み、"使用条件の条項に同意します"を選択し、"次へ"ボタンを押します。<br>
+        インストールのロケーションはデフォルトのまま"終了"ボタンを押します。<br>
+        "検査"のダイアログが表示されますので、"すべてインストール"ボタンを押します。<br>
+        Eclipseの再始動を求められたら、再始動します。<br><br>
+      </li>
+      <li>
+        Eclipse 3.4の場合<br>
+        メニューから"ヘルプ"→"ソフトウエア更新"→"ソフトウェア更新およびアドオン"ダイアログを開きます。<br>
+        "使用可能なソフトウェア"タブ・ウィンドウを選択し、"サイトの追加"ボタンを押して、"サイトの追加ダイアログ"を開きます。<br>
+        "アーカイブ"ボタンを押し、ダウンロードしたjava3declipse-20090302.zipを選択します。<br>
+        "使用可能なソフトウェア"タブ・ウィンドウにチェックボックス付きリストツリーがで追加されるのでチェックして"インストール"ボタンを押します。<br>
+        "インストール"ダイアログが開きますが特にチェック項目を変更することなく"次へ"ボタンを押します<br>
+        使用条件を読み、"使用条件の条項に同意します"を選択し、"次へ"ボタンを押します。<br>
+        Eclipseの再始動を求められたら、再始動します。<br><br>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

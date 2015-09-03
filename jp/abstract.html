@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>シミュレーションの概要</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">シミュレーションの概要</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>OpenHRP の構成 </h2>
+<p>
+OpenHRPはネットワークで分散されているソフトウェアであり、以下にあげられるサーバ群からなります．ただしこれらのサーバに対する各種操作はOpenHRPの標準GUIフロントエンドであるGrxUIが行いますので，通常の利用ではユーザはこれらのサーバ群の存在を意識する必要はありません．
+</p>
+
+<h3> サーバ </h3>
+<h4> DynamicsSimulator </h4>
+<p>
+Dynamics Simulatorはリンク系の順動力学を計算し、得られた関節加速度を積分して関節速度、関節値を更新
+します。任意の開リンク機 構、閉リンク機構を扱うことが出来ます。また、リンク間の干渉が発生すると、
+それらの間に相対速度がある場合は衝突計算により相対速度をなくした後、相対加速度が発生しないために必要
+な接触力を計算します。動力学計算の結果の一部はセンサ出力として取り出すことが出来ます。
+</p>
+
+<h4> CollisionDetector </h4>
+<p>
+CollisionDetectorサーバは、トライアングルメッシュとして表現された幾何モデルを用いてロボットと環境との接触の検出を行います。シミュレーション実行時に
+DynamicsSimulatorサーバから呼ばれます。干渉チェックアルゴリズムは
+<a href="http://www.codercorner.com/Opcode.htm" target="_blank">OPCODE</a>を使用しています。DynamicsSimulatorサーバ
+のユーザが、CollisionDetectorを直接呼ぶ必要性はありません。DynamicsSimulatorから呼び出され、接触計算および
+反力のベクトル計算を行います。
+</p>
+
+<h4> ModelLoader </h4>
+<p>
+   ロボットの機構や形状のモデルを記述したモデルファイルを読み込むためのサーバです。
+   テキスト記述されたモデルファイルをパースし、プログラム上扱いやすいデータ構造として提供します。
+   システム全体に渡って利用されます。
+</p>
+
+<h4> VisionSimulator </h4>
+<p>
+VisionSimulatorサーバは、ロボットに取り付けられている視覚センサ(カメラ)のシミュレーションを行います。
+</p>
+
+<h4> Controller </h4> 
+<p>
+   ロボットの制御プログラムを実装するサーバです。
+   シミュレーションにおいて各ロボットに関連づけて利用されます。
+   ユーザはこのControllerを開発することで、独自の制御プログラムをシミュレーションすることが可能となります。
+</p>
+
+<h3> CORBA </h3>
+<p>
+OpenHRPはCORBA(Common Object Request Broker Architecture)を用いた分散オブジェクトシステムを実現して
+います。OpenHRPは全てのサーバがCORBAオブジェクトとして実装されているので、それぞれのサーバを別々の
+マシンで走らせて計算負荷を分散させることが可能です。また、サーバ間の通信をCORBAで行うため、OpenHRP
+はプラットフォーム独立なシステム構成となり、そのためにそれぞれのサーバを最も適切な言語およびOSで
+開発し、接続することに成功しました。現在はWindows版と Linux版が利用可能です。
+</p>
+<p>
+サーバを利用するためには各サーバのインターフェースが記述されたIDLファイルが必要です。OpenHRPでは、
+idl/OpenHRPディレクトリに設置してあります。IDLファイルをIDLコンパイラに
+かけることにより、各種言語向けのスタブやスケルトンに変換されます。
+</p>
+
+
+<h2> シミュレーションにあたって </h2>
+<p>
+OpenHRPでシミュレーションをするにあたっては、以下の三つの要素をそろえる必要があります。
+</p>
+<h3> モデル </h3>
+<p>
+モデルはシミュレータ上のロボットや環境の形状や動力学パラメータをVRMLファイルを使用して表します。
+ファイル形式の詳細は<a href="./create_model.html">ロボット，環境モデル記述形式</a>を，モデルの作成に関しては<a href=howtoeditmodel.html>GrxUIを用いたモデル作成</a>をご参照ください。
+</p>
+<h3> コントローラ </h3>
+<p>
+モデルによって表されるロボットを動かすプログラムがコントローラです。これによりロボットの動作制御則
+が定義されることになります。OpenHRPではコントローラを<a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM</a>
+を使用して作成します。具体的な方法はユーザマニュアルを参照してください。
+</p>
+
+<h3> プロジェクト </h3>
+<p>
+上記のとおり、GrxUIは各種サーバのクライアントとなりモデルやコントローラを制御します。そこでその制御
+を指示するものはプロジェクトと言います。プロジェクトはGrxUIを使用して編集します。具体的な作成方法は<a href="./create_project.html">プロジェクトの作成</a>を参照して下さい．
+</p>
+
+<h4> Simulation </h4>
+<p>
+シミュレーション世界を管理するアイテムで、シミュレーションを何秒行うか、重力はいくつかといった設定を行います。
+</p>
+
+<h4> WorldState </h4>
+<p>
+シミュレーション結果を管理するアイテムで、結果を記録する時間間隔を設定します。
+</p>
+
+<h4> Model </h4>
+<p>
+上記で説明したモデルです。ただしここでは、どのモデルを使い、それが環境モデルなのか、ロボットモデルな
+のかや、そのモデルの関節角度等を設定します。
+</p>
+
+<h4> Collision-Pair </h4>
+<p>
+衝突計算を設定します。どのモデルとどのモデルで行うか、またはどのリンクとどのリンクで行うかを設定します。
+</p>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

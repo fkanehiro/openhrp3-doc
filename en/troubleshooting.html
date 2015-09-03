@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>OpenHRP3 Troubleshooting(Ver.3.1)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">OpenHRP3 Troubleshooting(Ver.3.1)</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Table of contents</h2>
+<ul>
+ <li><a href="#grxui_on_eclispe_compile_error">Type mismatch error when compiling "GrxUI on Eclispe"</a></li>
+ <li><a href="#zombie_clear">A click of clear zombie button of RTSystemEditor will not operate GrxUI</a></li>
+ <li><a href="#set_tmp_dir">Change of the momentary preservation place of a file </a></li>
+ <li>Linux Specific Problems</li>
+ <ul>
+  <li><a href="#error_ipv6_localhost">RTC on "GrxUI on Eclipse" does not work on Ubuntu-9.04 </a></li>
+  <li><a href="#gcj_sun_error">Compile errors / Java exceptions occurs after applying Ubuntu system updates </a></li>
+  <li><a href="#ldd_not_found">The server group of OpenHRP does not start at the time of GrxUI starting.</a></li>
+ </ul>
+ <li>Windows Specific Problems</li>
+ <ul>
+  <li><a href="#win_omni_err">OmniORB name server does not start</a></li>
+ </ul>
+</ul>
+
+
+<h2>Platform Independent Problems</h2>
+
+<h3 id="grxui_on_eclispe_compile_error">Type mismatch error when compiling "GrxUI on Eclispe"</h3>
+
+<p>
+Type mismatch error may occur when compiling "GrxUI on Eclipse", when it could not find 
+<i>"jp.go.aist.hrp"</i> package. If <i>"GrxUIonEclipse-project-0.9.8/openhrpstubskel.jar"</i> 
+file is extremely small in size (such as 1KB), generating <i>"openhrpstubskel"</i> fails and cause to 
+this problem. Though <i>"openhrpstubskel.jar"</i> depends on <i>"openrtmstubskel.jar"</i>, generating 
+<i>"openhrpstubskel"</i> may fail due to timing mismatch caused by parallel compiling. You may have 
+already noticed this in javac error log when compiling <i>"openhrpstubskel"</i>. The reason for that 
+error message is also the same.
+</p>
+
+<p>
+To resolve this problem you have to build the correct <i>"openhrpstubskel.jar"</i> file as follows.
+Then refresh the Eclipse project using "F5".
+</p>
+
+<h4>Solution for Linux</h4>
+
+<p>
+Avoid using 'j' option when compiling. It causes typical error when used 'j' option with <i>make</i> 
+command.
+</p>
+
+<h4>Solution for Windows</h4>
+
+<p>
+This error can be resolved by explicitly specifing the dependent projects on VisualC++ project.
+<br>
+<ol>
+  <li>
+   Select <i>"Project"</i> -&gt; <i>"Project dependencies"</i> on menubar. Project Dependencies 
+   dialog will be opened.
+  </li>
+  <li>
+   Go to <i>"Dependencies"</i> tab windows and select <i>"JavaStubSkel"</i> in <i>"Project"</i> 
+   pull-down box.
+  </li>
+  <li>Check the <i>"OpenRTMStubSkel"</i> dependence check-box.</li>
+  <li>Press "OK" to apply settings.</li>
+  <li>Rebuild the project.</li>
+</ol>
+
+The cause of the dependence probelem is still unknown and we are now working on it. It can be misuse 
+of Cmake, problem of the way Cmake is used or a bug of Cmake it self. However, it is scheduled to fix 
+this bug in future release.
+</p>
+
+
+<h3 id="zombie_clear">A click of clear zombie button of RTSystemEditor will not operate GrxUI. </h3>
+<p>
+In RTSystemEditor, there is a function to delete collectively the zombie object which cannot access the object of substance from a name server. 
+<br>
+When RTSystemEditor is used together with OpenHRP, the servers of OpenHRP will be enumerated as a zombie like the yellow frame of a figure. 
+Since it is a process under operation in fact, please do not push the button of the red frame of a figure. <br>
+<p align="center">
+<img src="../img_new/trouble/zombieClear.png"><br>
+Fig. ÅFclear zombie
+</p>
+</p>
+
+<h3 id="set_tmp_dir">Change of the momentary preservation place of a file </h3>
+<p>
+In OpenHRP3, the log is temporarily saved at the file in the efficiency of a simulation. <br>
+The place of a file is the directory specified by Java system property "java.io.tmpdir" + "grxui-(user name)".<br>
+When the directory specified by "java.io.tmpdir" is assigned to drives with slow access, such as a drive on a network, 
+operation of a simulation becomes extremely slow. In such a case, please change a preservation place directory as follows. <br>
+</p>
+Refer to<a href="init_grxui.html#eclipse_init">Initial setting of Eclipse </a>, open eclipse.ini. <br>
+Please add the following contents to the last line. <br>
+<pre>-Djava.io.tmpdir=(The directory of a change place Åj</pre>
+<br>
+
+<h2>Linux Specific Problems</h2>
+
+<h3 id="error_ipv6_localhost">RTC on "GrxUI on Eclipse" does not work on Ubuntu-9.04 (On Linux)</h3>
+
+<p>
+If you install OpenHRP for the first time on Ubuntu-9.04 environment, RTC based sample models may 
+not work on "GrxUI on Eclipse". In such case, open terminal window and run,
+
+<pre>
+$ openhrp-aist-dynamics-simulator -ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService
+</pre>
+
+if you get the output as follows,
+
+<pre>
+IDL:omg.org/CORBA/TRANSIENT:1.0
+</pre>
+
+the problem has occured because ipv6 on Ubuntu-9.04 has not been enabled by default.<br>
+<br>
+To resolve this problem, locate <i>"/etc/hosts"</i> file and comment-out the line 
+<i>"::1        localhost ip6-localhost ip6-loopback"</i> where keeps localhost settings of IPv6.
+</p>
+
+
+<h3 id="gcj_sun_error">Compile errors / Java exceptions occurs after applying Ubuntu system updates (On Linux)</h3>
+
+<p>
+When installing OpenHRP3 we 
+<a href="./install_ubuntu_3_1.html#switch_java">set 'Sun-java' as default java environment</a>. 
+But when applying Ubuntu system updates, it renews 'Java-gcj' to its latest version and set as 
+default java environment automatically, which may cause to compile errors or Java exceptions when 
+starting GrxUI.
+</p>
+
+<p>When starting GrxUI, it may hang-up giving following messege;
+<pre>
+Null peer?!
+</pre>
+</p>
+
+<p><a href="./install_ubuntu_3_1.html#switch_java">Switching the default java environment</a> 
+back to 'Sun-java', will resolve the problem.</p>
+
+<pre>
+$ sudo update-java-alternatives -s java-6-sun
+</pre>
+or
+<pre>$ sudo update-java-alternatives -s java-6-openjdk</pre>
+
+<p>
+If you are not willing to use 'gcj' for any other applications, you can uninstall it, so that the 
+problem will never be take place.
+</p>
+
+<h3 id="ldd_not_found">The server group of OpenHRP does not start at the time of GrxUI starting.</h3>
+<p>
+When an installation directory is changed, since a shared library is not found from the executable file of OpenHRP,
+ a server group may be unable to be started correctly. <br>
+Please check that the dependency to a shared library is right by the following commands. <br>
+<pre>
+$ ldd openhrp-model-loader
+</pre>
+As a result, when the library of libhrp* is not found,<br>
+please add a (Installation directory)/lib to environment variable LD_LIBRARY_PATH. 
+</p>
+<br><br>
+
+<h2>Windows Specific Problems</h2>
+
+<h3 id="ns_error">OmniORB name server does not start (On Windows)</h3>
+<p>
+It may be this fault when servers are not enumerated, even if it clicks the update button in the name service monitor of GrxUI. 
+<BR>
+<h4>Fault which happens when omniORB of the Python version is installed and the root directory of Python is registered into PATH of an environment variable 
+</h4>
+Please execute the following commands. 
+<pre>&gt;omniNames -ORBendPointPublish giop:tcp:localhost: -start 2809</pre>
+
+<pre>
+Fri Feb 05 09:40:17 2010:
+
+Error: cannot open log file 'C:\temp\omninames-PC_NAME.log'.
+
+usage: omniNames [-start [&lt;port&gt;]]
+                 [-logdir &lt;directory name&gt;]
+                 [-errlog &lt;file name&gt;]
+                 [-ignoreport]
+                 [&lt;omniORB-options&gt;...]
+
+Use -start option to start omniNames for the first time.
+With no &lt;port&gt; argument, the standard default of 2809 is used.
+
+Use -logdir option to specify the directory where the log/data files are kept.
+
+Use -errlog option to specify where standard error output is redirected.
+
+Use -ignoreport option to ignore the port specification.
+
+You can also set the environment variable OMNINAMES_LOGDIR to specify the
+directory where the log/data files are kept.
+</pre>
+It may be displayed in this way. <BR>
+Please except the root directory of Python from the environment variable PATH. <BR>
+</p>
+<br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

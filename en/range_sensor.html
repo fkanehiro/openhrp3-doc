@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Distance sensor simulation using RangeSensor node</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Distance sensor simulation using RangeSensor node</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Background of implementaion</h2>
+
+<p>
+In OpenHRP-3.0, distance sensor was substituted to DEPTH type VisionSensor output, but it caused 
+following problems.
+</p>
+
+<p>
+<ul>
+  <li>
+    On Java3D V1.5 and later versions, there was a bug with depth buffer acquisition and we had to 
+    continue with V1.4.
+  </li>
+  <li>
+    Even with V1.4 Off-Screen rendering did not perform well; user always had to bring the window to 
+    front.
+  </li>
+  <li>Distance resolution capability was not enough with 32bit disk buffer</li>
+</ul>
+</p>
+
+<p>
+Therefore in OpenHRP-3.1, we implemented a function to simulate distance sensor, using 
+half-line of OPCODE that used for collision check and polygon's collision check function.
+</p>
+
+
+<h2>Adding sensor to the model</h2>
+
+<p>
+To define a distance sensor on a model, 
+<a href="./create_model.html#RANGESENSOR">prototype declaration of RangeSensor node</a> has to be 
+added to the beginning of the VRML model of the robot which distance sensor is supposed to be 
+attached. So that the RangeSensor node will be dangled by the children field of the joint node 
+that correspond to the link which sensor is attached.
+</p>
+
+
+<h2>Checking sensor output on GrxUI</h2>
+
+<p>
+On GrxUI, sensor output can be visually checked by using <a href="./um_3d_view.html">3DView</a> or 
+<a href="./um_rangesensor_view.html">RangeSensorView</a>.
+
+Extract the model tree from <a href="./um_item_view.html">ItemView</a> and select the RangeSensor 
+that you are supposed to see. Measurement results will be displayed as a semi-transparent polygon on 
+the 3DView.
+
+Sectors that correspond to the measurement range is displayed prior to the simulation start. And when 
+simulations is started those sectors transform to the shape that correspond to the measured distance. 
+
+Moreover, if you select and open RangeSensorView from Eclipse menu, and select model name and the 
+sensor name in the upper part of the view, a circle and the measurement results will be displayed. 
+This circle refers to the distance specified in maxDistance field of RangeSensor node.
+</p>
+
+<img src="../img_new/RangeSensor.png">
+
+<h2>Obtaining sensor output through ControllerBridge</h2>
+
+<p>
+To obtain sensor output through <a href="./controller_bridge.html">ControllerBridge</a> following 
+options are passed to the openhrp-controller-bridge as parameters.
+</p>
+
+<div>
+<code>
+<pre>
+ --out-port range:URG_SENSOR0:RANGE_SENSOR
+</pre>
+</code>
+</div>
+
+<p>
+The output comes in the type of TimedDoubleSequence and it contains distance data scanned from the 
+right side to the sequence part toward the direction of the measurement. The distance is output 
+even it is further than the maxDistance, as long as an interference is occured.
+</p>
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

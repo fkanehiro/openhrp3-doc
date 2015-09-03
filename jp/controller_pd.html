@@ -1,0 +1,447 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>コントローラ作成ガイド(歩行パターン)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">コントローラ作成ガイド(歩行パターン)</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2> 概要 </h2>
+<p>
+ここでは、歩行パターンファイルに基づいてPD制御でロボットを歩行させるコントローラをOpenRTMコンポーネントとして作成する方法を説明します。
+</p>
+
+<h2> ファイルの作成 </h2>
+<p>
+まず、作業フォルダーとして新しいフォルダーを作成します。(例えば "mySamplePD" としましょう。)<br>
+その中に下記のとおり３つのファイルを用意します。
+</p>
+mySamplePD/etc/ 内
+<ul>
+<li>歩行パターンファイル</li>
+  <ul>
+	<li>angle.dat	(コントローラの関節角度データ)</li>
+	<li>vel.dat  	(コントローラの関節角速度データ)</li>
+  </ul>
+<li>ゲインファイル</li>
+  <ul>
+	<li>PDgain.dat	(コントローラのゲイン)</li>
+  </ul>
+</ul>
+<p>
+<b>※</b>　テスト用のファイルが "OpenHRP3/sample/controller/SamplePD/etc/" フォルダー内に
+置いてありますので、それらの３つのファイルを "mySamplePD/etc/" 内にコピーして使ってもらって
+も構いません。<br>
+なお、&beta;4から対応したバイナリパッケージによるインストールでは、
+<ul>
+ <li>Ubuntu環境の場合：/usr/share/</li>
+ <li>Windows環境の場合：OpenHRPSDK/share/</li>
+</ul>
+以下のOpenHRP-3.1/sample/controller/SamplePD/etcをご使用ください。<br>
+ファイル内容はいずれの場合も同じです。<br>
+</p><br>
+
+
+<h3> 歩行パターンファイル </h3>
+<p>
+歩行パターンファイル(angle.dat,vel.dat)のフォーマットについて説明します。
+</p>
+<pre>
+時刻  &lt;JointID=0 の関節のデータ&gt;  &lt;JointID=1 の関節のデータ&gt;  …  &lt;JointID=nの関節のデータ&gt;
+</pre>
+<p>
+一行が１フレームに相当し、デリミッタはtabです。時刻は開始時刻からの相対時間、関節のデータはangle.datの場合角度、vel.datの場合角速度に相当します。例えばサンプルの場合、14秒間6701フレームの29個の関節データが表現されています。<br>
+</p>
+<h3> ゲインファイル </h3>
+PD制御のゲインを記録します。そのフォーマットはJointID行にPゲイン、Dゲインの任意個をスペースでわけて書くこととし、具体的には以下のとおりとします。
+<pre>
+Pゲイン Dゲイン (<= JointID = 0)
+Pゲイン Dゲイン (<= JointID = 1)
+...
+Pゲイン Dゲイン (<= JointID = n)
+</pre>
+
+<h3> スケルトン作成 </h3>
+<p>
+コンポーネントのスケルトンを作成します。angleという名前のInPort、torqueという名前のOutPortを備えたSamplePDコンポーネントです。
+RTC　Builderを使用する方法とrtc-templateを使用する方法があります。
+</p>
+<h4> RTC BUilderを使用する </h4>
+<p>
+RTC Builderを起動します。RTC Builderに関する詳しい説明は、OpenRTM マニュアルの 
+<a href="http://www.openrtm.org/openrtm/ja/content/rtcbuilder-110" target="_blank">RTCBuilder-1.1.0とは</a>
+で確認してください。<br>
+基本プロファイル入力ページを開いて図１のように設定します。
+</p>
+<p align="center">
+<img src="../img_new/RtcBuilderBasic.png"><br>
+図1 : RTC Builder Basic
+</p>
+<p>
+アクティビティページを開いて図２のように設定します。
+</p>
+<p align="center">
+<img src="../img_new/RtcBuilderActivity.png"><br>
+図2 : RTC Builder Activity
+</p>
+<p>
+データポートページを開いて図３のように設定します。
+</p>
+<p align="center">
+<img src="../img_new/RtcBuilderDataPort.png"><br>
+図3 : RTC Builder DataPort
+</p>
+<p>
+言語・環境ページを開いて図４のように設定します。<br>
+Linuxの場合は、Use old buid environment.にチェックを入れてください。
+</p>
+<p align="center">
+<img src="../img_new/RtcBuilderLanguage.png"><br>
+図4 : RTC Builder Language and environment
+</p>
+<p>
+基本プロファイル入力ページに戻って、コード生成ボタンを押すと、コンポーネントのスケルトンが作成されます。
+</p>
+
+<h2> プログラミング </h2>
+<h3> SamplePD.h </h3>
+<p>
+生成されたソースSamplePD.hを編集します。
+</p>
+<p>
+コントローラが使用する種々のメンバを追加します。
+</p>
+<pre>
+private: 
+  int dummy; 
+  std::ifstream angle, vel; // 関節角度, 関節角速度
+  double *Pgain; // Pゲインの配列
+  double *Dgain; // Dゲインの配列
+  std::vector&lt;double&gt; qold; // ひとつ前の関節角度を保持
+</pre>
+
+<h3> SamplePD.cpp </h3>
+<p>
+最初にヘッダファイルのインクルードとマクロの定義を行います。
+</p>
+<pre>
+#include &lt;iostream&gt;
+
+#define DOF (29) // 自由度
+#define TIMESTEP 0.002 // シミュレーションのステップ
+
+// 各種ファイル群
+#define ANGLE_FILE "etc/angle.dat"
+#define VEL_FILE   "etc/vel.dat"
+#define GAIN_FILE  "etc/PDgain.dat"
+
+namespace {
+  const bool CONTROLLER_BRIDGE_DEBUG = false;
+}
+</pre>
+<p>
+SamplePD.hで宣言したメソッドを実装します。
+</p>
+<p>
+SamplePD::SamplePDでコンストラクタを追加します。
+</p>
+<pre>
+SamplePD::SamplePD(RTC::Manager* manager)
+  : RTC::DataFlowComponentBase(manager),
+    // &lt;rtc-template block="initializer"&gt;
+    m_angleIn("angle", m_angle),
+    m_torqueOut("torque", m_torque),
+    
+    // &lt;/rtc-template&gt;
+    dummy(0),
+    qold(DOF)
+{
+</pre>
+<p>
+SamplePD::onInitialize()で歩行パターンファイルを開き、ゲインファイルからPDゲイン値を変数に取り込みます。
+</p>
+<pre>
+RTC::ReturnCode_t SamplePD::onInitialize()
+{
+  // Registration: InPort/OutPort/Service
+  // &lt;rtc-template block="registration"&gt;
+  // Set InPort buffers
+  addInPort("angle", m_angleIn);
+
+  // Set OutPort buffer
+  addOutPort("torque", m_torqueOut);
+
+  // Set service provider to Ports
+
+  // Set service consumers to Ports
+
+  // Set CORBA Service Ports
+
+  // &lt;/rtc-template&gt;
+
+  // &lt;rtc-template block="bind_config"&gt;
+  // Bind variables and configuration variable
+
+  Pgain = new double[DOF];
+  Dgain = new double[DOF];
+
+  // 関節角度ファイルを開く
+  angle.open(ANGLE_FILE);
+  if (!angle.is_open()){
+    std::cerr &lt;&lt; ANGLE_FILE &lt;&lt; " not found" &lt;&lt; std::endl;
+  }
+
+  // 関節角速度ファイルを開く
+  vel.open(VEL_FILE);
+  if (!vel.is_open()){
+    std::cerr &lt;&lt; VEL_FILE &lt;&lt; " not found" &lt;&lt; std::endl;
+  }
+
+  // ゲインファイルを開き配列に代入
+  std::ifstream gain;
+  gain.open(GAIN_FILE);
+  if (gain.is_open()){
+    for (int i=0; i&lt;DOF; i++){
+      gain &gt;&gt; Pgain[i];
+      gain &gt;&gt; Dgain[i];
+    }
+    gain.close();
+  }else{
+    std::cerr &lt;&lt; GAIN_FILE &lt;&lt; " not found" &lt;&lt; std::endl;
+  }
+
+  // トルク, 関節角度ポートの長さをロボットの自由度分確保
+  m_torque.data.length(DOF);
+  m_angle.data.length(DOF);
+
+  // &lt;/rtc-template&gt;
+  return RTC::RTC_OK;
+}
+</pre>
+<p>
+SamplePD::~SamplePDでファイルのクローズと配列の開放を行います。
+</p>
+<pre>
+  if (angle.is_open()) angle.close();
+  if (vel.is_open()) vel.close();
+  delete [] Pgain;
+  delete [] Dgain;
+</pre>
+<p>
+RTC::ReturnCode_t SamplePD::onActivatedでは初期化処理を行います。
+</p>
+<pre>
+RTC::ReturnCode_t SamplePD::onActivated(RTC::UniqueId ec_id)
+{
+  std::cout &lt;&lt; "on Activated" &lt;&lt; std::endl;
+  angle.seekg(0);
+  vel.seekg(0);
+
+  // 関節角度InPortの値をアップデート
+  if(m_angleIn.isNew()){
+    m_angleIn.read();
+  }
+
+  // １フレーム前の値を保持する
+  for(int i=0; i &lt; DOF; ++i){
+    qold[i] = m_angle.data[i];
+  }
+
+  return RTC::RTC_OK;
+}
+</pre>
+<p>
+RTC::ReturnCode_t SamplePD::onExecuteメソッドを編集します。このメソッドがシミュレーションのステップごとに呼ばれ、指令を更新します。
+</p>
+<pre>
+RTC::ReturnCode_t SamplePD::onExecute(RTC::UniqueId ec_id)
+{
+  if( CONTROLLER_BRIDGE_DEBUG )
+  {
+    std::cout &lt;&lt; "onExecute" &lt;&lt; std::endl;
+  }
+
+  // 関節角度InPortの値をアップデート
+  if(m_angleIn.isNew()){
+    m_angleIn.read();
+  }
+
+  double q_ref, dq_ref;
+  angle &gt;&gt; q_ref; vel &gt;&gt; dq_ref;// skip time
+  
+  
+  // 各関節のtorque値を決定
+  for (int i=0; i&lt;DOF; i++){
+    angle &gt;&gt; q_ref;
+    vel &gt;&gt; dq_ref;
+    double q = m_angle.data[i];
+    double dq = (q - qold[i]) / TIMESTEP;
+    qold[i] = q;
+    
+    m_torque.data[i] = -(q - q_ref) * Pgain[i] - (dq - dq_ref) * Dgain[i];
+  }
+  
+  //トルクを出力
+  m_torqueOut.write();
+  
+  return RTC::RTC_OK;
+}
+</pre>
+
+<h2> コンパイル </h2>
+<h3> Linuxの場合 </h3>
+<p>
+Makefileが自動的に生成されます。そのMakefileを使用してコンパイルします。
+</p>
+<pre>
+make -f Makefile.SamplePD
+</pre>
+
+<h3> Windowsの場合 </h3>
+<p>
+CMake用のCMakeList.txtが自動的に生成されます。<br>
+Doxygenをインストールしていない場合は、CMakeList.txtをエディタで開いて、次の行をコメントアウトしてください。
+<pre>
+# check doxygen installed
+#find_package(Doxygen)
+#if(DOXYGEN_FOUND STREQUAL "NO")
+#　　message(FATAL_ERROR "Doxygen not found.")
+#endif()
+</pre>
+
+<p>
+CMakeのGUIを起動して、必要な内容を設定し、VC++のバージョンを選択してソリューションファイルを生成してください。<br>
+作成されたソリューションファイル(*.sln)を開き、ビルドを実行してください。
+詳しくは、OpenRTM マニュアルの 
+<a href="http://www.openrtm.org/openrtm/ja/content/コンパイル方法-windows、cmake-利用" target="_blank">コンパイル方法 (Windows、CMake 利用 )</a>
+をご覧ください。<br>
+</p>
+
+
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>OpenHRP3 Tips</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">OpenHRP3 Tips</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+
+<h3>Linux日本語環境とGrxUI</h3>
+
+<p>
+JavaかXの入力システムの不具合により、
+Linuxの日本語環境でGrxUIを使用するとユーザーインタフェースの挙動が
+遅くなる場合があります。
+このような場合、ロケールを英語に設定することにより挙動を改善できます。
+</p>
+Linuxで現在のロケールを調べるには次のようにします。
+<div><pre>
+$ set | grep LANG
+</pre></div>
+日本語環境では、例えば以下のような結果が表示されます。
+<div><pre>
+LANG=ja_JP.eucJP
+</pre></div>
+
+次のように入力するとロケールが英語に設定されます。
+<div><pre>
+$ export LANG=C
+</pre></div>
+
+
+<h3 id="switch_rtm">Windows環境でOpenRTM-aist-0.4.2とOpenRTM-aist-1.0.0を切り替えて使用する方法</h3>
+
+<p>
+Windows環境でOpenRTM-aist-0.4.2とOpenRTM-aist-1.0.0の両方をインストールしている場合
+環境変数を切り換えて異なるバージョンのOpenRTMを使用することが可能です。<br>
+変更する環境変数は、PATHとRTM_ROOTの二つで、各変数の以下の部分を
+<pre>
+C:\Program Files\OpenRTM-aist\0.4\
+</pre>
+<center><b>↑↓</b></center>
+<pre>
+C:\Program Files\OpenRTM-aist\1.0\
+</pre>
+のように切り換えます。
+</p>
+
+具体的な切り替え方法は、以下の通りです。
+<ol>
+  <li>システムのプロパティダイアログ内の詳細設定タブを選択します。</li>
+  <li>環境変数ボタンを押下します。</li>
+</ol>
+<p align="center">
+<img src="../image/trouble/sys_property.png"><br>
+図：システムのプロパティダイアログ<br>
+</p>
+環境変数ダイアログの赤枠にある変数を上述の通り切り替えます。<br>
+<p align="center">
+<img src="../image/trouble/env_property.png"><br>
+図：環境変数ダイアログ<br>
+</p>
+
+</p>
+<p>
+環境変数を変更したら、再び
+<a href="./install_windows_3_0.html#compile">「Visual C++ によるコンパイル」</a>
+からはじめて、リンク先にある通り改めてrtm_config.vspropsファイルをコピーしてから
+OpenHRPのバイナリコードを生成してください。<br>
+
+OpenRTM-aist-1.0.0から初めてOpenRTM-aist-0.4.2に切り替える場合は、<br>
+OpenRTM-aist-0.4.2の<a href="http://www.is.aist.go.jp/rt/OpenRTM-aist/html/E38380E382A6E383B3E383ADE383BCE383892FC2B2B2F0.4.2-RELEASE.html#h3_content_138_2" target="_blank">ダウンロードページ</a>より
+OpenRTM-aist-0.4.2-jp_vc9.msi、ACE-5.6_vc9.msiを入手してインストールする必要があります。
+</p>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

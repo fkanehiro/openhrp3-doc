@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>インストール</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">インストール</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>目次</h2>
+<ul>
+ <li><a href="#support_os">対応OS</a></li>
+ <li><a href="#install">インストール手順</a></li>
+ <li><a href="#sample">GrxUIの起動・サンプルによる確認</a></li>
+ <li><a href="#original">独自環境構築のためのヒント</a></li>
+</ul>
+
+<h2 id="support_os">対応OS</h2>
+
+<p>
+現在のところ、OpenHRP3は以下の環境で動作確認を行っています．
+</p>
+
+<p>
+<ul>
+<li>OS</li>
+<ul>
+<li>Ubuntu Linux 10.04LTS ～12.10 </li>
+<li>Windows XP, 7</li>
+</ul>
+<li>OpenRTM-aist 1.0.0</li>
+<li>OpenRTM-aist 1.1.0</li>
+<li>Eclipse 3.4SR2</li>
+</ul>
+</p>
+
+<p>
+Linuxに関しては、Ubuntu以外のディストリビューションの多くで動作させることが可能だと思われます.
+動作実績のあるOSについては下記のページをご覧ください.
+
+<ul>
+ <li><a href="./os.html">OS/ディストリビューション 対応状況</a>
+</ul>
+
+<p>
+ただし、本サイトのマニュアルや配布パッケージの構成などは公式対応OSを前提としていますので、
+それ以外のOS上で使用する際には、OSの操作やプログラミングに関してより高度な知識を求められる場合があります。
+</p>
+
+<p>
+なお、使い勝手と動作速度の点でWindowsよりもLinux上での使用をおすすめ致します。
+</p>
+
+<h2 id="install">インストール手順</h2>
+
+<p>
+Ubuntu LinuxとWindowsのインストール手順です。
+</p>
+
+<ul>
+ <li>Ubuntu Linux におけるインストール
+ <ul>
+  <li><a href="./inst_ubu_src_3_1.html">ソースコードからインストール</a></li>
+  <li><a href="./inst_ubu_bin_3_1.html">バイナリパッケージからインストール</a></li>
+ </ul><br>
+ <li><a href="./inst_win_3_1.html">Windows におけるインストール</a></li>
+</ul>
+
+<h2 id="sample">GrxUIの起動・サンプルによる確認</h2>
+<p>
+GrxUI on Eclipseの起動、および、動作するための初期設定です。
+</p>
+<ul>
+ <li><a href="./init_grxui.html">GrxUIの起動・初期設定</a></li>
+</ul>
+
+<p>
+インストールが完了したら、以下で説明するサンプルシミュレーションを実行し、
+無事インストールできているかを確認してみてください。
+</p>
+<ul>
+ <li><a href="./simulate_sample.html">サンプルシミュレーションの実行</a></li>
+</ul>
+
+<br>
+<h2 id="original">独自環境構築のためのヒント</h2>
+<p>
+必ずしも、上記ページにおけるインストール手順に従う必要はなく、
+基本的には必要なライブラリ等をインストールして、
+コンパイルのための設定を適切に行えばOKです。
+そのための情報を以下に載せますので、
+使用環境を自由に構築したい場合や、
+公式対応OS以外のOS/ディストリビューションでOpenHRP3を動作させたい場合は、
+参考にしてください。
+</p>
+
+<ul>
+ <li><a href="./required_programs.html">OpenHRP3のコンパイル/実行に必要なソフトウェア</a>
+ <p>
+ OpenHRP3使用のための環境構築に関する説明です.
+ OpenHRP3のコンパイルや実行にあたっては、
+ 本ページで示すソフトウェアをOSにインストールしておく必要があります。
+ </p>
+ </li>
+
+ <li><a href="./howtomake.html">CMakeコマンドによるコンパイル</a>
+ <p>
+ OpenHRP3本体のソースコードをcmakeコマンドを使ってコンパイル、
+ 実行ファイルを生成するための手順を説明します。
+ </p>
+ </li>
+</ul>
+<br><br>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

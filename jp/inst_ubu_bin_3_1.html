@@ -1,0 +1,272 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>Ubuntu パッケージインストール</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Ubuntu パッケージインストール</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>目次</h2>
+<ul type="disc">
+ <li><a href="#check_env">インストール前確認</a></li>
+ <li><a href="#bin">バイナリパッケージからインストール</a></li> 
+  <ul>
+   <li><a href="#file_structure">ファイル構成</a></li>
+  </ul>
+  <ol type="1">
+   <li><a href="#bin_apt-get">apt-getの使用</a></li>
+    <ul>
+     <li><a href="#chk_java">Javaサードパーティの確認</a></li>
+    </ul>
+   <li><a href="#bin_install_grxui">Eclipse、および、GrxUIプラグインのインストール</a></li>
+  </ol>
+</ul>
+
+<h2 id="check_env">1. インストール前確認</h2>
+<p><span style="color: red">
+※　バイナリのOpenHRPは SSE 拡張命令を有効にしてコンパイルしております。PentiumⅢ、Athlon XPより前のCPUでは動作いたしません。
+</span></p>
+<p>
+OpenHRP は3Dグラフィックを利用するアプリケーションなので、インストールを
+始める前に、お使いのパソコンで3Dグラフィックスを正常に動作できるかを確認する必要があります。
+端末を開いて次のコマンドを実行してください。
+なお、端末ウィンドウは
+Ubuntuメニューの"アプリケーション"-"アクセサリ"-"端末"などから起動できます。
+</p>
+
+<pre>$ glxinfo | grep rendering</pre>
+<p> </p>
+
+<ul>
+  <li><p>
+  結果が "direct rendering: Yes"　であれば、<br>
+  　お使いのパソコンが3Dグラフィックをサポートしますので、次のステップへ進んでください。</p>
+  </li>
+  <li><p>
+  結果が "direct rendering: No"　となった場合、<br>
+  　3Dアクセレレーション機能をサポートするグラフィックドライバを導入する必要があります。</p>
+
+  <p>⇒　<a href="./g3d_support.html">グラフィックドライバの導入手法</a></p>
+
+  <p>（注）</p>
+  <ul>
+    <li><p>
+    グラフィックボードによって、上記の手法が適用できない場合もあります。
+    この場合でも、基本的には OpenHRP が動作します。ただし、3Dアクセレレーション機能が有効でないため、
+    OpenHRPの3D表示が遅くなり、効率よく動作しない可能性がありますので、ご了承ください。  </p>
+    </li>
+    <li><p>
+    グラフィックボードに関しては、Linuxにおける3Dアクセラレーション機能の対応度の点で、nVidiaのチップ
+    を積んだものがお勧めです。</p>
+    </li>
+    <li><p>
+    VMware等の仮想マシン上ではグラフィックドライバの導入は必要ございませんが、仮想マシンの持つグラフィックドライバにより動作しない可能性がございます。</p>
+    </li>
+  </ul>
+  </li>
+</ul>
+<br>
+
+<h2 id="bin">バイナリパッケージからインストール</h2>
+<p>
+OpenHRP3.1.0&beta;4からapt-getによるバイナリパッケージの配布に対応いたしました。<br>
+</p>
+
+<h3 id="file_structure">ファイル構成</h3>
+インストールディレクトリは以下の構成となります。<br>
+<pre>
+/usr/
+  +- bin/                  # OpenHRPの実行ファイル ファイル名の先頭はopenhrpで修飾
+  +- include/              # OpenHRPライブラリのヘッダ
+  +- lib/                  # OpenHRPライブラリ
+      +- pkgconfig/
+          +- openhrp3.1.pc # pkg-configの定義ファイル
+  +- share/
+      +- OpenHRP-3.1/
+          +- idl/          # IDLファイル
+          +- sample/       # サンプル群、サンプルの定義ファイル、リソース、実行ファイル
+          +- java/         # OpenHRP提供のGrxUIが依存するjarファイル
+          +- plugins/      # OpenHRP提供のEclipseプラグイン
+      +- doc/              # ドキュメント群
+          +- OpenHRP-3.1/  # ライセンス、ヒストリなど
+             +- idl/       # IDLのdoxygen 英語
+             +- idl_jp/    # IDLのdoxygen 日本語
+             +- lib/       # ライブラリのdoxygen 英語
+             +- lib_jp/    # ライブラリのdoxygen 日本語
+             +- ut/        # 東大版DynamicsSimulatorのdoxygen 英語
+</pre>
+</p>
+
+<p>
+また、OpenRTM-1.1.0に依存しダウングレードはできません。<br>
+以下の手順に沿って導入してください。
+</p>
+
+<h3 id="bin_apt-get">apt-getの使用</h3>
+<p>
+次のコマンドを実行してopenhrパケージをインストールします。
+<pre>
+sudo add-apt-repository ppa:hrg/stable
+sudo add-apt-repository ppa:openrave/release
+sudo apt-get update
+sudo apt-get install openhrp
+</pre>
+
+特に問題がなければ適宜Yesや承諾を選択してインストールを終えてください。<br>
+<br>
+
+<h4 id="chk_java">Javaのサードパーティ確認</h4>
+<pre>$ java -version</pre>
+を実行してjavaのサードパーティを確認してください。<br>
+"OpenJDK Runtime Environment "の文言が含まれていればOpenJDKのjreが有効になっています。<br>
+"Java(TM) SE Runtime Enviroment" の文言が含まれていればSunのjreが有効になってます。<br>
+OpenJDK、またはsunが有効になっていることを確認し、<a href="#bin_install_grxui">Eclipse、および、GrxUIプラグインのインストール</a>作業へお進みください。<br>
+そうでない場合、gcjに切り替わっていることがあり、その時は<br>
+<pre>$ sudo update-java-alternatives -s java-6-sun</pre>
+または
+<pre>$ sudo update-java-alternatives -s java-6-openjdk</pre>
+を実行して切り替えてください。<br>
+</p><br>
+
+
+<h3 id="bin_install_grxui">Eclipse、および、GrxUIプラグインのインストール</h3>
+GrxUIはEclipseのプラグインです。現在のバージョンはEclipse3.4に対応しています。<br>
+Eclipseの実行とコンパイルに必須のプラグインをあらかじめ導入した全部入りパッケージを用意しています。<br>
+本サイトの<a href="./download.html">「ダウンロード」</a>ページからEclipse 全部入りパッケージを
+ダウンロードして、解凍してください。<br>
+<pre>
+tar xzvf peclipse342_hrpdependencies_linux_ja_20120220.tar.gz
+</pre>
+/usr/share/OpenHRP-3.1/java/plugins/ ディレクトリ内のすべてのjarファイルをEclipseのpluginsディレクトリへコピーしてください。<br>
+例えば、eclipseディレクトリがカレントディレクトリの場合
+<pre>$ cp /usr/share/OpenHRP-3.1/java/plugins/*.jar plugins/</pre>
+コマンドでコピーできます。<br><br>
+これでインストールは完了です。<a href="./init_grxui.html">GrxUIの起動・初期設定</a>に進み、GrxUIの起動してください。
+<br><br>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

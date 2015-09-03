@@ -1,0 +1,408 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>Ubuntu LinuxにおけるOpenHRP3のインストール(Ver.3.0.8)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Ubuntu LinuxにおけるOpenHRP3のインストール(Ver.3.0.8)</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<p>
+Ubuntu Linuxの場合、本ページの手順に従うことにより、
+OpenHRP3のインストールを比較的簡単にインストールすることができます。
+現在(OpenHRP Ver.3.0.7)のところ、Ubuntu Linux のバージョン8.04、8.10において、
+この方法を用いることができます。
+</p>
+
+<h2>インストール前確認</h2>
+
+<p>
+OpenHRP は3Dグラフィックを利用するアプリケーションなので、インストールを
+始める前に、お使いのパソコンで3Dグラフィックスを正常に動作できるかを確認する必要があります。
+端末を開いて次のコマンドを実行してください。
+</p>
+
+<pre>$ glxinfo | grep rendering</pre>
+<p> </p>
+
+<ul>
+  <li><p>
+  結果が "direct rendering: Yes"　であれば、<br>
+  　お使いのパソコンが3Dグラフィックをサポートしますので、次のステップへ進んでください。</p>
+  </li>
+  <li><p>
+  結果が "direct rendering: No"　となった場合、<br>
+  　3Dアクセレレーション機能をサポートするグラフィックドライバを導入する必要があります。</p>
+
+  <p>⇒　<a href="./g3d_support.html">グラフィックドライバの導入手法</a></p>
+
+  <p>（注）</p>
+  <ol>
+    <li><p>
+    グラフィックボードによって、上記の手法が適用できない場合もあります。
+    この場合でも、基本的には OpenHRP が動作します。ただし、3Dアクセレレーション機能が有効でないため、
+    OpenHRPの3D表示が遅くなり、効率よく動作しない可能性がありますので、ご了承ください。  </p>
+    </li>
+    <li><p>
+    グラフィックボードに関しては、Linuxにおける3Dアクセレレーション機能の対応度の点で、nVidiaのチップ
+    を積んだものが、お勧めとします。</p>
+    </li>
+  </ol>
+  </li>
+</ul>
+<br>
+
+
+<h2>OpenHRP3 ソースパッケージの展開</h2>
+
+<p>
+本ページの手順においては、OpenHRP3のパッケージに付属のスクリプトを利用します.
+このスクリプトを実行するため、まずはダウンロードしたOpenHRP-xxx.zip
+のソースパッケージを展開しておく必要があります.
+(xxxは3.0.7といったバージョンを示す文字列が入ります。
+ ダウンロードしたファイルのものと置き換えて読んでください。)
+
+</p>
+
+<p>
+OpenHRP3ソースの展開先はどこでも構いませんが、ここではホームディレクトリの
+OpenHRPディレクトリ以下に展開する例を示します。
+端末ウィンドウを起動して、以下のコマンドを入力してください.
+なお、端末ウィンドウは
+Ubuntuメニューの「アプリケーション」-「アクセサリ」-「端末」などから起動できます。
+</p>
+
+<p>
+<pre>
+$ cd 
+$ mkdir OpenHRP
+$ cd OpenHRP
+$ unzip (ソースパッケージダウンロード先)/OpenHRP-xxx.zip 
+</pre>
+
+<p>
+以上の操作でホームディレクトリのOpenHRPディレクトリ以下に、
+OpenHRP3のソースが展開されたOpenHRP-xxxというディレクトリができます。
+</p>
+
+<h2 id="install_script">パッケージ導入スクリプトの実行</h2>
+
+<p>
+OpenHRP3のソースディレクトリ内に、util というディレクトリがあります。
+この中に入っている installPackages.sh に以下の引数を与えて実行します。
+</p>
+<pre>
+$ cd ~/OpenHRP/OpenHRP-xxx/util
+$ ./installPackages.sh packages.list.ubuntu.8.04
+</pre>
+
+<p>
+例ではUbuntu 8.04のケースですが、Ubuntu 8.10の場合 packages.list.ubuntu.8.10 を引数として与えてください。<br>
+途中ライセンス同意を求められたら、全ての項目に対して同意して下さい。<br>
+また全ての確認に対してY(Yes)を選択してください。<br>
+</p>
+
+<p>
+この操作により、
+<a href="./required_programs_3_0.html">OpenHRPのコンパイル/実行に必要なソフトウェア</a>
+の大部分がインストールされます。
+</p>
+
+<p>
+<font color="red">なお、インストールする OpenRTM-aist は OpenRTM-aist-1.0.0-RELEASEです。</font>
+</p>
+<br>
+
+<h2 id="switch_java">Javaの切り替え</h2> 
+
+<p>
+UbuntuではgcjというJava環境も利用可能となっていますが、
+OpenHRPの使用においてはSunによるJava環境を推奨します。
+（これは上述の<a href="#install_script">パッケージ導入スクリプト</a>によりインストールされます。）
+</p>
+
+<p>
+OpenHRP側で使用するJavaを設定することも可能ですが、
+ここではシステムの標準Java環境を切り替えることとします。
+</p>
+
+切り替えは、以下のコマンドで行います。
+<pre>
+$ sudo update-java-alternatives -s java-6-sun
+</pre>
+
+以下のコマンドで、java のバージョンが java-gcj から
+1.6 に切り替わっている事を確認してください。
+
+<pre>
+$ java -version
+java version "1.6.0"
+Java(TM) SE Runtime Environment (build 1.6.0-b105)
+Java HotSpot(TM) Server VM (build 1.6.0-b105, mixed mode)
+</pre>
+
+
+<p><font color="red">注 １</font>
+<ul>
+  ただし、Ubuntu 8.04でjdk1.6をお使いの場合、突然シミュレーションを実行できなくなる事がありますので、 
+  しばらくの間はjdk1.5をご利用ください。
+  <pre>
+  [javaの変更]
+  $ sudo apt-get install sun-java5-jdk
+  $ sudo update-java-alternatives -s java-1.5.0-sun
+  
+  [元に戻す時]
+  $ sudo update-java-alternatives -s java-6-sun
+  
+  [既存のjavaをリスト表示する]
+  $ sudo update-java-alternatives -l
+  </pre>
+  
+  現象としては、何らかのモデルをロードしてから１〜２分程度経過すると、
+  ModelLoader(VRMLモデルパーズサーバ)と他のサーバ間の通信ができなくなるというもので、
+  GUIを立ち上げ直すと元に戻りますが、JDKを1.5にしない限り改善する事はありません。
+</ul>
+</p>
+<br>
+<p><font color="red">注 ２</font>
+<ul>
+  <a href="./troubleshooting_3_0.html#gcj_sun_error">「Ubuntuでアップデートを行うとコンパイルエラー、またはGrxUIの起動時に例外が発生して起動できない」</a><br>
+  不具合が発生することがあります。gcjを使用する予定が無い場合はgcjをアンインストールすることも検討してください。
+</ul>
+</p>
+<br>
+
+
+<h2>コンパイルの準備</h2>
+
+<p>
+OpenHRP3では、コンパイルのための設定を
+ソースディレクトリ中の "Make.vars" というファイルで行います。
+このファイルの設定に関する詳しい説明は
+<a href="./howtomake_3_0.html#make_vars">「MakeコマンドによるOpenHRPのコンパイル」</a>ページにありますが、
+ここでは本ページのインストール手順に合わせてあらかじめ設定されたファイルを用いることとします。
+</p>
+
+<p>
+まず、コマンドライン上でOpenHRP3のソースディレクトリへ移動します。
+</p>
+<pre>
+$ cd ~/OpenHRP/OpenHRP-xxx
+</pre>
+<p>
+ここで、以下のコピー操作により、設定ファイル"Make.vars"を作成します。
+</p>
+<pre>
+$ cp Make.vars.ubuntu.8.10 Make.vars
+</pre>
+<p>
+ここまでデフォルトな選択でインストールを終えた場合、設定ファイル"Make.vars"への修正は不要となります。
+</p>
+<br>
+
+
+<h2>OpenHRP3 のコンパイル</h2>
+
+OpenHRP3 のソースディレクトリより、make コマンドを実行します。
+
+<pre>
+$ make
+</pre>
+
+<p>
+本ページの手順により、必要なソフトウェアのインストールとMake.varsの設定が正しく行われていれば、
+(展開したディレクトリ)/bin 以下にOpenHRP3 の実行ファイル・スクリプトが生成されます。
+</p>
+
+<p>
+コンパイルが終了したら、<a href="./simulate_sample_3_0.html">
+サンプルシミュレーションの実行</a>を行って、正常にコンパイルできていることを確認して
+ください.
+</p>
+<font color=red ><b>！ＮＯＴＩＣＥ！</b></font><br>
+<h3>9.04以降で動作させる場合の注意点</h3>
+<a href="./troubleshooting.html#error_ipv6_localhost">ubuntu9.04以降の環境でGrxUI on EclipseからRTCが動作しない（Linux 対象）</a>にありますとおり<br>
+ipv6が無効な環境の場合、/etc/hostsの
+<pre>::1        localhost ip6-localhost ip6-loopback</pre>
+ipv6のlocalhost設定の行をコメントアウトしてください。
+
+<h2>個別にインストールする必要がなくなったソフトウェア</h2>
+<p>
+この項目はOpenHRP 以前のユーザーに向けた情報です。初めてOpenHRPを使用する
+ユーザーは<a href="#switch_java">「Javaの切り替え」</a>へ読み進めてください。<br
+</p>
+
+<h3>Java 3D</h3>
+
+<p>
+この項目はOpenHRP Ver.3.0.1以前のユーザーに向けた情報です。<br>
+OpenHRP Ver.3.0.1以前では lg3d配布のJava3Dライブラリを使用していましたが、
+
+<ul>
+ <li>JDKも包含するためSUNオフィシャルのJDKと重複して冗長である。</li>
+ <li>lg3dを配布するサーバーがダウンすることがあり、インストール、アップデート時にトラブルを起こすことがある。</li>
+ <li>1.5系バージョンでは深度バッファの取得に不具合がある。(2008/9/19 現在)</li>
+</ul>
+
+などの Java 由来のトラブルを防ぐため、OpenHRP Ver.3.0.2 より SUNオフィシャルの Java3D1.4.1 を
+パッケージに含めて配布することにしましたので、個別に Java 3D をインストールする必要はなくなりました。
+</p>
+
+<p>
+<font color=red ><b>！ＮＯＴＩＣＥ！</b></font><br>
+<h4>lg3d削除</h4>
+lg3dをシステムから削除したい場合は、以下の操作を行ってください。ただし、Ver.3.0.1以前のOpenHRP3をシステムに共存させたい場合は削除しないでください。
+<pre>
+$ sudo aptitude remove lg3d-java3d lg3d-jdk
+</pre>
+そして、Ver.3.0.1以前の<a href="./add_lg3d.html">「パッケージダウンロード先の追加」</a>
+の操作で登録した、
+<pre>
+deb http://javadesktop.org/lg3d/debian stable contrib
+</pre>
+をソフトウェアソースから削除してください。
+</p>
+
+<h3>Java Media Framework (JMF)</h3>
+<p>
+この項目はOpenHRP Ver.3.0.1以前のユーザーに向けた情報です。<br>
+OpenHRP Ver.3.0.1以前では JMF を個別にインストールする必要がありましたが、上記「Java 3D」
+同様の理由よりパッケージに含めて配布することにしました。
+</p>
+
+<h3>OpenRTM-aist</h3>
+<p>
+OpenHRP Ver.3.0.2以前では OpenRTM-aist を個別にインストールする必要がありましたが、Ver.3.0.3から
+パッケージ導入スクリプトでインストールできるようになりました。
+</p>
+
+<h3>tvmet</h3>
+<p>
+Ver.3.0.6から、パッケージ導入スクリプトでインストールできるようになりました。
+</p>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

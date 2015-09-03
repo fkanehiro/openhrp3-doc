@@ -1,0 +1,459 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>OpenHRP3 Troubleshooting(Ver.3.0)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">OpenHRP3 Troubleshooting(Ver.3.0)</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>プラットフォーム共通のトラブル</h2>
+<h3>OpenHRPの旧バージョン用に作っていたモデルファイルが読み込めない</h3>
+
+<p>モデルファイルの仕様が一部変更になっています。
+とりあえず、モデルファイル内の「Proto Joint」 ノードの定義で、</p>
+
+<blockquote>
+  exposedField SFFloat jointId -1
+</blockquote>
+
+<p>となっているところを、</p>
+
+<blockquote>
+  exposedField SFInt32 jointId -1
+</blockquote>
+
+<p>と修正してみてください。</p>
+
+
+<h3 id="start_hang">GrxUIが起動時に固まる</h3>
+
+<p>
+omniORBのネームサーバ omniNames の内容を一度クリアすると
+不具合が解消される場合があります。
+</p>
+
+<p>
+omniNamesは一度登録されたCORBAオブジェクトをログファイルで記録しておくように
+なっていますので、このログファイルを消去してomniNamesを再起動します。
+</p>
+
+<p>
+例えば、Ubuntu上でパッケージとしてomniORBをインストールした場合は、
+/var/log 以下に omninames-ホスト名.bak, omninames-ホスト名.log という
+ログファイルがあるので、まずはこれを消去してください。
+その後、/etc/init.d で
+<pre>
+$ ./omniorb4-nameserver restart
+</pre>
+として、ネームサーバを再起動します。
+これで、ネームサーバがクリアされた状態でOpenHRPを起動することができます。
+</p>
+
+
+<h3>GrxUIが起動時モーダレスダイアログが表示されたままになる</h3>
+<p>
+<a href="#start_hang">「GrxUIが起動時に固まる」</a>とは異なり
+GrxUIの操作は受け付けますが、ダイアログが画面トップに表示したままになります。
+この時サンプルプロジェクトをロードするなどした場合ダイアログが消えてくれます。
+この不具合は、OpenHRP Ver.3.0.3で解消しました。
+</p>
+<br>
+
+<h3>VRMLの内容を変更したのに変更が反映されない</h3>
+<p>
+3.0系のVRML読み込み部分は，以前読み込んだことのあるファイルの読み込みが指定された場合，実際に読み込みを行うかわりに以前読み込んだ内容を返すことで読み込み時間を短縮するキャッシュ機能をもっています．このためファイル名は変えずにファイルの中身を変えてもその内容が反映されません．このような場合はGrxUIを起動し直すか，メニューバーのTools->ProcessManagerからModelLoaderのチェックを一度外して再度チェックを入れることでModelLoaderの再起動を行って下さい．
+</p>
+
+<h2>Linux特有のトラブル</h2>
+<h3>GrxUIにおいて3D表示がおかしい/ウィンドウが固まる（Linux 対象）</h3>
+
+<p>
+X Window でOpenGLの描画をDirect Rendering で行っている場合、
+ドライバによってはこのような不具合が起きることがあり、
+Direct Rendering をオフにすれば（描画速度は遅くなりますが）
+正常に動くことがあります。
+</p>
+
+<p>
+具体的に、Ubuntu 7.10 をインテルGM965チップセットを搭載したノートPCで動かしたときに、
+このような症状を確認しています。
+その例では、/etc/X11/xorg.conf の、Section "Device" 内に、
+<pre>
+Option "DRI" "false"
+</pre>
+を追加してX Windowを再起動したところ、Direct Rendering がオフになり、
+正常に動作しました.
+</p>
+
+<p>
+おそらく、OpenGLドライバか、Java3Dのバグだと思われます。
+</p>
+
+<h3>GrxUIを操作中に X Window が落ちる　（Linux 対象）</h3>
+
+<p>
+XのディスプレイドライバがOpenGLに関して適切に設定されていない場合、
+このような症状がでることがあるようです。
+</p>
+
+<p>
+nvidia, ATI等のビデオカードでメーカーによるディスプレイドライバが使用可能な場合は、
+それを用いることで問題が解決される可能性があります。
+（詳しくは、<a href="./g3d_support.html">こちら</a>）
+</p>
+
+<h3 id="gcj_sun_error">Ubuntuでアップデートを行うとコンパイルエラー、またはGrxUIの起動時に例外が発生して起動できない（Linux 対象）</h3>
+
+<p>
+ubuntuのアップデートを行うとデフォルトでインストールされているgcjが最新版に更新されて、
+インストール時に<a href="./install_ubuntu_3_0.html#switch_java">切り替えた標準Java環境</a>がsunのJavaから
+gcjへ切り替わる現象が原因です。
+</p>
+<p>
+実行時に
+<pre>
+$ ./GrxUI.sh
+message logging level : SEVERE
+classpath added: file:/home/user/aist/OpenHRP3.0/client/gui/plugin/
+/home/user/aist/OpenHRP3.0/client/gui
+Null peer?!
+</pre>
+とコンソール上に表示されハングする現象が発生します。
+</p>
+<p>この現象を解消するには、インストール時と同様にコマンド
+  <pre>
+  $ sudo update-java-alternatives -s java-6-sun
+  </pre>
+  を実行してシステムの<a href="./install_ubuntu_3_0.html#switch_java">標準Javaを切り替え</a>てください。
+  gcjを使用しない場合はgcjをアンインストールしてしまうのも手です。
+</p>
+
+<h3>Ubuntu環境で視覚効果を適応した場合ダイアログ表示が背景色になる。(Linux 対象)</h3>
+VMWareのような仮想マシン環境ではなく、ネイティブ環境で顕著に再現した不具合です。
+ファイルをオープンする時、図(Fig.1)のような異常が起きます。
+<center>
+<img src="../img_new/trouble/white_dlg.png" align="top"><br>
+Fig.1
+</center><br><br>
+
+これを回避するには、視覚効果を無しに設定してください。<br>
+設定手順は以下の通りです。<br>
+デスクトップのメニューより
+システム→設定→外観の設定を選択し外観の設定ダイアログを起動します。(Fig.2)
+<center>
+<img src="../img_new/trouble/view_config1.png" align="top"><br>
+Fig.2
+</center><br><br>
+視覚効果タブを押下して効果なしのラジオボタンを選択して適応します。(Fig.3)
+<center>
+<img src="../img_new/trouble/view_config2.png" align="top"><br>
+Fig.3
+</center><br>
+<br>
+
+<h3 id="error_ipv6_localhost">ubuntu9.04以降の環境でGrxUI on EclipseからRTCが動作しない（Linux 対象）</h3>
+<p>
+ubuntu9.04以降の環境で初回導入時、GrxUI on EclipseでRTCを使用するサンプルが動作しないことがあります。
+この時、端末から
+<pre>$ openhrp-aist-dynamics-simulator -ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService</pre>
+と実行して
+<pre>IDL:omg.org/CORBA/TRANSIENT:1.0</pre>
+と出力されれば、ubuntu9.04以降の環境でipv6がデフォルトで有効でなくなったことが原因による不具合と思われます。<br>
+<br>
+対処法は、/etc/hostsの
+<pre>::1        localhost ip6-localhost ip6-loopback</pre>
+ipv6のlocalhost設定の行をコメントアウトしてください。
+</p>
+
+<h3>ModelLoaderサーバに他のPCからアクセスできない。</h3>
+現在、ubuntu上で起動したModelLoaderサーバーに、他のPCからCORBAのインタフェースでアクセスできない不具合が確認されています。
+原因は、特定できていません。
+
+<h3 id="compileError_rtmUpdate">2009/05/25以降、システムのアップデートまたはOpenHRPの新規インストール時にコンパイルエラーが起こる（Linux 対象）</h3>
+
+<p>
+2009/05/25以降、ubuntuのアップデートまたはOpenHRPの新規インストールを行うと通常OpenRTM-aist-1.0.0-RC1
+が導入されます。2009/06/09現在のOpenHRPでは、最新のOpenRTM-aist-1.0.0-RC1に対応していませんので次の
+ようなコンパイルエラーが発生します。
+<pre>
+error: ‘ExtTrigExecutionContextService_var’ in namespace ‘RTC’ does not name a type
+error: ‘RTC::ExtTrigExecutionContextService’ has not been declared
+error: ‘ExtTrigExecutionContextService_ptr’ is not a member of ‘RTC'
+</pre>
+場合に応じて以下のように対処してください。
+</p>
+<br><br>
+
+
+<h4 id="fresh_install">OpenHRP を新規インストールする場合</h4>
+<p>
+2010年5月31日以前のパッケージ導入スクリプトではOpenRTM-aist-1.0.0-RC1をインストールしてしまいます。<br>
+該当の方は (解凍先フォルダ)/util/pkg_install_ubuntu.sh を以下のスクリプトファイルで置き換えてください。
+
+<ul>
+ <li>OpenHRP 3.0.5 パッケージ導入スクリプト修正版: <a href="../download/pkg_install_ubuntu.sh">pkg_install_ubuntu.sh</a></li>
+</ul>
+
+パッケージを置き換えたら<a href="./install_ubuntu_3_0.html#install_script">「パッケージ導入スクリプトの実行」</a>説明どおりパッケージを導入してください。
+</p>
+
+<p>
+なお、OpenRTM-aist 旧バージョンをインストールしても次回からパッケージ自動アップデート
+により最新版にアップグレードされてしまう可能性がありますので、次の節の通り
+<a href="#stop_update">OpenRTM-aist 自動アップデートを停止</a>するようにしてください。
+</p>
+
+<p>
+<font color="red">既にOpenRTM-aist-1.0をインストールを行ってしまった場合にはOpenRTM-aist-1.0のアンインストールが必要です。</font><br>
+OpenRTM-aist-1.0のアンインストールを行った後にパッケージ導入スクリプトを実行してください。
+<pre>
+sudo apt-get remove openrtm-aist openrtm-aist-doc openrtm-aist-dev openrtm-aist-example
+</pre>
+</p>
+
+<h4 id="stop_update">OpenRTM-aist 自動アップデートを停止する</h4>
+<p>
+メニューから システム －＞ システム管理 －＞ ソフトウェアソース(English: System -&gt; 
+Administration -&gt; Software Sources)を選択し、"サードパーティのソフトウェア"タブを開いてください。
+そして Fig.4 のように OpneRTM 項目のチェックを外してください。
+</p>
+<center>
+<img src="../img_new/trouble/compileError_rtmUpdate.png" align="top"><br>
+Fig.4
+</center>
+<br>
+
+<h2>Windows特有のトラブル</h2>
+<h3 id="ns_error">omniORBのネームサーバが起動しない（Windows 対象）</h3>
+<p>
+OmniORBバージョン4.1.2をインストールしたWindows環境にて、
+以下の画像(Fig.4)のようにGrxUIの起動時に "3DVIEW : failed to bind to localhost NameService" と
+表示されてしまい、起動が失敗する場合があります。
+<center>
+<img src="../img_new/failed_bind.png" align="top"><br>
+Fig.4: failed to bind to localhost NameService
+</center><br>
+<br></p>
+
+<p>ご利用のコンピュータのコンピュータ名を正常に認識できなかった場合、このようなエラーが発生します。</p>
+<p>コンピュータ名を［A～Z，a～z，0～9,'_'] のみの構成にして14文字以下に設定し直してください。</p>
+<p>
+コンピュータ名の変更は次の通りです。<br>
+以下の4つの方法でシステムのプロパティダイアログを起動します。<br>
+•デスクトップの[マイ コンピュータ]アイコンを右クリックし、[プロパティ] をクリックします。<br>
+•[スタート] ボタンをクリックし、[マイ コンピュータ] を右クリックし、[プロパティ] をクリックします。<br>
+•[スタート] ボタンをクリックし、[ファイル名を指定して実行] をクリックします。次に、sysdm.cpl と入力し、[OK] をクリックします。<br>
+•[スタート] ボタンをクリックし、[コントロール パネル]、[システム] の順にクリックします。<br><br>
+起動したダイアログにて[コンピュータ名]タブ、[変更]ボタンを選択後、コンピュータ名を変更して再起動します。
+</p>
+
+<h3>GrxUIにおいて3D表示がおかしい(Windows 対象)</h3>
+<p>
+GrxUI 3DViewの矩形が狭い時、頂点バッファの表示が崩れることがあります。
+原因は確定してはいませんがノートPCに見られた現象からビデオアダプタに由来する不具合と
+思われます。3DViewタブ ウィンドウの矩形を拡大するような操作を行えば正常に表示されます。
+</p>
+
+<h3>GrxUI起動時に 3D デバイス用のエラーが表示される　（Windows 対象）</h3>
+
+<p>GrxUI起動時に以下のようなエラーが表示され、window が落ちてしまう場合があります。</p>
+
+<blockquote>Fail to create referance rasterizer 3D Device - D3DERR_NOTAVAILABLE</blockquote>
+
+<p><a href="http://support.microsoft.com/kb/191660/ja" target="_blank">
+http://support.microsoft.com/kb/191660/ja</a> によるとこの問題の原因として以下のうようなこと
+が考えられます。</p>
+
+<ol>
+　<li><b>使用しているコンピュータが、実行に必要な 3D ハードウェアの最小要件を満たしていない。</b></li>
+　<li><b>使用しているビデオ アダプタに、実行するのに十分なビデオメモリがない。</b></li><br>
+　対処：<ol>
+          (1.) と (2.) 対しては、CPU,メインメモリ,ビデオメモリなどのハードウェア機器が
+          3D表示をするために必要な最小要件を満たしていないという問題ですので、ハードウェア
+          スペックを性能の良いものに更新する手しかありません。以下に、OpenHRP3 を
+          快適に利用できるコンピュータのハードウェアスペックを述べますので、それとご自分のコンピュータ
+          のスペックを比較の上、判断してください。
+          <ul>
+          <li>CPU：PentiumIV 2Ghz</li>
+          <li>メインメモリ：1024MB </li>
+          <li>ビデオアダプタ：NVIDIA</li>
+          <li>ビデオメモリ：128MB </li>
+          <li>HDD空き容量：5GB</li></ul>
+        </ol>
+  </li>
+　<li><b>[DirectDraw アクセラレータ]、 [Direct3D アクセラレータ]  が無効になっている。</b><br>
+　対処：<ul>
+     <li>「スタート」 → 「ファイル名を指定して実行」 と辿って 「dxdiag」 と実行します。
+          すると 「DirectX 診断ツール」 ウィンドウが現れます。</li>
+　	 <li>「ディスプレイ」 タブを選択し、「DirectDrawアクセラレータ」 と 「Direct3Dアクセラレータ」 
+          の状態を確認します。いずれかが 「使用不可」 となっていれば、その行の 「有効」 をクリックします。</li>
+　	 <li>「有効」 ボタンがアクティブでない状態 （ボタンを押せない状態） であれば、次の (4.) と (5.) を
+           確認してください。</li>
+     </ul>
+  </li>
+　<li><b>ビデオアダプタ用のドライバが古い。</b><br>
+　対処：<ul>古いバージョンのドライバですと、上記のアクセラレータ機能が対応しない場合があります。
+            このような場合、ビデオアダプタに対応するドライバの最新バージョン（できれば安定版）を
+            見つけてきてインストールする必要があります。多くの場合メーカのホームページから最新
+            ドライバを提案されます。 「デバイスマネージャー」 の 「ディスプレイアダプタ」 項目に
+            表示されるドライバでネットを検索するとダウンロード元が見つかりやすいでしょう。
+       </ul>
+  </li>
+　<li><b>DirectX の最新バージョンがインストールされていない、または DirectX が破損している。</b><br>
+　対処：<ul>(3.) で説明されているとおり、 「DirectX 診断ツール」 の 「ディスプレイ」 タブに辿って 
+            「DirectDraw のテスト」 と 「Direct3D のテスト」 を行ってください。テスト中にいくつかの
+            画面が表示されます。それらを正常に表示されない場合テストが失敗しますので、DirectX ランタイム・
+            エンジンのを異常があると考えられます。
+            <a href="http://www.microsoft.com/japan/windows/directx/default.mspx" target="_blank">
+            http://www.microsoft.com/japan/windows/directx/default.mspx</a>　から DirectX インストーラ
+            をダウンロードし、再インストールしてください。
+        </ul>
+  </li>
+　<li><b>バックグラウンドで実行される一つまたは複数のプログラムが干渉している。</b><br>
+　対処：<ul>バックグラウンドで DirectDraw、Direct3D を利用して3D表示をするアプリケーション・ソフト
+            が実行されると、処理が重くなり、ハンドルできなくなることがあります。パソコンの性能に
+            よって処理をハンドルできる程度が変わります。このような場合、利用していないアプリケーション
+            の使用を止めてから進めてください。
+        </ul>
+  </li>
+</ol>
+
+
+
+<h3>GrxUI実行中に OS が落ちる　（Windows 対象）</h3>
+<p>
+特定のビデオアダプタとドライバーのバージョンによって発生する不具合のようです。
+固有のビデオアダプタについては下記のテーブルを参考にしてください。
+</p>
+<table border="1" align="center">
+<tr><td>ビデオアダプタ</td><td>不具合発生時ドライバ Ver.</td><td>対処</td></tr>
+<tr><td>ATI Radeon HD 2400 XT</td><td>8.420.0.0 (2007/09/14)版</td><td>ドライバ更新による不具合解消</td></tr>
+</table>
+<center>Table 1:不具合発生ビデオアダプタ一覧</center>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Using Dynamics Servers</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Using Dynamics Servers</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+
+<h2> Sample </h2>
+
+<h3> Source code </h3>
+
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;string&gt;
+#include &lt;OnlineViewerClient.h&gt;
+#include &lt;DynamicsSimulator.h&gt;
+
+using namespace std;
+using namespace OpenHRP;
+
+enum {X, Y, Z};
+#define deg2rad(x) ( 3.14159265358979 / 180*(x) )
+#define DOF 29    // Degree-of-freedom
+
+// Retrieving servers
+template &lt;typename X, typename X_ptr&gt; 
+X_ptr checkCorbaServer(std::string n, CosNaming::NamingContext_var &amp;cxt)
+{
+    CosNaming::Name ncName;
+    ncName.length(1);
+    ncName[0].id = CORBA::string_dup(n.c_str());
+    ncName[0].kind = CORBA::string_dup("");
+    X_ptr srv = NULL;
+    try 
+    {
+        srv = X::_narrow(cxt-&gt;resolve(ncName));
+    } 
+    catch(const CosNaming::NamingContext::NotFound &exc) 
+    {
+        std::cerr &lt;&lt; n &lt;&lt; " not found: ";
+        switch(exc.why) 
+        {
+            case CosNaming::NamingContext::missing_node:
+                std::cerr &lt;&lt; "Missing Node" &lt;&lt; std::endl;
+                break;
+            case CosNaming::NamingContext::not_context:
+                std::cerr &lt;&lt; "Not Context" &lt;&lt; std::endl;
+                break;
+            case CosNaming::NamingContext::not_object:
+                std::cerr &lt;&lt; "Not Object" &lt;&lt; std::endl;
+                break;
+        }
+        return (X_ptr)NULL;
+    } 
+    catch(CosNaming::NamingContext::CannotProceed &exc) 
+    {
+        std::cerr &lt;&lt; "Resolve " &lt;&lt; n &lt;&lt; " CannotProceed" &lt;&lt; std::endl;
+    } 
+    catch(CosNaming::NamingContext::AlreadyBound &exc) 
+    {
+        std::cerr &lt;&lt; "Resolve " &lt;&lt; n &lt;&lt; " InvalidName" &lt;&lt; std::endl;
+    }
+    return srv;
+}
+
+
+int main(int argc, char* argv[])
+{
+    int i;
+    string url = "file://";
+    // Specify the URL of the model using -url 
+    for(i=0; i &lt; argc; i++)
+    {
+        if( strcmp(argv[i], "-url") == 0 && i+1 &lt; argc) url += argv[i+1];
+    }
+
+    string robot_url = url+"sample.wrl";
+    string floor_url = url+"floor.wrl";
+
+    const char *ROBOT_URL = robot_url.c_str();
+    const char *FLOOR_URL = floor_url.c_str();
+
+    //////////////////////////////////////////////////////////////////////
+
+    // Initializing CORBA
+    CORBA::ORB_var orb;
+    orb = CORBA::ORB_init(argc, argv);
+
+    // ROOT POA
+    CORBA::Object_var poaObj = orb -&gt; resolve_initial_references("RootPOA");
+    PortableServer::POA_var rootPOA = PortableServer::POA::_narrow(poaObj);
+
+    // Retrieving reference to POA manager
+    PortableServer::POAManager_var manager = rootPOA -&gt; the_POAManager();
+    
+    // Retrieving reference to NamingService
+    CosNaming::NamingContext_var cxT;
+    {
+      CORBA::Object_var    nS = orb-&gt;resolve_initial_references("NameService");
+      cxT = CosNaming::NamingContext::_narrow(nS);
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+
+    // Retrieving DynamicsSimulator
+    DynamicsSimulatorFactory_var dynamicsSimulatorFactory;
+    dynamicsSimulatorFactory = 
+        checkCorbaServer &lt;DynamicsSimulatorFactory,
+        DynamicsSimulatorFactory_var&gt; ("DynamicsSimulatorFactory", cxT);
+
+    if (CORBA::is_nil(dynamicsSimulatorFactory)) 
+    {
+        std::cerr &lt;&lt; "DynamicsSimulatorFactory not found" &lt;&lt; std::endl;
+    }
+
+    DynamicsSimulator_var dynamicsSimulator 
+        = dynamicsSimulatorFactory-&gt;create();
+
+    
+    // Retrieving ModelLoader
+    ModelLoader_var modelLoader =
+        checkCorbaServer &lt;ModelLoader, 
+        ModelLoader_var&gt; ("ModelLoader", cxT);
+
+    if (CORBA::is_nil(modelLoader)) 
+    {
+        std::cerr &lt;&lt; "ModelLoader not found" &lt;&lt; std::endl;
+    }
+
+
+    // Loading models 
+    CharacterInfo_ptr cInfo;
+    try 
+    {
+        cInfo = modelLoader-&gt;loadURL(ROBOT_URL);
+    } 
+    catch(CORBA::SystemException& ex) 
+    {
+        std::cerr &lt;&lt; "CORBA::SystemException raised by ModelLoader: " 
+            &lt;&lt; ex._rep_id() &lt;&lt; std::endl;
+    } 
+    catch(ModelLoader::ModelLoaderException& ex)
+    {
+        std::cerr &lt;&lt; "ModelLoaderException (id = " &lt;&lt; ex.id &lt;&lt; ") : " 
+            &lt;&lt; ex.description &lt;&lt; std::endl;
+    }
+    dynamicsSimulator-&gt;registerCharacter("robot", cInfo);
+
+    // Loading floor
+    try 
+    {
+        cInfo = modelLoader-&gt;loadURL(FLOOR_URL);
+    } 
+    catch(CORBA::SystemException& ex) 
+    {
+        std::cerr &lt;&lt; "CORBA::SystemException raised by ModelLoader: " 
+            &lt;&lt; ex._rep_id() &lt;&lt; std::endl;
+    } 
+    catch(ModelLoader::ModelLoaderException& ex)
+    {
+        std::cerr &lt;&lt; "ModelLoaderException (id = " &lt;&lt; ex.id &lt;&lt; ") : " 
+            &lt;&lt; ex.description &lt;&lt; std::endl;
+    }
+    dynamicsSimulator-&gt;registerCharacter("floor", cInfo);
+
+
+    /////////////////////////////////////////////////////////////////////////
+
+    // Initializing DynamicsSimulator
+    dynamicsSimulator-&gt;init(0.002, 
+        DynamicsSimulator::RUNGE_KUTTA, 
+        DynamicsSimulator::ENABLE_SENSOR);
+
+    // Setting gravity vector
+    DblSequence3 gVector;
+    gVector.length(3);
+    gVector[0] = gVector[1] = 0;
+    gVector[2] = 9.8;
+    dynamicsSimulator-&gt;setGVector(gVector);
+    
+    // Setting joint's driving mode
+    dynamicsSimulator-&gt;setCharacterAllJointModes(
+        "robot", DynamicsSimulator::TORQUE_MODE);
+
+    // Initial posture
+    double init_pos[] = {0.00E+00, -3.60E-02, 0,  7.85E-02, -4.25E-02,  0.00E+00,
+                         1.75E-01, -3.49E-03, 0, -1.57E+00,  0.00E+00,  0.00E+00,
+                         0.00E+00,  0.00E+00, -3.60E-02, 0,  7.85E-02, -4.25E-02,
+                         0.00E+00,  1.75E-01,  3.49E-03, 0, -1.57E+00,  0.00E+00,
+                         0.00E+00,  0.00E+00, 0, 0, 0};
+
+    // Setting initial posture to joint angle
+    DblSequence q;
+    q.length(DOF);
+    for (int i=0; i&lt;DOF; i++) 
+    {
+        q[i] = init_pos[i];
+    }
+    dynamicsSimulator-&gt;setCharacterAllLinkData(
+        "robot", DynamicsSimulator::JOINT_VALUE, q);
+
+    // Forward kinematics calculation
+    dynamicsSimulator-&gt;calcWorldForwardKinematics();
+
+    // Setting collision pair(2 hands) 
+    DblSequence6 dc, sc;
+    dc.length(0);
+    sc.length(0);
+
+    dynamicsSimulator-&gt;registerCollisionCheckPair(
+        "robot",
+        "RARM_WRIST_R",
+        "robot",
+        "LARM_WRIST_R",
+        0.5,
+        0.5,
+        dc,
+        sc);
+
+    dynamicsSimulator-&gt;initSimulation();
+
+    /////////////////////////////////////////////////////////////////////////
+
+    // Retrieving OnlineViewer
+    OnlineViewer_var onlineViewer =
+        checkCorbaServer &lt;OnlineViewer,    
+        OnlineViewer_var&gt; ("OnlineViewer", cxT);
+
+    if (CORBA::is_nil(onlineViewer)) 
+    {
+        std::cerr &lt;&lt; "OnlineViewer not found" &lt;&lt; std::endl;
+    }
+
+    // Loading model to OnlineViewer
+    try 
+    {
+        onlineViewer-&gt;load("robot", ROBOT_URL);
+        onlineViewer-&gt;load("floor", FLOOR_URL);
+        onlineViewer-&gt;clearLog();
+    } 
+    catch (CORBA::SystemException& ex) 
+    {
+        std::cerr &lt;&lt; "Failed to connect GrxUI." &lt;&lt; endl;
+        return 1;
+    }
+    /////////////////////////////////////////////////////////////////////////
+
+    // Preparing for inverse kinematics calculation
+    double RARM_p[] = {0.197403, -0.210919, 0.93732};
+    double RARM_R[] = {0.174891, -0.000607636, -0.984588,
+                       0.00348999, 0.999994, 2.77917e-06,
+                       0.984582, -0.00343669, 0.174892};
+
+    double LARM_p[] = {0.197403, 0.210919, 0.93732};
+    double LARM_R[] = {0.174891, 0.000607636, -0.984588,
+                       -0.00348999, 0.999994, -2.77917e-06,
+                       0.984582, 0.00343669, 0.174892};
+    double dp = 0.0;
+
+    /////////////////////////////////////////////////////////////////////////
+
+    WorldState_var state;        
+    while (1) 
+    {
+        // Inverse kinematics calculation 
+        LinkPosition link;
+        link.p[0] = RARM_p[0];
+        link.p[1] = RARM_p[1] + dp;
+        link.p[2] = RARM_p[2];
+        for (int i=0; i&lt;9; i++) 
+          link.R[i] = RARM_R[i];
+        dynamicsSimulator-&gt;calcCharacterInverseKinematics(CORBA::string_dup("robot"),
+                                  CORBA::string_dup("CHEST"),
+                                  CORBA::string_dup("RARM_WRIST_R"),
+                                  link);
+
+        link.p[0] = LARM_p[0];
+        link.p[1] = LARM_p[1] - dp;
+        link.p[2] = LARM_p[2];
+        for (int i=0; i&lt;9; i++) 
+          link.R[i] = LARM_R[i];
+        dynamicsSimulator-&gt;calcCharacterInverseKinematics(CORBA::string_dup("robot"),
+                                  CORBA::string_dup("CHEST"),
+                                  CORBA::string_dup("LARM_WRIST_R"),
+                                  link);                            
+
+        dynamicsSimulator-&gt;calcWorldForwardKinematics();
+        dp += 0.001;
+
+        // Updating OnlineViewer 
+        try 
+        {
+            dynamicsSimulator-&gt;getWorldState(state);
+            state-&gt;time = dp*10;
+            onlineViewer-&gt;update(state);
+        }
+        catch (CORBA::SystemException& ex) 
+        {
+            std::cerr &lt;&lt; "OnlineViewer could not be updated." &lt;&lt; endl;
+            return 1;
+        }
+
+        // Collision check
+        dynamicsSimulator-&gt;checkCollision();
+
+        if (state-&gt;collisions.length() &gt; 0) 
+        {            
+            if (state-&gt;collisions[0].points.length() &gt; 0) 
+            {
+                break;
+            }
+        }
+    }
+    return 0;
+}
+</pre>
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

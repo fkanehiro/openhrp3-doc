@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>シミュレーション チュートリアル</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">シミュレーション チュートリアル</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h3>はじめに </h3>
+  <p>
+  <a href="simulate_sample.html">インストール＞サンプルシミュレーション</a>の所で、サンプルプロジェクト(SampleRobotPD.xml)をロードしてOpenHRP3の動作確認を行いました。<br>
+  ここでは、自分でプロジェクトを作成して、シミュレーションを行う手順について説明を行います。<br>
+  <p>
+  OpenHRP3を利用するためには、ロボットモデルとコントローラを作成する必要がありますが、今回はSampleRobotPD.xmlと同様に、<br>
+  <br>
+   ロボットモデル：OpenHRP3/etc/sample.wrl <br>
+   コントローラ　：OpenHRP3/Controller/server/PDcontroller <br>
+  <br>
+  として以降の説明を進めます。<br>
+  <br> 
+  なおPDcontrollerは、<br>
+  <br>
+  PDゲインファイル : OpenHRP3/Controller/server/etc/PDgain.dat <br>
+  歩行パターンファイル : OpenHRP3/Controller/server/etc/angle.dat <br>
+  <br>
+  を読み込んで、実行するコントローラです。
+  </p>
+
+<h3><a name="2">GrxUIの起動</a></h3>
+  <h4>Linux環境の場合</h4>
+  <p>
+  以下のコマンドでGrxUIを起動します。<br>
+<pre>
+$ cd (OPENHRPをインストールしたディレクトリ)/bin/unix
+$ ./GrxUI.sh
+</pre>
+  またはファイルブラウザなどのGUIを使用してもGrxUI.shを実行できます。
+  </p>
+  <h4>Windows環境の場合</h4>
+  <p>
+  以下のコマンドでGrxUIを起動します。<br>
+<pre>
+>cd (OPENHRPをインストールしたディレクトリ)/bin/dos
+>GrxUI.bat
+</pre>
+  またはエクスプローラなどのGUIを使用してもGrxUI.batを実行できます。
+  </p>
+  <p align="center">
+  <img src="../image/grxui/initialwindow.png"> <br>
+  fig.1: Initial Window
+  </p>
+
+<h3>使用するモデルのロードと初期設定 </h3>
+  モデルのロードは、fig.2に示すようにItemView上で行います。<br>
+  <p align="center">
+  <img src="../image/grxui/loadmodel1.png" align="top"> 
+  <img src="../image/grxui/loadmodel2.png" align="top"> <br>
+  fig.2: load models
+  </p>
+  <br>
+
+  モデルアイテムを扱うViewには、ロボットモデルと環境モデルとを区別するものがあり、fig.3のようにItem Viewの右クリックメニューから変更します。<br>
+  <p align="center">
+  <img src="../image/grxui/loadmodel3.png" align="top"> 
+  <img src="../image/grxui/loadmodel4.png" align="top"> <br>
+  fig.3: Robot model to Environmental model
+  </p>
+
+  <br>
+  ロードしたモデルは<b>3DView</b>上に表示され、位置・姿勢、関節角度等を編集できるようになります。<br>
+  編集した内容は、初期条件として各モデルのプロパティに設定されます。<br>
+  編集中のモデルの関節角度は、<b>RobotStateView</b>で確認する事ができます。<br> 
+  <p align="center">
+  <img src="../image/grxui/editmodel1.png" align="top"> 
+  <img src="../image/grxui/editmodel2.png" align="top"> <br>
+  fig.4: 3DView and RobotStateView
+  </p>
+  関節角度編集モード<img src="../image/grxui/joint_rotation.png">では、マウス操作により各関節を回転できる他、カーソルキー操作でも関節角度を調整できます。<br>
+  ここでは、PDcontrollerが読み込む動作ファイルの初期姿勢に設定します。左上図の関節角度を参考に設定して下さい。<br>
+  <br>  
+  なお、<b>PropertyView</b>を利用する事で、数値を直接入力して編集することも可能です。<br>
+  <br>  
+
+<h3>コントローラの設定 </h3>
+  <p>
+  ロボットモデルがある場合は、OpenHRP/Controllerタブで、コントローラを関連付ける事ができます。<br>
+  <br>
+  <b>Controller</b><br>
+  接続するコントローラのCORBAオブジェクトIDを指定します。<br>
+  今回は、"PDcontroller"と指定します。<br>
+  <br>
+  <b>Control Time[s]</b><br>
+  コントローラの実行周期を指定します。<br>
+  今回は、動作パターンが0.002[s]刻なので、0.002を指定します。<br>
+  </p>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/editmodel3.png" align="top"> <br>
+  fig.5: Edit Controller Settings
+  </p>
+
+<h3>干渉チェックペアの設定 </h3>
+  <p>
+  干渉チェックペアは、OpenHRP/Collisionタブにより編集します。<br>
+  中央左側の<b>Add</b>ボタンを押すと、Collisionタブの下側半分が操作できるようになります。<br>
+  <b>Add</b>ボタンが押せない場合は、まずモデルがロードされている事を確認して下さい。 <br>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/editcollision1.png" align="top"> <br>
+  fig.5: Edit Collision Pair
+  </p>
+  <p>
+  コンボボックス<b>Object1</b>と<b>Object2</b>でモデルを選択し、<b>Link1</b>と<b>Link2</b>で干渉チェックを行うリンクを特定します。<br>
+  <b>Link</b>の所で何も選ばなかった場合は、そのモデルにある全てのリンクを干渉チェックの対象とします。<br>
+  </p>
+  <p>
+  この例では、ロボットモデルsampleと環境モデルlongfloorの干渉チェックを設定します。<br>
+  Object1とObject2でそれぞれ、sampleとlongfloorを選択するように変更し、<b>OK</b>ボタンを押して下さい。<br>
+  </p>
+
+<h3>実行条件の設定 </h3>
+  OpenHRP/Simulationタブでシミュレーション時間等の設定を行います。<br>
+  設定内容がWorldStateアイテムに記録されるため、まずWorldStateアイテムを生成します。<br>
+  <p align="center">
+  <img src="../image/grxui/createworldstate1.png" align="top"> 
+  <img src="../image/grxui/createworldstate2.png" align="top"> 
+  <img src="../image/grxui/createworldstate4.png" align="top"> <br>
+  fig.6: create WorldStateItem
+  </p>
+
+  <b>Total Time[s]</b><br>
+  Sampleのコントローラは、あらかじめ生成された歩行パターンファイルを読み込んで、ロボットを駆動します。<br>
+  そのパターンファイルの実行時間が13.4であるため、13.4を設定します。<br>
+  <br>
+  <b>Integration Step[s]</b><br>
+  同じくパターンファイルのタイムステップが0.002[s]刻になっているため、ここでは0.002を設定します。<br>
+  <br>
+
+  <b>Loggin Step[s]</b><br>
+  Logging Stepの変更で、結果の記録によるファイルアクセスを減らす事ができますので、シミュレーション時間を短縮できます。<br>
+  ここでは、Integration Stepと同じく0.002[s]に設定します。Integration Step以下に設定した場合は、Integration Stepと同じ値とみなされます。<br>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/editsimconf.png" align="top"> <br>
+  fig.7: Edit Collision Pair
+  </p>
+  <p>
+
+<h3>プロジェクトの保存</h3>
+  ここまでに設定した各アイテムの状態は、プロジェクトファイルとして保存することができます。
+  メニューからFile->Save Projectを選択し保存します。
+  </p>
+  <p align="center">
+  <img src="../image/grxui/saveproject1.png" align="top"> <br>
+  fig.10: Edit Collision Pair
+  </p>
+  
+  その後、下図に示すダイアログが現れますので、画面構成を保存するかどうかを選択します。
+  </p>
+  <p align="center">
+  <img src="../image/grxui/saveproject3.png" align="top"> <br>
+  fig.11: Edit Collision Pair
+  </p>
+
+<h3>プロセスマネージャの設定</h3>
+  サンプルプロジェクトSampleRobotPD.xmlには、シミュレーション開始時に自動的にOpenHRP3/bin/unix/PDController.shを実行するための記述が追加してあります。<br>
+  現時点では、この設定をGUIから行う事ができません。<br>
+  従って、プロジェクト保存後、テキストエディタにて、プロジェクトを開き以下の行を追加して下さい。<br>
+  <br>
+
+  &lt;process id="PDcontroller" com="$(BIN_DIR)/PDController$(BIN_SFX)" dir="$(BIN_DIR)/" hasshutdown="true" autostart="false"/&gt;<br>
+  <br>
+  上記を追加後、この変更を有効にするために一度プロジェクトをLoadし直して下さい。<br>
+  <br>
+
+<h3><a name="startSimulation">シミュレーションの開始 </a></h3>
+  下図赤枠のシミュレーション開始ボタンを押して下さい。<br>
+  このボタンを押した時点で、Item View上で選択状態にあるモデルアイテムやCollisionPairアイテムが、シミュレーション中有効になります。<br>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/startsimulation1.png" align="top"> <br>
+  fig.8: Edit Collision Pair
+  </p>
+  OpenHRP/Controllerタブで設定したコントローラが起動していなければ、自動起動を試みます。<br>
+  この時Controllerへの接続に成功するとシミュレーションが開始されます。<br>
+  接続に失敗した場合、<br>
+    1.もう少し待つ<br>
+    2.Controllerなしでシミュレーションをスタートする<br>
+    3.キャンセルする<br>
+  かを選択する下図のダイアログが現れます。<br>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/startsimulation2.png" align="top"> <br>
+  fig.9: Edit Collision Pair
+  </p>
+
+<h3>シミュレーションの中断・終了 </h3>
+  シミュレーション開始ボタン<img src="../image/grxui/sim_start.png" align="top">は、
+  シミュレーション実行中、中断・終了ボタン<img src="../image/grxui/sim_stop.png" align="top">に変わります。<br>
+  中断・終了ボタンを押すと、シミュレーションは一時中断し、終了してもよいかを問うダイアログが現れます。<br>
+  このダイアログの<b>OK</b>ボタンを押すと、シミュレーションは終了します。<br>
+  <br>
+
+<h3>プレイバック機能の利用 </h3>
+  シミュレーション結果は、画面上部にある再生・スロー再生・早送り・巻戻しボタン等を押す事でプレイバックできます。<br>
+  シミュレーション結果はWorldStateアイテムに記録されており、スライダの指す時刻のデータを、3DView、Graph、RobotStatといった各Viewが表示します。<br>
+  <br>
+
+<h3>グラフ機能</h3>
+  グラフ表示する項目は、GraphContentsアイテムに記録されます。<br>
+  まずはItem View上でGraphContensアイテムを生成します。<br>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/creategraphitem1.png" align="top">
+  <img src="../image/grxui/creategraphitem2.png" align="top"> <br>
+  fig.10: Create Graph Contents
+  </p>
+
+  次にGraphビューの<b>Series</b>ボタンを押し、表示する項目を選択します。<br>
+  表示項目は、シミュレーション終了後でも選択する事が可能です。<br> 
+  登録した内容は、プレイバック時、もしくは次回のシミュレーション時に表示される事になります。<br>
+  </p>
+  <p align="center">
+  <img src="../image/grxui/editgraphitem1.png" align="top"> <br>
+  fig.10: Create Graph Contents
+  </p>
+  <br>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

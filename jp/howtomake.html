@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>CMakeコマンドによるOpenHRP3のコンパイル</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">CMakeコマンドによるOpenHRP3のコンパイル</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+
+<h2><a name="1" class="wiki-page"></a>CMakeによるコンパイル</h2>
+
+	<p>バージョン3.1ではコンパイルに&#8221;CMake&#8221;というツールを使います。</p>
+
+
+	<p>まずは cmake をインストールしてください。Ubuntuでは、</p>
+
+
+<pre>
+$ sudo apt-get install cmake
+</pre>
+	<p>で入ります。</p>
+
+
+	<p>cmakeでは、各ディレクトリに置かれた &#8220;CMakeLists.txt&#8221; という設定ファイルに基づいて、MakefileやVisual C++ のプロジェクトファイルなどを生成します。生成は、以下のようにします。（ただし、Visual C++ についてはまだCmakeLists.txt の記述が十分ではありません。）</p>
+
+
+	<p>ソースのトップで、</p>
+
+
+<pre>
+ $ ccmake .
+</pre>
+	<p>とすると cmake の設定画面が表示されます。</p>
+
+
+	<p>最初は設定開始前の状態ですので、ここで &#8220;c&#8221;を押して、設定を進めます。<br />
+すると、必要なライブラリなどを自動的にみつけてそれらの使用のための設定をしてくれます。</p>
+
+
+	<p>ただし、ライブラリ等を標準的でないディレクトリやパスの通ってないディレクトリとかに置いていて、それらをみつけられない場合もあります。この場合、CMake Error: とでて、エラーの原因が表示されます。例えば tvmet がみつからなかったときは、</p>
+
+
+<pre>
+$  CMake Error: Could not find tvmet. Please set TVMET_DIR correctly
+</pre>
+	<p>などとでます。</p>
+
+
+	<p>この場合は、まず画面下部の指示に従って、&#8221;e&#8221; キーを押します。<br />
+すると、キーと値のリストを編集していく画面になります。</p>
+
+
+	<p>ここで、例えば TVMET_DIR の項目に &#8220;TVMET_DIR-NOTFOUNT&#8221; などとでていたりしますので、これを適切に設定します。項目にカーソルを持っていって、リターンキーを押した後、パスなどを入力すればOKです。このとき、TABキーによるファイルパス補間も可能です。</p>
+
+
+	<p>設定ができたら、また &#8220;c&#8221; キーを押します。すると設定がやり直されて、値が正しく設定されていれば、エラーはなくなるはずです。以上を、エラーが起きなくなるまで進めます。</p>
+
+
+	<p>ただし、エラーがでていなくても、意図するパスとは違うパスでライブラリ等が設定されている場合もあるので、例えば自分でホームに入れたライブラリを使いたかったりする場合は、対応する項目をそれに合わせて設定するようにします。</p>
+
+
+	<p>最後に、&#8221;g&#8221; キーを押すと、設定にもとづいてMakefileが自動的に生成されます。</p>
+
+
+	<p>以上の操作は、バッチ的に行うこともできます。その場合は、&#8221;ccmake&#8221; ではなく、&#8221;cmake&#8221; コマンドを使うようにしてください。例えば、もしライブラリの探索でエラーがでないのであれば、</p>
+
+
+<pre>
+$ cmake .
+</pre>
+	<p>だけで Makefile が生成されることになります。</p>
+
+
+	<p>このようにして生成したMakefile で、普通にmake できます。依存関係も完璧に記述されていますので、ソースのどこか一部を修正する度に &#8220;make clean&#8221; をしなくても大丈夫なはずですし、 &#8220;make -j n&#8221; とかやると、 n プロセスによる並列コンパイルも問題なく行うことができるはずです。</p>
+
+
+	<p>また、cmakeが生成したMakefileによるmakeでは、個々のコンパイルのコマンドラインを全て見せるのではなく、処理中のファイルと進捗率を重視したすっきりとした表示がなされます。ただし、個々のコンパイルのコマンドラインも確認したいという場合には、</p>
+
+
+<pre>
+$ make VERBOSE=1
+</pre>
+	<p>とすればOKです。</p>
+
+
+	<p>常にこうしたい場合は、cmake の設定で &#8220;CMAKE_VERBOSE_MAKEFILE&#8221; を &#8220;ON&#8221; にしておけばOKです。</p>
+
+
+	<p>cmake の詳細については、<a href="http://www.cmake.org/" target="_blank">http://www.cmake.org/</a> や、ここからたどれる　<a href="http://www.cmake.org/Wiki/CMake" target="_blank">http://www.cmake.org/Wiki/CMake</a> , <a href="http://www.cmake.org/HTML/CMake-2.4.html" target="_blank">http://www.cmake.org/HTML/CMake-2.4.html</a> なんかをみるようにしてください。</p>
+
+
+	<p>今後は、例えば新たにソースファイルを追加したりする場合は、Makefile ではなく、CMakeLists.txt を編集することになります。</p>
+
+
+	<h3><a name="2" class="wiki-page"></a>ビルドディレクトリをソースディレクトリ以外にする場合</h3>
+
+	<p>ソースディレクトリとビルドディレクトリを分けて作業をする方法と注意点を記します。</p>
+
+
+	<p>ソースディレクトリを (Working Dir)/OpenHRP3.1 、ビルド用ディレクトリを (Working Dir)/test とします。</p>
+
+
+<pre>
+$ cd test/
+$ ccmake ../OpenHRP3.1
+$ make
+</pre>
+	<p>とすることでcmakeの設定画面を起動します。設定を終えgキーを押下し ビルド用のファイルとディレクトリを生成します。<br />
+test 以下にMakefile,CMakeCache.txt,作業ディレクトリなどが生成されますので、test ディレクトリターゲットにして make コマンドを実行してください。
+</p>
+
+
+	<p>ただし OpenHRP3.1 以下にCMakeCache.txtが作成済みの場合、OpenHRP3.1 以下のMakefile等を再構築することになりますので<br />
+あらかじめ OpenHRP3.1 以下のCMakeCache.txtはリネームもしくは削除してください。</p>
+
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

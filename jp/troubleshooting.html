@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>OpenHRP3 Troubleshooting(Ver.3.1)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">OpenHRP3 Troubleshooting(Ver.3.1)</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+
+<h2>目次</h2>
+<ul>
+ <li><a href="#grxui_on_eclispe_compile_error">GrxUI on Eclispe をコンパイルする時型解決のエラーが発生</a></li>
+ <li><a href="#zombie_clear">RTSystemEditorの「ゾンビをクリア」ボタンを押下するとGrxUIが正常に動作しなくなる</a></li>
+ <li><a href="#set_tmp_dir">ファイルの一時保存先を変更したい</a></li>
+ <li>Linux特有のトラブル</li>
+ <ul>
+  <li><a href="#error_ipv6_localhost">Ubuntu9.04以降の環境でサンプルが動作しない</a></li>
+  <li><a href="#gcj_sun_error">Ubuntuでアップデートを行うとコンパイルエラー、またはGrxUIの起動時に例外が発生して起動できない</a></li>
+  <li><a href="#deb_error">Ubuntu9.04以前の環境でバイナリパッケージを導入すると/にファイルがインストールされる</a></li>
+  <li><a href="#ldd_not_found">GrxUI起動時にOpenHRPのサーバ群が起動しない</a></li>
+ </ul>
+ <li>Windows特有のトラブル</li>
+ <ul>
+  <li><a href="#win_omni_err">omniNamesが正常に起動しない</a></li>
+ </ul>
+</ul>
+
+
+<h2>プラットフォーム共通のトラブル</h2>
+<h3 id="grxui_on_eclispe_compile_error">GrxUI on Eclispe をコンパイルする時型解決のエラーが発生</h3>
+<p>
+GrxUI on Eclispe をコンパイルする際jp.go.aist.hrp以下のパッケージが
+見つからないために型解決のエラーが起こることがあります。<br>
+GrxUIonEclipse-project-0.9.8/openhrpstubskel.jarのファイルが
+1KBのような極端に小さいファイルであれば、openhrpstubskelの生成に失敗したことが原因です。<br>
+openhrpstubskel.jarはopenrtmstubskel.jarに依存するのですが、特に並列コンパイルの時、
+生成タイミングの影響でopenhrpstubskelの生成に失敗することがあります。<br>
+openhrpstubskelのjavacのメッセージ異常で早めに気づく方もおられると思いますが、それも同じ理由です。<br>
+<br><br>
+対処法ですが、正常なopenhrpstubskel.jarを以下の方法で作成します。<br>
+その後Eclipse側のプロジェクトをF5で更新してください。
+</p>
+<h4>Linuxでの対処法</h4>
+<p>
+make時にjオプションを指定した場合特有のエラーですので、jオプションを使用しないでコンパイルしてください。<br>
+</p>
+<h4>Windowsでの対処法</h4>
+<p>
+VCのプロジェクトで明示的に依存プロジェクトを指定するとこのエラーを回避できるようになります。<br>
+<br>
+<ol>
+  <li>メニューのプロジェクト→プロジェクト依存関係を選択して、プロジェクトの依存関係ダイアログを開いてください。</li>
+  <li>依存関係タブ・ウインドウにてプロジェクト・プルダウンボックスからJavaStubSkelを選択します。</li>
+  <li>依存先のOpenRTMStubSkelのチェックボックスをチェックします。</li>
+  <li>OKボタンを押して適応します。</li>
+  <li>プロジェクトをリビルドします。</li>
+</ol>
+依存関係が解決できない原因を調査中ですが、CMakeの誤用、使用法に問題があるか、CMake独自のバグなのか今のところ不明です。今後改善する予定です。
+</p>
+
+
+<h3 id="zombie_clear">RTSystemEditorの「ゾンビをクリア」ボタンを押下するとGrxUIが正常に動作しなくなる</h3>
+<p>
+RTSystemEditorには
+<a href=http://www.openrtm.org/OpenRTM-aist/html/E3839EE3838BE383A5E382A2E383AB2FRTSystemEditor_1.0.0.html#h2b7d7a1 target="_blank">
+「ネームサーバにエントリされてはいるが、実体のオブジェクトにアクセスできないゾンビオブジェクト」をネームサーバーから一括して削除する機能
+</a>があります。<br>
+
+RTSystemEditorをOpenHRPと併用して使用する場合、図の黄色枠のようにOpenHRPのサーバがゾンビとして列挙されてしまいますが、
+実際には動作中のプロセスですので図の赤枠のボタンは押下しないでください。<br>
+このボタンを押下したらネームサーバからOpenHRPのサーバ群の登録が削除されますのでGrxUIが正常に動作しなくなります。<br>
+<p align="center">
+<img src="../img_new/trouble/zombieClear.png"><br>
+図：ゾンビをクリア
+</p>
+</p>
+
+<h3 id="set_tmp_dir">ファイルの一時保存先を変更したい</h3>
+<p>
+OpenHRP3では、シミュレーションの実効中、ログを一時的にファイルに保存しています。<br>
+ファイルの場所は、Javaのシステムプロパティ"java.io.tmpdir"で指定されているディレクトリ＋"grxui-(ユーザ名)"となります。<br>
+"java.io.tmpdir"で指定されているディレクトリが、ネットワーク上のドライブなど、アクセスが遅いドライブに割り当てられている場合には、
+シミュレーションの動作が極端に遅くなる場合があります。このような場合には、以下のようにして、保存先ディレクトリを変更してください。<br>
+</p>
+<a href="init_grxui.html#eclipse_init">Eclipseの初期設定</a>を参照して、eclipse.iniを開いてください。<br>
+最後の行に<br>
+<pre>-Djava.io.tmpdir=(変更先のディレクトリ）</pre>
+を追加してください。<br>
+
+<h2>Linux特有のトラブル</h2>
+
+<h3 id="error_ipv6_localhost">Ubuntu9.04以降の環境でサンプルが動作しない（Linux 対象）</h3>
+<p>
+Ubuntu9.04以降の環境で初回導入時、サンプルが動作しないことがあります。
+この時、端末から
+<pre>$ openhrp-aist-dynamics-simulator -ORBInitRef NameService=corbaloc:iiop:localhost:2809/NameService</pre>
+と実行して
+<pre>IDL:omg.org/CORBA/TRANSIENT:1.0</pre>
+と出力されれば、Ubuntu9.04以降でipv6がデフォルトで有効になったことが原因による不具合と思われます。<br>
+<br>
+対処法は、/etc/hostsの
+<pre>::1        localhost ip6-localhost ip6-loopback</pre>
+ipv6のlocalhost設定の行をコメントアウトしてください。
+</p>
+
+
+<h3 id="gcj_sun_error">Ubuntuでアップデートを行うとコンパイルエラー、またはGrxUIの起動時に例外が発生して起動できない（Linux 対象）</h3>
+
+<p>
+javaコードのコンパイルエラーやGrxUI実行時に
+<pre>Null peer?!</pre>
+とコンソール出力されてGrxUIの起動が止まるなどの現象が起こります。<br>
+Ubuntuのアップデートを行うとデフォルトでインストールされているgcjが最新版に更新されて、
+インストール時に切り替えた標準Java環境がsunのJavaから
+gcjへ切り替わる現象が原因です。
+</p>
+<p>この現象を解消するには、インストール時と同様にコマンド
+  
+  <pre>$ sudo update-java-alternatives -s java-6-sun</pre>
+  または
+  <pre>$ sudo update-java-alternatives -s java-6-openjdk</pre>
+  を実行してシステムの標準Javaを切り替えてください。
+  gcjを使用しない場合はgcjをアンインストールしてしまうのも手です。
+</p>
+
+<h3 id="ldd_not_found">GrxUI起動時にOpenHRPのサーバ群が起動しない</h3>
+<p>
+インストールディレクトリを変更してインストールした場合、OpenHRPの実行ファイルから共有ライブラリが見つからないために正しくサーバ群が起動できないことがあります。<br>
+以下のコマンドで共有ライブラリへの依存関係が正しいことを確認してください。<br>
+下記の openhrp-model-loader の部分はOpenHRPの実行ファイルであれば他のファイルでも構いません。<br>
+<pre>
+$ ldd openhrp-model-loader
+</pre>
+上記の結果、libhrp* のライブラリが not found になっている場合、<br>
+環境変数 LD_LIBRARY_PATH に (インストール先ディレクトリ)/lib を追加してください。
+</p>
+<br><br>
+
+
+<h2>Windows特有のトラブル</h2>
+<h3 id="win_omni_err">omniNamesが正常に起動しない</h3>
+<p>
+GrxUIパースペクティブを開き、ネームサービスモニタ・タブ・ウィンドウの更新ボタンを押下してもサーバが列挙されない場合はこの不具合の可能性があります。<BR>
+<h4>Python版のomniORBを導入した環境でPythonのルートディレクトリを環境変数のPATHに登録した時に起こる不具合</h4>
+コマンドプロンプトにて
+<pre>&gt;omniNames -ORBendPointPublish giop:tcp:localhost: -start 2809</pre>
+を実行した時
+<pre>
+Fri Feb 05 09:40:17 2010:
+
+Error: cannot open log file 'C:\temp\omninames-PC_NAME.log'.
+
+usage: omniNames [-start [&lt;port&gt;]]
+                 [-logdir &lt;directory name&gt;]
+                 [-errlog &lt;file name&gt;]
+                 [-ignoreport]
+                 [&lt;omniORB-options&gt;...]
+
+Use -start option to start omniNames for the first time.
+With no &lt;port&gt; argument, the standard default of 2809 is used.
+
+Use -logdir option to specify the directory where the log/data files are kept.
+
+Use -errlog option to specify where standard error output is redirected.
+
+Use -ignoreport option to ignore the port specification.
+
+You can also set the environment variable OMNINAMES_LOGDIR to specify the
+directory where the log/data files are kept.
+</pre>
+のように表示された場合がこれにあたります。<BR>
+対処法として環境変数PATHからPythonのルートディレクトリを除外してください。<BR>
+</p>
+<br><br>
+
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

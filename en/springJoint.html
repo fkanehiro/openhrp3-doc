@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>The method of spring damper modeling of a joint</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">The method of spring damper modeling of a joint</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Overview</h2>
+
+<p>
+OpenHRP has plug-in called "BodyCustomizer" as structure which includes the program depending on a model in a dynamics calculation library dynamically.<br>
+If you use this plug-in, You can incorporate the spring damper model or analytical inverse kinematics of a joint to a model. <br>
+In this section we describe the method of spring damper modeling of a joint using sample project "springJoint.xml". <br>
+</p>
+
+<h2>Creation of a model </h2>
+<p>
+With a sample, the model by which the joint of the spring damper model is defined between two boxes (link) is used. <br>
+The model file of the sample is (openHRP)/sample/model/springJoint.wrl.<br>
+You define a joint as usual similarly and set up the direction of displacement of a spring damper. 
+Since it is a joint which is not controlled, JointID does not need to set up. <br>
+The name of SPRING_JOINT is attached to this joint.<br>
+</p>
+<div>
+<code>
+<pre>
+DEF springJoint Humanoid {
+  version "1.1"
+  humanoidBody [
+    DEF ROOT Joint {
+        :
+        :
+        DEF SPRING_JOINT Joint {
+            translation     0 0 0.05
+            jointType "slide"
+	        jointAxis 0 0 1
+                :
+                :
+</pre>
+</code>
+</div>
+
+<h2>Creation of plug-in </h2>
+<h3>Source code</h3>
+<p>
+Next, let's create plug-in for the upper models. 
+The source code of a sample is (OpenHRP)/sample/example/customizer/customizer.cpp. <br>
+</p>
+<div>
+<code>
+<pre>
+static const char** getTargetModelNames()
+{
+    static const char* names[] = { 
+        "springJoint",
+        0 };
+	
+    return names;
+}
+</pre>
+</code>
+</div>
+<p>
+This function tells a dynamics calculation library about to which model plug-in is applied. 
+It returns the arrangement which enumerated the names set up into the model file. <br>
+Note that it is not a name of the model loaded by GrxUI.<br>
+(In OpenHRP, you can attach a model name different from the name in a file, in order to identify the robot loaded from the same file. <br>
+When you want to specify plug-in as each of the same robot, you have to define a model file independently.）<br>
+Please put '0' into the end of arrangement. <br>
+</p>
+<div>
+<code>
+<pre>
+static BodyCustomizerHandle create(BodyHandle bodyHandle, const char* modelName)
+{
+    Customizer* customizer = 0;
+	
+    string name(modelName);
+    if(name == "springJoint"){
+        customizer = new Customizer;
+        customizer->bodyHandle = bodyHandle;
+        customizer->springT = 1.0e3;    
+        customizer->dampingT = 1.0e1;
+        int jointIndex = bodyInterface->getLinkIndexFromName(bodyHandle, "SPRING_JOINT");
+        if(jointIndex >=0 ){
+            JointValSet& jointValSet = customizer->jointValSet;
+            jointValSet.valuePtr = bodyInterface->getJointValuePtr(bodyHandle, jointIndex);
+            jointValSet.velocityPtr = bodyInterface->getJointVelocityPtr(bodyHandle, jointIndex);
+            jointValSet.torqueForcePtr = bodyInterface->getJointForcePtr(bodyHandle, jointIndex);
+        }
+    }
+
+    return static_cast&lt;BodyCustomizerHandle&gt;(customizer);
+}
+
+</pre>
+</code>
+</div>
+<p>
+This function is called to the beginning of plug-in. This performs initialization of a variable, etc. Please carry out initialization of a variable, etc. <br>
+How to access the variable of a dynamics calculation library from plug-in is also described. <br>
+The function offered from a dynamics calculation library to plug-in is as follows. 
+<table border="1" align="center">
+<tr><td>getLinkIndexFromName</td><td>The name of a joint is changed into the identification number of a library. </td></tr>
+<tr><td>getLinkName</td><td>The identification number of a library is changed into the name of a joint. </td></tr>
+<tr><td>getJointValuePtr</td><td>The pointer of the variable of the position of a joint with an identification number is returned. </td></tr>
+<tr><td>getJointVelocityPtr</td><td>The pointer of the variable of the velocity of a joint with an identification number is returned. </td></tr>
+<tr><td>getJointForcePtr</td><td>The pointer of the variable of the torque of a joint with an identification number is returned. </td></tr>
+</table>
+</p>
+<div>
+<code>
+<pre>
+static void destroy(BodyCustomizerHandle customizerHandle)
+{
+    Customizer* customizer = static_cast&lt;Customizer*&gt;(customizerHandle);
+    if(customizer){
+        delete customizer;
+    }
+}
+</pre>
+</code>
+</div>
+<p>
+This function is called when plug-in is destroyed. 
+Post-processing is performed. 
+</p>
+<div>
+<code>
+<pre>
+extern "C" DLL_EXPORT
+NS_HRPMODEL::BodyCustomizerInterface* getHrpBodyCustomizerInterface(NS_HRPMODEL::BodyInterface* bodyInterface_)
+{
+    bodyInterface = bodyInterface_;
+
+    bodyCustomizerInterface.version = NS_HRPMODEL::BODY_CUSTOMIZER_INTERFACE_VERSION;
+    bodyCustomizerInterface.getTargetModelNames = getTargetModelNames;
+    bodyCustomizerInterface.create = create;
+    bodyCustomizerInterface.destroy = destroy;
+    bodyCustomizerInterface.initializeAnalyticIk = 0;
+    bodyCustomizerInterface.calcAnalyticIk = 0;
+    bodyCustomizerInterface.setVirtualJointForces = setVirtualJointForces;
+
+    return &bodyCustomizerInterface;
+}
+</pre>
+</code>
+</div>
+<p>
+This function tells a dynamics calculation library about the function which plug-in offers. It returns the structure which described the mounted function name.<br>
+Please input '0' into the function which is not mounted. <br>
+<br>
+These four functions certainly need to be mounted in plug-in. 
+<div>
+<code>
+<pre>
+static void setVirtualJointForces(BodyCustomizerHandle customizerHandle)
+{
+    Customizer* customizer = static_cast&lt;Customizer*&gt;(customizerHandle);
+    JointValSet& trans = customizer->jointValSet;
+    *(trans.torqueForcePtr) = - customizer->springT * (*trans.valuePtr) - customizer->dampingT * (*trans.velocityPtr);
+}
+</pre>
+</code>
+</div>
+<p>
+This function is called for every step by the integration loop of a dynamics calculation library. Please describe the code of formation of a spring damper in this function. <br>
+</p>
+<h3>Installation</h3>
+<p>
+Please compile the created source code to create a library. 
+Please be sure to attach a library name like ***Customizer.so(dll). <br>
+Please copy it to (OpenHRP3) / share/OpenHRP-3.1-/customizer. <br>
+(A sample is installed at the time of installation of OpenHRP.) <br>
+A dynamics calculation library loads all plug-in of the name of ***Customizer.so (dll) in this directory. 
+<br>
+
+
+<h2>Execution of a sample </h2>
+Please start GrxUI and load project springJoint.xml. <br>
+If you start a simulation, after a box falls on a floor, the upper box will shake up and down. <br>
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

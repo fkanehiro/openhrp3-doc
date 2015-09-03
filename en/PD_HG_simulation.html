@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>High-Gain mode and Torque-Control mode coorperated simulation</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">High-Gain mode and Torque-Control mode coorperated simulation</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Overview</h2>
+
+<p>
+In this section we use the sample model "PD_HGtest" distributed with OpenHRP package to describe the 
+simulation procedure, of "free" joint-type root joint in high-gain mode and other joints in 
+torque-control mode. Models used for sample have simple structure that composed of ROOT joint and 2 
+links. ROOT joint is provided position and posture and other links are provided joint-torque by the 
+controller. Basic procedure is as follows.
+</p>
+
+<ol>
+<li>Simulation project settings</li>
+<li>Making Controller</li>
+<li>ControllerBridge settings</li>
+</ol>
+
+<p>Hereafter these procedures are explained in detail.</p>
+
+
+<h3>Simulation project settings</h3>
+
+<p>The simulation project settings are described in <i>PD_HGtest.xml</i>.</p>
+
+<p>
+If nothing is specified, the control mode of each joint in the model is set to torque-control mode 
+in default. High-gain settings are applied only to the ROOT joint as we desired. Please see the 
+following highlighted part in red.
+</p>
+
+PD_HGtest.xml
+<div>
+<code>
+<pre>
+     :
+     :
+     &lt;item class="com.generalrobotix.ui.item.GrxModelItem" name="testRobot" select="true" url="$(PROJECT_DIR)/../model/PD_HGtest.wrl"&gt;
+            &lt;property name="isRobot" value="true"/&gt;
+            &lt;property name="controller" value="PD_HGtestController"/&gt;
+            &lt;property name="controlTime" value="0.002"/&gt;
+            &lt;property name="setupDirectory" value="$(PROJECT_DIR)/../controller/PD_HGtest"/&gt;
+            &lt;property name="setupCommand" value="PD_HGtest$(BIN_SFX)"/&gt;
+            <span style="color: red">&lt;property name="ROOT.mode" value="HighGain"/&gt;</span>
+            &lt;property name="ROOT.translation" value="0.0 0.0 1.0 "/&gt;
+     &lt;/item&gt;
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+    
+<br>
+
+<h3>Making Controller</h3>
+
+<p>
+Controller's source files are <i>sample/controller/PD_HGtest/PD_HGtest.</i>{<i>h</i>, <i>cpp</i>}.
+</p>
+
+<p>
+Here we make a simple controller that moves ROOT joint to the direction of X-axis and outputs 
+joint-torque (=0) to the other joints. X-axis vectors (position, velocity, acceleration) are 
+defined as suitable in advance and saved in <i>sample/controller/PD_HGtest/etc/root.dat</i>.
+</p>
+
+<p>
+First we set output ports for each joint. Regarding the ROOT joint, we prepare ports to output 
+position, velosity, acceleration and the data length is set to 12,6,6 in the order. 
+</p>
+
+PD_HGtest.h
+<div>
+<code>
+<pre>
+     :
+     :
+  // DataOutPort declaration
+  // &lt;rtc-template block="outport_declare"&gt;
+  TimedDoubleSeq m_torque0;
+  OutPort&lt;TimedDoubleSeq&gt; m_torque0Out;
+  TimedDoubleSeq m_torque1;
+  OutPort&lt;TimedDoubleSeq&gt; m_torque1Out;
+  <span style="color: red">
+  TimedDoubleSeq m_root_trans;
+  OutPort&lt;TimedDoubleSeq&gt; m_root_transOut;
+  TimedDoubleSeq m_root_vel;
+  OutPort&lt;TimedDoubleSeq&gt; m_root_velOut;
+  TimedDoubleSeq m_root_acc;
+  OutPort&lt;TimedDoubleSeq&gt; m_root_accOut;</span>
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+PD_HGtest.cpp
+<div>
+<code>
+<pre>
+     :
+     :
+PD_HGtest::PD_HGtest(RTC::Manager* manager)
+  : RTC::DataFlowComponentBase(manager),
+    // &lt;rtc-template block="initializer"&gt;
+    m_torque0Out("torque0", m_torque0),
+    m_torque1Out("torque1", m_torque1),
+    <span style="color: red">m_root_transOut("root_trans", m_root_trans),
+    m_root_velOut("root_vel", m_root_vel),
+    m_root_accOut("root_acc", m_root_acc)</span>
+     :
+     :
+  // Registration: InPort/OutPort/Service
+  // &lt;rtc-template block="registration"&gt;
+  // Set OutPort buffer
+  registerOutPort("torque0", m_torque0Out);
+  registerOutPort("torque1", m_torque1Out);
+  <span style="color: red">registerOutPort("root_trans", m_root_transOut);
+  registerOutPort("root_vel", m_root_velOut);
+  registerOutPort("root_acc", m_root_accOut);</span>
+  
+  m_torque0.data.length(1);
+  m_torque1.data.length(1);
+  <span style="color: red">m_root_trans.data.length(12);
+  m_root_vel.data.length(6);
+  m_root_acc.data.length(6);</span>
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+<p>Next we describe the output operation; the process that actually output a value.</p>
+
+<p>First the output values for the the ROOT joint are read from file (1).</p>
+
+<p>Next, the output values are set except for the ROOT joint (2).</p>
+
+<p>Set the position of ROOT joint (3). Data is ordered to position vector and 3x3 posture matrix.</p>
+
+<p>
+Set the velocity (acceleration) of ROOT joint (4). Data is ordered to velocity (acceleration) vector 
+and angular velocity (angular acceleration).
+</p>
+
+<p>Data is been output (5).</p>
+
+PD_HGtest.cpp
+<div>
+<code>
+<pre>
+     :
+     :
+RTC::ReturnCode_t PD_HGtest::onExecute(RTC::UniqueId ec_id)
+{
+     :
+     :
+  static double root_x_p, root_x_v, root_x_a;           (1)
+  if(!waist.eof()){
+    waist >> root_x_p;  //skip time
+    waist >> root_x_a;
+    waist >> root_x_v;
+    waist >> root_x_p;
+  }
+
+  m_torque0.data[0] = 0.0;                              (2)
+  m_torque1.data[0] = 0.0;
+  
+  for(int i=0; i<12; i++)                               (3)
+    m_root_trans.data[i] = 0;
+  m_root_trans.data[0] = root_x_p;    //x
+  m_root_trans.data[2] = 1.0;          //z
+  m_root_trans.data[3] = 1.0;
+  m_root_trans.data[7] = 1.0;
+  m_root_trans.data[11] = 1.0;
+  for(int i=0; i<6; i++)                                (4)
+      m_root_vel.data[i] = 0.0;
+  m_root_vel.data[0] = root_x_v;
+  for(int i=0; i<6; i++)                                    
+      m_root_acc.data[i] = 0.0;
+  m_root_acc.data[0] = root_x_a;
+
+  m_torque0Out.write();                                 (5)
+  m_torque1Out.write();
+  m_root_transOut.write();
+  m_root_velOut.write();
+  m_root_accOut.write();
+
+  return RTC::RTC_OK;
+  }
+     :
+     :
+</pre>
+</code>
+</div>
+<br>
+
+<br>
+	
+<h3>ControllerBridge settings</h3>
+
+<p>
+Next we configure ControllerBridge settings. ControllerBridge settings are described in 
+<i>sample/controller/PD_HGtest/bridge.conf</i>.
+</p>
+
+<div>
+<code>
+<pre>
+in-port= torque0:J0:JOINT_TORQUE
+in-port= torque1:J1:JOINT_TORQUE
+<span style="color: red">
+in-port= root_trans:ROOT:ABS_TRANSFORM
+in-port= root_vel:ROOT:ABS_VELOCITY
+in-port= root_acc:ROOT:ABS_ACCELERATION
+</span> 
+connection= torque0:torque0
+connection= torque1:torque1
+<span style="color: red">
+connection= root_trans:root_trans
+connection= root_vel:root_vel
+connection= root_acc:root_acc
+</span> 
+server-name= PD_HGtestController
+</pre>
+</code>
+</div>
+
+<p>By now, preparation for the simulation is done. You can now execute the simulation.</p>
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

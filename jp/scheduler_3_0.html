@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>スケジューラ作成法(Ver.3.0)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">スケジューラ作成法(Ver.3.0)</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2> 概要 </h2>
+<p>
+ここでは、通常GrxUIが行うModelLoaderへのモデル読み込み、DynamicsServerでのシミュレーション、Controllerでの制御をスケジューラを作成することで説明します。
+</p>
+<p>
+流れは以下のとおりです。
+</p>
+<ol>
+<li>CORBA初期化</li>
+<li>NamingServiceを取得する</li>
+<li>ModelLoaderを取得し、モデルを読み込む</li>
+<li>DynamicsServerを取得し、シミュレーション設定を行う</li>
+<li>OnlineViewerを取得し、モデルを読み込む</li>
+<li>Controllerを取得する</li>
+<li>シミュレーションのループ</li>
+</ol>
+<a name="corbainit"></a>
+<h2> CORBA初期化 </h2>
+
+<p>
+最初にCORBA ORBの初期化とNamingServiceの参照取得を行います。
+</p>
+<pre>
+// CORBA初期化
+CORBA::ORB_var orb;
+orb = CORBA::ORB_init(argc, argv);
+
+// ROOT POA
+CORBA::Object_var poaObj = orb -> resolve_initial_references("RootPOA");
+PortableServer::POA_var rootPOA = PortableServer::POA::_narrow(poaObj);
+
+// POAマネージャへの参照を取得
+PortableServer::POAManager_var manager = rootPOA -> the_POAManager();
+
+CosNaming::NamingContext_var cxT;
+CORBA::Object_var	nS = orb->resolve_initial_references("NameService");
+cxT = CosNaming::NamingContext::_narrow(nS);
+</pre>
+
+<h2> ModelLoader取得</h2>
+<p>
+まず、サーバ群を取得するために以下のような関数を用意します。
+</p>
+<pre>
+template &lt;typename X, typename X_ptr&gt;
+X_ptr checkCorbaServer(std::string n, CosNaming::NamingContext_var &cxt)
+{
+  CosNaming::Name ncName;
+  ncName.length(1);
+  ncName[0].id = CORBA::string_dup(n.c_str());
+  ncName[0].kind = CORBA::string_dup("");
+  X_ptr srv = NULL;
+  try {
+    srv = X::_narrow(cxt->resolve(ncName));
+  } catch(const CosNaming::NamingContext::NotFound &exc) {
+    std::cerr << n << " not found: ";
+    switch(exc.why) {
+    case CosNaming::NamingContext::missing_node:
+      std::cerr << "Missing Node" << std::endl;
+    case CosNaming::NamingContext::not_context:
+      std::cerr << "Not Context" << std::endl;
+      break;
+    case CosNaming::NamingContext::not_object:
+      std::cerr << "Not Object" << std::endl;
+      break;
+    }
+    return (X_ptr)NULL;
+  } catch(CosNaming::NamingContext::CannotProceed &exc) {
+    std::cerr << "Resolve " << n << " CannotProceed" << std::endl;
+  } catch(CosNaming::NamingContext::AlreadyBound &exc) {
+    std::cerr << "Resolve " << n << " InvalidName" << std::endl;
+  }
+  return srv;
+}
+</pre>
+<p>
+これはNamingServiceから指定した型を取得した後、種々の例外処理を行うものです。この関数を利用してModelLoaderとDynamicsSimulatorの取得を行います。
+</p>
+<pre>
+DynamicsSimulatorFactory_var dynamicsSimulatorFactory;
+dynamicsSimulatorFactory =
+  checkCorbaServer &lt;DynamicsSimulatorFactory,
+  DynamicsSimulatorFactory_var&gt; ("DynamicsSimulatorFactory", cxT);
+
+if (CORBA::is_nil(dynamicsSimulatorFactory)) {
+  std::cerr << "DynamicsSimulatorFactory not found" << std::endl;
+}
+
+DynamicsSimulator_var dynamicsSimulator = dynamicsSimulatorFactory->create();
+</pre>
+<p>
+ここでは、まずDynamicsSimulatorFactoryを取得し、それに対しcreateメソッドを使用することでDynamicsSimulatorを起こしています。
+</p>
+<p>
+次にModelLoaderの取得です。
+</p>
+<pre>
+ModelLoader_var modelLoader =
+  checkCorbaServer &lt;ModelLoader,
+  ModelLoader_var&gt; ("ModelLoader", cxT);
+
+if (CORBA::is_nil(modelLoader)) {
+  std::cerr << "ModelLoader not found" << std::endl;
+}
+</pre>
+<a name="loadmodels"></a>
+<p>
+取得したModelLoaderとDynamicsSimulatorに対してモデルの読み込みを行います。
+</p>
+<pre>
+CharacterInfo_ptr cInfo = modelLoader->loadURL(ROBOT_URL);
+dynamicsSimulator->registerCharacter("robot", cInfo);
+</pre>
+<p>
+1行目でモデルをModelLoaderに対して読み込ませ、2行目でキャラクタ"robot"として登録しています。同様に床も登録します。
+</p>
+<pre>
+cInfo = modelLoader->loadURL(FLOOR_URL);
+dynamicsSimulator->registerCharacter("floor", cInfo);
+</pre>
+<h2> DynamicsSimulator </h2>
+<p>
+DynamicsSimulatorの初期化を行います。
+</p>
+<pre>
+dynamicsSimulator->init(0.002, DynamicsSimulator::RUNGE_KUTTA, DynamicsSimulator::ENABLE_SENSOR);
+</pre>
+<p>
+initメソッドはシミュレーション1ステップごとの時間、差分法、センサーの有効/無効を設定します。
+差分法にはオイラー法を用いるDynamicsSimulator::EULERとルンゲクッタ法を用いるDynamicsSimulator::RUNGE_KUTTAが設定できます。
+センサーは有効にするDynamicsSimulator::ENABLE_SENSORと無効にするDynamicsSimulator::DISABLE_SENSORがあります。
+</p>
+<p>
+次に、重力ベクトルを設定します。
+</p>
+<pre>
+DblSequence3 gVector;
+gVector.length(3);
+gVector[0] = gVector[1] = 0;
+gVector[2] = 9.8;
+dynamicsSimulator->setGVector(gVector);
+</pre>
+<p>
+この場合、下向きに9.8ms^-2の重力加速度がかかることになります。
+</p>
+<p>
+さらに、関節駆動モードの設定を行います。
+</p>
+<pre>
+dynamicsSimulator->setCharacterAllJointModes("robot", DynamicsSimulator::TORQUE_MODE);
+</pre>
+<p>
+このコードでキャラクタ"robot"の全関節に対してトルクモードが設定されます。
+関節モードは上記で使用したDynamicsSimulator::TORQUE_MODEのほかにハイゲインモードDynamicsSimulator::HIGH_GAIN_MODEもあります。
+</p>
+<p>
+次に、ロボットの初期姿勢を決定します。
+DynamicsSimulator::setCharacterAllLinkData等が使用できますので、それを用いて設定してください。
+</p>
+<p>
+設定が終わったら順運動学計算を１回行い、姿勢に反映させます。
+</p>
+<pre>
+dynamicsSimulator->calcWorldForwardKinematics();
+</pre>
+<p>
+次に衝突検出ペアの登録を行います。ここで登録されたペア同士の衝突検出が行われることになります。ロボットと床の間にペアを設定しています。
+</p>
+<pre>
+DblSequence6 sc, dc;
+sc.length(0);
+dc.length(0);
+dynamicsSimulator->registerCollisionCheckPair
+  ("robot",
+   "",
+   "floor",
+   "",
+   0.5,
+   0.5,
+   sc,
+   dc);
+</pre>
+<p>
+最後にinitSimulationメソッドを呼びます。
+</p>
+<pre>
+dynamicsSimulator->initSimulation();
+</pre>
+<h2> OnlineViewer </h2>
+<p>
+OnlineViewerの取得を行います。
+</p>
+<pre>
+OnlineViewer_var onlineViewer =
+  checkCorbaServer &lt;OnlineViewer,
+  OnlineViewer_var&gt; ("OnlineViewer", cxT);
+
+if (CORBA::is_nil(onlineViewer)) {
+  std::cerr << "OnlineViewer not found" << std::endl;
+}
+</pre>
+<p>
+さらに、OnlineViewerに対してもモデルを読み込ませます。
+</p>
+<pre>
+onlineViewer->load("robot", ROBOT_URL);
+onlineViewer->load("floor", FLOOR_URL);
+</pre>
+
+<h2> Controller </h2>
+<p>
+ControllerFactoryを取得する際はそれぞれのController名で行います。
+</p>
+<pre>
+ControllerFactory_var controllerFactory;
+controllerFactory =
+  checkCorbaServer &lt;ControllerFactory,
+  ControllerFactory_var&gt; ("PDcontroller", cxT);
+
+if (CORBA::is_nil(controllerFactory)) {
+  std::cerr << "ControllerFactory not found" << std::endl;
+}
+</pre>
+<p>
+この場合はPDcontrollerという名前のControllerのControllerFactoryを取得しています。
+</p>
+<p>
+FactoryからControllerを取得します。その際にどのキャラクタのControllerかも指示します。
+</p>
+<pre>
+Controller_var controller = controllerFactory->create("robot");
+</pre>
+<p>
+また、DynamicsSimulatorもControllerにセットします。
+</p>
+<pre>
+controller->setDynamicsSimulator(dynamicsSimulator);
+</pre>
+<p>
+最後にスタートさせます。
+</p>
+<pre>
+controller->start();
+</pre>
+
+<h2> シミュレーションループ </h2>
+<p>
+実際のシミュレーション実行時にまわされるループです。以下の構成を持ちます。
+</p>
+
+<ol>
+<li>OnlineViewerのアップデート</li>
+<li>Controller::inputの呼び出し</li>
+<li>Controller::controlの呼び出し</li>
+<li>DynamicsSimulator::stepSimulationの呼び出し</li>
+<li>Controller::outputの呼び出し</li>
+</ol>
+<p>
+具体的な形は以下のようになります。
+</p>
+<pre>
+WorldState_var state;
+while (1) {
+  // WorldStateを取得し、OnlineViewerに渡す
+  dynamicsSimulator->getWorldState(state);
+  onlineViewer->update(state);
+
+  // input呼び出し
+  controller->input();
+
+  // control呼び出し
+  controller->control();
+
+  // stepSimulationを呼び出し、シミュレーションを進めます。
+  dynamicsSimulator->stepSimulation();
+
+  // output呼び出し
+  controller->output();
+}
+</pre>
+
+<h2> 付加情報 </h2>
+<p>
+上記シミュレーションループにおいては衝突による法線ベクトルが表示されますが、法線ベクトルを編集し他の目的に使用することもできます。
+これは、WorldStateのcollisionsを以下のように編集することで実現できます。
+</p>
+<pre>
+dynamicsSimulator->getWorldState(state);
+
+state->collisions.length(1);
+state->collisions[0].pair.charName1 = CORBA::string_dup("robot");
+state->collisions[0].pair.charName2 = CORBA::string_dup("floor");
+state->collisions[0].pair.linkName1 = CORBA::string_dup("RLEG_ANKLE_R");
+state->collisions[0].pair.linkName2 = CORBA::string_dup("WAIST");
+state->collisions[0].points.length(1);
+state->collisions[0].points[0].position[0] = 0.0;
+state->collisions[0].points[0].position[1] = 0.0;
+state->collisions[0].points[0].position[2] = 0.0;
+state->collisions[0].points[0].normal[0] = 0.0;
+state->collisions[0].points[0].normal[0] = 0.0;
+state->collisions[0].points[0].normal[0] = 0.5;
+
+onlineViewer->update(state);
+</pre>
+<p>
+このコードはキャラクタ名robot, floorの間に(0.0, 0.0, 0.0)から(0.0, 0.0, 0.5)の法線ベクトルを描画するように設定されます。
+</p>
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

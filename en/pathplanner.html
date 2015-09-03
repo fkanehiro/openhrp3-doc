@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Move operation design tutorial</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Move operation design tutorial</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Overview</h2>
+
+Move operation design tool plans the migratory pathway of the robot on a two-dimensional plane. It is included in OpenHRP from version 3.1.0.beta3. 
+Move operation design tool consists of move operation design components which can be used also as the RT component, and the PathPlanning view which is one of the views of GrxUI. 
+First of all, please check a rough procedure by an animation.<p>
+
+<div align=center>
+<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="640" height="480">
+<param name="movie" value="../../movie/PathPlanner.swf" />
+<param name="quality" value="high" />
+<param name="bgcolor" value="black" />
+<embed src="../../movie/PathPlanner.swf" quality="high" bgcolor="black" width="640" height="480" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+</object>
+</div>
+
+<h2>Configuration</h2>
+
+<h3>Eclipse starting and display of a perspective </h3>
+
+Please start Eclipse and display a GrxUI perspective. 
+When the GrxUI perspective is not displayed, click "Open perspective" -> "others" and choose GrxUI from a list. 
+<div align=center>
+<img src="../img_new/pathplanner/MImage01.png" alt="Open perspective" align=center>
+</div>
+
+<h3>The check of a required view </h3>
+
+If <a href=um_3d_view.html>3DView</a>、Path Planning、<a href=um_logger_view.html>Logger View</a>、<a href=um_property_view.html>Property View</a>、<a href=um_item_view.html>Item View</a>are not displayed,
+Please click "Window"->"Display of view"->"others" from a menu bar to add them. <p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage02.png" alt="add view">
+</div>
+
+<h2>Construction of a scene </h2>
+
+You load the model file of the robot and the obstacle, and build the scene for designing move operation. 
+
+<h3>Loading of the existing project  </h3>
+
+Please choose "GrxUI"->"load of project" from a menu bar.
+Please choose the project file to load. 
+
+<h3>building of a new scene </h3>
+
+Please right-click "Model" by <a href=um_item_view.html>Item View</a>, choose "load".
+Please choose the file to load in a file selection dialog. <p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage04.png" alt="loading a model file">
+</div>
+
+<h3>Creation of a World State item</h3>
+
+Please right-click "World State" by <a href=um_item_view.html>Item View</a>, choose "create".
+
+<h3>Creation of a collision pair </h3>
+
+Please create the collision pair between a robot and an obstacle by Collision view. 
+
+<h3>Creation of the parameter set for algorithms </h3>
+
+Please right-click "PPArgolithm" by <a href=um_item_view.html>Item View,</a> choose "create".
+If you save a project, the parameter for algorithms is also saved simultaneously. <p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage06.png" alt="Creation of the parameter">
+</div>
+
+<h2>Connection with a course plan engine</h2>
+
+Please start openhrp-path-planner.
+Please prepare rtc.conf which described the position of the suitable name server in the directory.
+Next, please change a perspective into RT System Editor, newly open a stem editor, and drag a Path component and a PathConsumer component. 
+Please connect a service port and a consumer port. <p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage03.png" alt="Connection with a course plan engine">
+</div>
+
+<h2>Calculation of a course plan </h2>
+
+You set a parameter with a PathPlanner view (the following figure).<p>
+
+<div align=center>
+<img src="../img_new/pathplanner/pathplannerview.png" alt="Path Planning view
+</div>
+
+<h3>Selection of a model and an algorithm</h3>
+
+Please choose the model and the shifting algorithm which the model has. <br>
+Unless it is connected with the move operation design component, some setting items, such as a shifting algorithm, are not displayed. 
+When they are not displayed, please check connection using RT System Editor. 
+
+<h3>The starting point and the terminal point</h3>
+
+You set up the starting point and the terminal point of path planning.
+Please move a robot to the starting point or a terminal point, and push the starting point or a terminal point setup button. <br>
+You can also input a numerical value into input area directly. <br>
+A push on the SET button will move a robot to the position.<br>
+
+<h3>Tolerance of a collision check </h3>
+
+You set up the tolerance of a collision check. 
+When the distance between two objects is smaller than this value, it is considered that those objects have collided. 
+Therefore, the robot can always maintain the distance more than fixed between obstacles.
+
+<h3>A path plan algorithm, a parameter selection box </h3>
+
+You choose the algorithm and parameter of a path plan.<br>
+Please choose the algorithm from an algorithm selection box. 
+At present, RRT and PRM are registered. 
+When the algorithm is not displayed, please check connection with a move operation design component. 
+Next, please choose the property of an algorithm from an Algorithm Properties selection box. 
+If you push the Update button of Algorithm Properties, the property for  chosen　algorithms will be set as a PPAlgorithm item from a move operation design component. <br>
+The value of a property can be changed by Property View.
+<br>
+
+<div align=center>
+<img src="../img_new/pathplanner/properties.png" alt="Property View">
+</div>
+
+The property common to PRM and RRT is as follows. 。</p>
+<ul>
+<li> Random number maximum point  ・・・ The maximum of the range of the point struck at random  (max-x, max-y)</li>
+<li> Random number minimum point  ・・・ The minimum of the range of the point struck at random  (min-x, min-y)</li>
+<li> Weight of distance           ・・・ Weight at the time of computing distance (weight-x, weight-y, weight-theta) </li>
+<li> Interpolation distance       ・・・ It is interpolated so that the adjoining distance of two points may become below this value (interpolation-distance)．
+If this value is small, a collision check will divide for two points finely. 
+Although it stops overlooking a collision, it requires computation time. 
+Conversely, a collision may be overlooked if a big value is set up. 
+</li>
+</ul>
+
+<p>By default, a random number is the range of (-2,-2) ~ (2,2), interpolation distance is 0.1、all weight of distance is 1.</p>
+
+<p>A PRM algorithm has the following properties. </p>
+<ul>
+<li> Neighborhood distance     ・・・ Neighborhood distance which connects edge (max-dist)．
+If the distance of two points struck at random becomes below in this value, and the collision of two points will be checked and it will not collide, the edge which connects two points is added to a road map. </li>
+<li> The number of points      ・・・ The number of the points struck at random (max-points)</li>
+</ul>
+
+<p>By default, Neighborhood distance is 1.0, The number of points is 100.</p>
+<p>A RRT algorithm has the following properties. </p>
+
+<ul>
+<li> Neighborhood distance                       ・・・ Distance of the node to which RRT is added (eps)</li>
+<li> The maximum of the number of times of trial ・・・ The number of times of closing search (max-trials)</li>
+</ul>
+
+<p>By default, Neighborhood distance is 1.0, The maximum of the number of times of trial is 10000.</p>
+
+<h3>Path plan </h3>
+
+Please push a calculation start button to start a path plan. 
+A calculation indicator moves and a dialog is displayed. 
+Please push the button of a dialog, for interrupting calculation on the way. 
+
+<h3>The display of a course and a road map</h3>
+
+After calculation is completed, selection of a course display button is attained and it can change a display and un-displaying of a course.<p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage13.png" alt="course display button is off"><br>
+<img src="../img_new/pathplanner/MImage13_2.png" alt="course display button is on"><br>
+</div>
+
+Moreover, if you move the button and slider on Logger View, a robot will move in a course. <p>
+
+<div align=center>
+<img src="../img_new/pathplanner/MImage14_3.png" alt="move in a course"><br>
+<img src="../img_new/pathplanner/MImage14_2.png" alt="move in a course"><br>
+<img src="../img_new/pathplanner/MImage14.png" alt="move in a course"><br>
+<img src="../img_new/pathplanner/MImage14_4.png" alt="move in a course"><br>
+</div>
+
+<h3>Optimization of a path </h3>
+
+In order to optimize the planned path, please choose a path optimization algorithm and push the Optimize button. 
+A display is updated by the optimized path when the path is visible. 
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

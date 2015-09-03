@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Installation of OpenHRPSDK</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Installation of OpenHRPSDK</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>OpenHRPSDK</h2>
+
+<p>
+OpenHRPSDK is a binary package containing OpenHRP and an executable file. <br>
+Since it contains the executable file (Eclipse RCP products) of GrxUI, you can try operation of GrxUI, without compiling. 
+</p>
+<br>
+
+<h3>Required software</h3>
+<p>
+OpenHRPSDK has a version for VS2008(32bit), for VS2010 32bit, and for VS2010 64bit.
+Please install the following software according to these. 
+<ul>
+  <li>Java Development Kit (JDK)</li>
+    Distribution place : <a href="http://java.sun.com" target="_blank">http://java.sun.com/</a> <br>
+    Even if you are using 64 bit OS, please install a 32 bit version for 32 bit OpenHRP.
+</ul>
+<p>
+Software required in order to create a controller
+</p>
+<ul>
+  <li>Visual C++ Compiler</li>
+    <a href="http://www.microsoft.com/visualstudio/en-us/products/2008-editions/express" target="_blank">Visual C++ 2008 Express Edition</a><br>
+  <li>Python</li>
+    Distribution place : <a href="http://www.python.org" target="_blank">http://www.python.org/</a>
+  </ul><br>
+  or <br>
+  <ul>
+  <li>Visual C++ Compiler</li>
+    <a href="http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express" target="_blank">Visual C++ 2010 Express Edition </a><br>
+    Note: Express Edition cannot build 64 bits binary by default.
+  <li>OpenRTM</li>
+  <li>RTCBuilder-1.1.0</li>
+  <li>CMake(2.8.5 or above versions)</li>
+</ul>
+ 
+<p>
+The following software is also required to use a Jython script.
+</p>
+<ul>
+  <li>Jython</li>
+    Distribution place : <a href="http://www.jython.org" target="_blank">http://www.jython.org/</a>
+</ul>
+</p>
+
+<h3>Before you begin</h3>
+<p>
+Please confirm that if your "Computer Name" is not longer than 8 letters and contains alpha-numeric
+letters only. Unless the Nameserver will not be started normally. 
+Please refer <a href="./troubleshooting.html#ns_error">here</a> for more details.
+</p>
+
+<h3>Install</h3>
+<p>
+<ol>
+<li>When the old version is installed, please uninstall and delete the directory of an installation place.</li>
+<li>
+Please download <a href="./download.html">OpenHRPSDK</a> and start installer.</li>
+<p align="center">
+<img src="../img_new/sdk_inst_1.png">
+</p>
+
+<li>Please check "I accept the terms in the License Agreement" and click "next". </li>
+<p align="center">
+<img src="../img_new/sdk_inst_2.png">
+</p>
+
+<li>Specify an installation place and click next.</li>
+<span style="color: red"> 
+*If you use JDK1.7.0_21, please specify the directory which does not contain the space as an installation place. <br>
+</span>
+<p align="center">
+<img src="../img_new/sdk_inst_3.png">
+</p>
+<li>Please follow directions of a screen. </li>
+<p align="center">
+<img src="../img_new/sdk_inst_4.png">
+</p>
+<p align="center">
+<img src="../img_new/sdk_inst_5.png">
+</p>
+</ol>
+</p>
+
+<h3>Composition of a file</h3>
+<p>Files are installed in the specified directory as follows. 
+<pre>
+OpenHRPSDK/           # Install directory
+    +- bin/           # The executable file of OpenHRP, omniNames.exe, DLL
+    +- etc/           # The configuration file of vsprops required for controller creation
+    +- GrxUI/         # Eclipse RCP products of GrxUI
+        +- GrxUI.exe  # GrxUI Starting file 
+    +- include/       # OpenHRP, OpenRTM, OmniORB, The header of libraries
+    +- lib/           # OpenHRP, OpenRTM, OmniORB, libraries
+    +- License/       # License document
+    +- share/         # Sample
+    +- utils/         # The tool for RT component creation 
+    +- epl-v10.html   # Eclipse Public License v1.0 License document
+    +- license-en.txt # License document(English)
+    +- license-ja.txt # License document(Japanese)
+</pre>
+Environment variable OPENHRP_SDK_ROOT is added as an installation directory. 
+</p>
+
+<h3>Execution of a sample simulation </h3>
+<ol>
+<li>Please start (Install directory)/bin/GrxUI.bat.</li>
+
+<p align="center">
+<img src="../img_new/sdk_rcp_1.png">
+</p>
+<li> Select "Window"-"preferences" from menu, preferences dialog opens. Click "GRXUI" in the tree on the left-hand side of a dialog, and set up the displayed contents.</li>
+<p>
+<p align="center">
+<img src="../img_new/sdk_rcp_2.png">
+</p>
+<p>
+Please specify (Install directory)/bin as server install directory. 
+Please specify (Install directory)/share/OpenHRP-3.1/sample/project as project install directory. 
+<br>
+<strong>Please reboot GrxUI after a setup. </strong>
+</p>
+<li>To open a project, select 'GrxUI' -> 'Load Project' from menubar.</li>
+<p align="center">
+<img src="../img_new/sdk_rcp_3.png">
+</p>
+<p align="center">
+<img src="../img_new/sdk_rcp_4.png">
+</p>
+<p>
+First, let's choose SamplePD.xml. A robot is displayed on a lower left view.
+</p>
+<li>Select 'GrxUI' -> 'Start Simulation' or click simulation start button.</li>
+<p align="center">
+<img src="../img_new/sdk_rcp_5.png">
+</p>
+<p>
+It is a success when a robot begins to walk. Please try other sample projects. 
+</p>
+
+<h3>Controller creation </h3>
+<p>
+In Visual C++2008, please create the skeleton of a component using "%OPENHRP_SDK_ROOT %\utils\rtc-template\rtc-template.py". <br>
+In Visual C++2010, please refer a <a href="controller_pd.html"target="_blank">Controller Building Guide (Walking Pattern) </a>
+</p>
+
+<h3>Uninstall</h3>
+<p>
+Please delete this program from the [Add/Remove Programs] of the [control panel]. 
+</p>
+
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

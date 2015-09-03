@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Softwares Install by Environment Configurator<br>(For Windows)</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Softwares Install by Environment Configurator<br>(For Windows)</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<p>
+As described in <a href="./install_windows.html">"OpenHRP3 Installation guide for Windows"</a> page,
+some of the supprted softwares are supposed to install using an automatic installer called "Environment 
+Configurator". In this page we explain how to install those supprted softwares manually.
+</p>
+
+<h2>Supported Softwares</h2>
+<p>
+We describe how to obtain and install, following supported softwares.
+<ul>
+ <li><a href="#openrtm">OpenRTM-aist Ver.1.0.0-RC1</a></li>
+ <li><a href="#openrtm">omniORB Ver.4.1.2</a></li>
+ <li><a href="#openrtm">python Ver.2.4.4</a></li>
+ <li><a href="#openrtm">PyYAML Ver.3.05</a></li>
+ <li><a href="#jython">Jython Ver.2.2.1</a></li>
+ <li><a href="#tvmet">tvmet Ver.1.7.2</a></li>
+ <li><a href="#clapack">CLAPACK Ver.3.1.1</a></li>
+ <li><a href="#boost">Boost Ver.1.35.0</a></li>
+</ul>
+</p>
+
+<h3 id="openrtm" >Setup OpenRTM environment</h3>
+
+<p>
+Here we install latest version of "OpenRTM-aist". (The latest released version of OpenHRP, needs 
+1.0.0-RC1 version of OpenRTM-aist.)
+</p>
+<p>
+Visit <a href="http://www.is.aist.go.jp/rt/OpenRTM-aist/" target="_blank">OpenRTM-aist Official Website</a>
+->"Downloads"->"Current Version (C++)"->"OpenRTM-aist-1.0.0-RC1"->" Pre-built Package for Windows" section. Find the set of packages built for 
+"Visual Studio 2008" and then download the following Windows installers.
+</p>
+
+<ul>
+  <li>OpenRTM-asit (English)</li>
+  <li>OmniORB</li>
+  <li>python</li>
+  <li>PyYAML</li>
+</ul>
+
+<p>
+Double-click and run the installation process of each downloaded package, according to the 
+guidence of installer. You can proceed with default installer settings, without making any changes.
+</p>
+
+
+<h3 id="jython"> Jython </h3>
+
+<p>
+Please download Jython installer from "Download" page at <a href="http://www.jython.org/" target="_blank">http://www.jython.org/</a>.
+Once you double-click the downloaded file, the installer will be launched.
+Please install as you are guided by the installer. You don`t have to change the installer settings, 
+just porceed with defaults.
+</p>
+
+
+<h3>Library Installations</h3>
+
+<h4 id="tvmet">tvmet</h4>
+
+<p>
+Here we install tvmet, which is a library for vector and matrix calculation.
+</p>
+
+<p>
+You can install tvmet either using the original source package available at 
+<a href="http://tvmet.sourceforge.net/" target="_blank">http://tvmet.sourceforge.net/</a> 
+or using the easy installer we prepared for windows, which is available at 
+"<a href="download.html#download_others">Downloads</a>" page in this site. 
+</p>
+
+<p>
+In case of easy installer, download the file named "tvmet-xxx-win.msi", then double click 
+to start installation. Proceed with the guidence given by installer. You can proceed with default 
+installer settings, without making any changes.
+</p>
+
+<p>
+If you wish to use the original source package, it is necessary to re-configure the 
+configuration file in source package, to be compatible with windows platform. 
+Dowanload the source package, and then extract to the path where you want tvmet to be 
+installed.Go to the extracted folder and locate the file 'include\tvmet\config\config-vc71.h'. 
+Then Copy it to the path 'include\tvmet\' and rename as "config.h".
+</p>
+
+
+<h4 id="clapack">CLAPACK</h4>
+
+<p>
+There is another vector and matrix calculation library called "Lapack".
+</p>
+
+<p>
+Lapack has number of derivated versions, and due to reliability and safety reasons, 
+we use "CLAPACK" derivation for OpenHRP3s' windows version. An easy installer named 
+"CLAPACK-xxx-.msi" is available at "<a href="download.html#download_others">Downloads</a>" 
+page in this site. Download it and double click to start install. You can proceed with 
+default installer settings, without making any changes.
+</p>
+
+
+<h4 id="boost"> Boost </h4>
+
+<p>
+Here we are going to install a collection of C++ libraries called, "Boost" distributed by 
+<a href="http://www.boost.org/" target="_blank">http://www.boost.org/</a>.
+</p>
+
+<p>
+We have prepared an easy installer, which installs pre-compiled binary libraries of Boost, 
+that are comptible with Visual C++ 2008. Download the file "Boost-xxx_VC9.msi" available at 
+"<a href="download.html#download_others">Downloads</a>" page. Double click to start installation 
+and follow the instructions. You can proceed with default installer settings, without making 
+any changes.</p>
+
+<p>
+However, there is an installer distributed by 
+<a href="http://www.boost-consulting.com/" target="_blank">http://www.boost-consulting.com/</a> 
+that allows you to select the Visual C++ compiler and library types. Then it installs the 
+compatible libraries for your Visual C++ version. 
+</p>
+
+<p>
+In case of using this installer, you will lead to a step called "Select Default Variants" 
+during the installation process. Select the particular Visual C++ version you are using, 
+in Compiler block. Select "Multithread" and "Multithread Debug" in Varients block.
+</p>
+<br>
+
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

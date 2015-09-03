@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Creating a configuration file of a controller</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Creating a configuration file of a controller</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2> Overview </h2>
+<p>
+Operation of a controller requires the rtc.conf file which describes a setup of RT component, and the script (batch) file which described a setup of connection between a controller bridge and RT component. 
+A controller bridge is the process of passing input and output between a robot and each OpenRTM component. It also creates RT component for a robot's input and output. 
+Here, the creation method of two files is explained.
+</p>
+
+<h2> How to create using GUI  </h2>
+<p>
+Please choose Sample from the list of robots by Controller View, and push a "Edit" button. </p>
+<p align="center">
+<img src="../img_new/GrxUI_Controller.png"><br>
+Fig.1 : Controller View
+</p>
+
+<p>
+Please set up the name and the interval of operation of Controller and push a "new File" button.<br>
+When you have already created the file, please push a "select File" button, choose a file and push a "open file" button. 
+You can edit a file. </p>
+<p align="center">
+<img src="../img_new/GrxUI_Controller_newFile.png"><br>
+Fig.2 : Controller View
+</p>
+
+<p>
+The dialog for a file setup opens. The name of the controller is already displayed. Because, it must be in agreement with the name set up by Controller View. <br>
+Other default values are displayed. 
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel.png"><br>
+Fig.3 : Controller Bridge Dialog
+</p>
+
+<p>
+You set up a robot's input-output port to control.<br>
+Please right-click a table and choose "add". When you delete, please choose and right-click the line of a table and choose "delete". <br>
+Please choose each cell, and as shown in a figure, set up.
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel_port.png"><br>
+Fig.4 : Controller Bridge Dialog
+</p>
+
+<p>
+If you choose the cell of id, the dialog for id edit will open. Since a robot's link names and sensor names are displayed, please put in a check. <br>
+Selection of a "All joints" button will choose all links with Joint ID. Moreover, the order of input and output becomes the turn that the check button is located in a line. 
+You can replace the turn of a button by drag-and-drop operation. <br>
+Please set up not contradictory to a setup of property. Please refer to <a href="./controller_bridge.html">"How to use Controller-Bridge"</a> for the details of a setup.
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel_id.png"><br>
+Fig.5 : Controller Bridge ID Dialog
+</p>
+
+<p>
+Please set up Module Name and Controller RTC Name and push a "check" button. <br>
+Please check that the error message is not displayed. </p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel_check.png"><br>
+Fig.6 : Controller Bridge Dialog
+</p>
+
+<p>
+When you save a setup of connection at another file, please put a check into "Use the configuration file", put in a file name, and push a "check" button. 
+</p>
+<p align="center">
+<img src="../img_new/GrxUI_Bridge_panel_conf.png"><br>
+Fig.7 : Controller Bridge Dialog
+</p>
+
+<p>
+Please push a "Save as" button, choose a file and save the contents. Please save as SamplePD.sh (.bat) to a mySamplePD directory in the example of this document. 
+Please push a "Close" button and close Dialog.
+</p>
+
+<h2> How to create using a text editor </h2>
+<p>
+Since two configuration files are text format, you can edit using the editor.<br>
+When you set up the details of rtc.conf not corresponding by GUI, or when you include a setup of an environment variable in a script, please use an editor. 
+</p>
+
+<h3 id="rtc_conf"> rtc.conf </h3>
+<p>
+<i>"rtc.conf"</i> file should be placed in the current directory when you start this particular ControllerBridge.<br>
+Please place on a mySamplePD directory in the example of this document. <br>
+<br>
+Please specify the following configurations in <i>"rtc.conf"</i>. 
+</p>
+<p>
+Specify the location(ip address) of the nameserver, according to your environment.
+</p>
+<pre>
+corba.nameservers: localhost:2809
+</pre>
+<p>
+Specify the settings regarding with log files.
+</p>
+<ul>
+  <li>To disable creating log files;
+    <ul>
+    <pre>logger.enable:NO</pre>
+    </ul>
+  </li>
+  <li>To enable creating log files;
+    <ul>
+    <pre>logger.enable:YES</pre>
+    </ul>
+  </li>
+  <p>
+  Specify the log file's name format and saving location(path). You can also specify the direct path as shown
+  below. 
+  </p>
+  <ul><pre>logger.file_name: D:\\Temp\\rtc%p.log</pre></ul>
+  <p>
+   Set the log level.
+  </p>
+  <ul>
+    <pre>logger.log_level: TRACE</pre>
+  </ul>
+</ul>
+<p>
+Specify the module file name and the component name.
+</p>
+<pre>
+manager.modules.preload: SamplePD
+manager.components.precreate: SamplePD
+</pre>
+<p>
+Normally you don't have to change the following contents.
+</p>
+<pre>
+naming.formats: %n.rtc
+manager.modules.load_path: .
+exec_cxt.periodic.rate: 1000000
+manager.modules.abs_path_allowed: yes
+exec_cxt.periodic.type: SynchExtTriggerEC
+</pre>
+<p>
+Refer OpenRTM 
+<a href="http://www.is.aist.go.jp/rt/OpenRTM-aist/html-en/Documents2FConfiguration.html" target="_blank">Configuaration</a>
+ manual, for detailed explanation about RT-components' configuration options.
+</p>
+<p>
+Note:<br>
+A sample conf file is available at <i>"OpenHRP3/sample/controller/SamplePD/rtc.conf"</i>.
+ You may copy that, edit and use by yourself.
+Meanwhile if you are using binary packages distributed with Beta4 release, please be remined to use 
+the sample file placed in <i>"OpenHRP3/sample/controller/SamplePD/rtc.conf"</i>, according to the appropriate 
+environment as shown below.
+<ul>
+ <li>On Ubuntu : /usr/share/</li>
+ <li>On Windows : OpenHRPSDK/share/</li>
+</ul>
+File content is same for both environment.</p>
+</p><br>
+
+<h3> Controller-bridge Settings </h3>
+<p>
+The purpose of separating the implementation of each RT-component is to improve the maintainability and the portability upon development process. 
+Here we describe, how to start controller-bridge and its connection settings with the component.<br>
+Please use SamplePD.sh (.bat) which placed in OpenHRP3/sample/controller/SamplePD, copying it to mySamplePD.
+</p>
+<h4>SamplePD.sh</h4>
+<pre>
+#!/bin/sh
+
+openhrp-controller-bridge \
+--server-name SamplePDController \
+--out-port angle:JOINT_VALUE \
+--in-port torque:JOINT_TORQUE \
+--connection angle:angle \
+--connection torque:torque
+</pre>
+<p>
+server-name：Name of OpenHRP controller.<br>
+(Ex: the component is registered in the nameserver as <i>"SamplePDController"</i>, in the above notation.)
+</p>
+<p>
+out-port：Specifies output port name and output property, seperated by colon.<br>
+(Ex: Output port <i>"angle"</i> outputs <i>"JOINT_VALUE"</i> property.)
+</p>
+<p>
+in-port：Specifies input port name and input property, seperated by colon.<br>
+(Ex: Input port <i>"torque"</i> inputs <i>"JOINT_TORQUE"</i> property.)
+</p>
+<p>
+connection：Used to specify the connection between ports.<br>
+Specifies model's i/o port name and controller's i/o port name, seperated by colon.<br>
+(Ex: Connects robot-model's port <i>"angle"</i> with controller's port <i>"angle"</i>. Same way it 
+conncets, robot-model's port <i>"torque"</i> with controller's port <i>"torque"</i>, as noted next 
+in line.)
+</p>
+
+<p>
+Please refer to <a href="./controller_bridge.html">"How to use Controller-Bridge"</a> for details of a starting option 
+</p>
+
+
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

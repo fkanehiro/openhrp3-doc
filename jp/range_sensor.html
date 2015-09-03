@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+ <meta name="keywords" content="OpenHRP,OpenHRP3,ロボット,robot,分散コンポーネント型ロボットシミュレータ,Distributed component type robot simulator,corba"> 
+ <meta name="description" content="OpenHRP official site"> 
+
+ <title>RangeSensorノードを用いた距離センサシミュレーション</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="UTF-8" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="UTF-8" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">RangeSensorノードを用いた距離センサシミュレーション</h1><br>
+   <div align="right"><a href="../en/index.html">English &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">基本情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/index.html">ホーム（お知らせ）</a></li>
+     <li><a href="../jp/about.html">OpenHRP3とは</a></li>
+     <li><a href="../jp/download.html">ダウンロード</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">ドキュメント</h2>
+    <ul class="menu">
+     <li><a href="../jp/install.html">インストール<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/install_3_0.html">インストール<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/users_manual.html">ユーザーズマニュアル<br>(Ver.3.1.4)</a></li>
+     <li><a href="../jp/users_manual_3_0.html">ユーザーズマニュアル<br>(Ver.3.0.8)</a></li>
+     <li><a href="../jp/programming.html">プログラミングマニュアル</a></li>
+     <li><a href="../jp/UT_DynamicsSimulator.pdf">力学計算アルゴリズム</a></li>
+     <li><a href="../jp/reference_manuals.html">リファレンスマニュアル</a></li>
+    </ul>
+
+   <h2 id="h2_content_3">補足情報</h2>
+    <ul class="menu">
+     <li><a href="../jp/samples.html">サンプル動画</a></li>
+     <li><a href="../jp/tips.html">Tips</a></li>
+     <li><a href="../jp/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../jp/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li>既知の不具合</li>
+     <!--<li><a href="../jp/known_bugs.html">既知の不具合</a></li>-->
+     <li><a href="../jp/papers.html">発表論文</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">サポート</h2>
+    <ul class="menu">
+     <li><a href="../jp/forum.html">質問用掲示板</a></li>
+     <li>講習会情報</li>
+     <!--<li><a href="../jp/workshop.html">講習会情報</a></li>-->
+    </ul>
+
+    
+   <h2 id="h2_content_5">リンク</h2>
+    <ul class="menu">
+     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
+     <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
+     <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
+    </ul>
+    
+    <h2 id="h2_content_6">HP ログ</h2></li>
+    <ul class="menu">
+     <li><a href="../jp/old_versions.html">OpenHRP3 他バージョン</a></li>
+    </ul>
+
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>経緯</h2>
+OpenHRP3.0では距離センサは、タイプをDEPTHとしたVisionSensorの出力で代用していましたが、以下のような問題がありました。
+<ul>
+<li>Java3D 1.5以降ではデプスバッファの取得部分にバグがあり、1.4を使い続ける必要があった。</li>
+<li>1.4でもオフスクリーンレンダリングがうまくいかず、ウィンドウを常に前面に出しておく必要があった</li>
+<li>32bitのデプスバッファでは距離の分解能が不足していた。</li>
+</ul>
+
+そこでOpenHRP3.1では干渉チェックの為に使用しているOPCODEの半直線とポリゴンの干渉チェック機能を使用して距離センサをシミュレートする機能を実装しました。
+
+<h2>センサのモデルへの追加</h2>
+
+距離センサをモデル上に定義するには、<a href=create_model.html#RANGESENSOR>RangeSensorノードのプロトタイプ宣言</a>を距離センサを搭載するロボットのVRMLモデルの先頭部分に追加し、センサが取り付けられているリンクに対応するJointノードのchildrenフィールドにRangeSensorノードをぶら下げます。
+
+<h2>GrxUI上でのセンサ出力の確認</h2>
+
+GrxUI上では<a href=um_3d_view.html>3DView</a>あるいは<a href=um_rangesensor_view.html>RangeSensorView</a>を使ってセンサの出力を視覚的に確認することができます。
+
+<a href=um_item_view.html>ItemView</a>からモデルツリーを展開し、表示したいRangeSensorを選択すると、3DView上に計測結果が半透明のポリゴンとして表示されます。シミュレーション開始前は計測範囲に対応する扇形が表示され、シミュレーションを開始すると計測した距離に応じた形状に変化します。
+
+またRangeSensorViewをEclipseのメニューから選択して表示し、ビューの上部にあるモデル名とセンサ名を選択すると、円と計測結果が表示されます。円はRangeSensorノードのmaxDistanceフィールドで設定した距離の円です。
+
+<img src="../img_new/RangeSensor.png">
+
+<h2>ControllerBridge経由でのセンサ出力の取得</h2>
+
+<a href=controller_bridge.html>コントローラブリッジ</a>経由でセンサ出力を取得するには、以下のようなオプションをopenhrp-controller-bridgeの引数として与えます。
+
+<div>
+<code>
+<pre>
+ --out-port range:URG_SENSOR0:RANGE_SENSOR
+</pre>
+</code>
+</div>
+
+出力されるのはTimedDoubleSequenceでシーケンス部分に計測方向に向かって右方向からスキャンした際の距離データが入っています。距離は干渉が発生する限り、maxDistanceよりも遠い場合も出力されます。干渉がない場合は0が出力されます。
+    
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, Humanoid Resarch Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

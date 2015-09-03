@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="OpenHRP,OpenHRP3,robot,Distributed component type robot simulator,corba"> 
+  <meta name="description" content="OpenHRP official site"> 
+
+ <title>Installation</title>
+
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <meta http-equiv="content-style-type" content="text/css">
+ <meta http-equiv="content-script-type" content="text/javascript">
+
+ <link rel="stylesheet" href="../style/default.css" type="text/css" media="screen" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/print.css" type="text/css" media="print" charset="Shift_JIS" />
+ <link rel="stylesheet" href="../style/greybox/greybox.css" type="text/css" media="all" charset="Shift_JIS" />
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+
+<div id="header">
+
+ <a href="../index.html">
+  <img id="logo" src="../image/openhrp3banner.jpg" width="200" height="94" alt="OpenHRP3" title="OpenHRP3" />
+ </a>
+
+   <h1 class="title">Installation</h1><br>
+   <div align="right"><a href="../jp/index.html">Japanese &gt;&gt;</a></div>
+</div>
+
+
+<div id="navigator"> 
+<hr class="full_hr" /></div>
+
+
+<div id="contents">
+<table class="contents" width="100%" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td class="ltable" valign="top"><div id="menubar">
+
+   <h2 id="h2_content_1">Introduction</h2>
+    <ul class="menu">
+     <li><a href="../en/index.html">Home</a></li>
+     <li><a href="../en/about.html">About OpenHRP3</a></li>
+     <li><a href="../en/download.html">Downloads</a></li>
+    </ul>
+
+   <h2 id="h2_content_2">Documents</h2>
+    <ul class="menu">
+     <li><a href="../en/install.html">Installation<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/install_3_0.html">Installation<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/users_manual.html">Users Manual<br>(Ver.3.1.4)</a></li>
+     <li><a href="../en/users_manual_3_0.html">Users Manual<br>(Ver.3.0.8)</a></li>
+     <li><a href="../en/programming.html">Programming Manual</a></li>
+
+<!--
+     <li><a href="../en/reference_manuals.html">Reference Manual</a></li>
+-->
+    </ul>
+
+   <h2 id="h2_content_3">Supplements</h2>
+    <ul class="menu">
+     <li><a href="../en/samples.html">Sample Movies</a></li>
+     <li><a href="../en/tips.html">Tips</a></li>
+     <li><a href="../en/troubleshooting.html">Troubleshooting<br>(Ver.3.1)</a></li>
+     <li><a href="../en/troubleshooting_3_0.html">Troubleshooting<br>(Ver.3.0)</a></li>
+     <li><!--<a href="../en/known_bugs.html">-->Known Bugs<!--</a>--></li>
+     <li><a href="../en/papers.html">Related Papers</a></li>
+    </ul>
+
+   <h2 id="h2_content_4">Support</h2>
+    <ul class="menu">
+     <li>
+       <a href="../en/forum.html">Users Forum</a></li>
+     </ul>
+
+
+   <h2 id="h2_content_5">Related Sites</h2>
+    <ul class="menu">
+     <li><a href="http://www.openrtm.org/openrtm/en" target="_blank">OpenRTM-aist</a></li>
+     <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/English/indexE.html" target="_blank">OpenHRP2 (prior version)</a></li>-->
+    </ul>
+
+   <h2 id="h2_content_2_0">Archived Docs</h2>
+    <ul class="menu">
+     <li><a href="../en/old_versions.html">OpenHRP3 Old Ver</a></li>
+
+</div></td>
+
+  <td class="ctable" valign="top">
+
+   <div id="body">
+
+
+<h2>Table of contents</h2>
+<ul>
+ <li><a href="#support_os">Supported OS</a></li>
+ <li><a href="#install">Installation Procedure</a></li>
+ <li><a href="#sample">Starting of GrxUI / Execution of a sample</a></li>
+ <li><a href="#original">How to configure the environment by yourself</a></li>
+</ul>
+
+<p>
+The following explains how to install OpenHRP3.
+</p>
+
+<h2 id="support_os">Supported OS</h2>
+
+<p>
+Currently, we have tested and confirmed that OpenHRP3's operation on following platforms.
+</p>
+
+<p>
+<ul>
+<li>OS</li>
+<ul>
+<li>Ubuntu Linux 10.04LTS to 12.10</li>
+<li>Windows XP, 7</li>
+</ul>
+<li>OpenRTM-aist 1.0.0</li>
+<li>OpenRTM-aist 1.1.0</li>
+<li>Eclipse 3.4SR2</li>
+</ul>
+</p>
+
+<p>
+When concerning Linux, OpenHRP3 may work on many Linux distributions other than 
+Ubuntu. Please refer the following page for detailed information about supported 
+platforms.
+</p>
+
+<ul>
+ <li><a href="./os.html">OpenHRP3 OS/Distribution Compatibility</a></li>
+</ul>
+
+<p>
+Each constitution of manual and distribution package is based on its officially 
+supported OS.Therefore if you use it on an OS other than we listed above, you will 
+be required a higher-level of knowledge about operating OS and programming. If you 
+are not familiar with that, please use an officially supported OS.
+</p>
+
+<p>
+As developers, we recommend to use Linux(Ubuntu) platform, since it is easier to 
+install and faster the operation of OpenHRP3 on Ubuntu, than Windows.
+</p>
+
+
+<h2 id="install">Installation Procedure</h2>
+
+<ul>
+ <li>Installation Guide for Ubuntu Linux
+ <ul>
+  <li><a href="./inst_ubu_src_3_1.html">Installation Guide from a source code </a></li>
+  <li><a href="./inst_ubu_bin_3_1.html">Installation Guide from a binary package</a></li>
+ </ul><br>
+ <li><a href="./inst_win_3_1.html">Installation Guide for Windows</a></li>
+</ul>
+
+<h2 id="sample">Starting of GrxUI / Execution of a sample</h2>
+<p>
+Initial setting for starting GrxUI on Eclipse is explained.</p>
+<ul>
+ <li><a href="./init_grxui.html">Initial setting for starting GrxUI</a></li>
+</ul>
+
+<p>
+After installaing OpenHRP3, it is better to run a sample simulation and check whether 
+the installation completed successfully.
+</p>
+<ul>
+ <li><a href="./simulate_sample.html">Run the sample simulation</a></li>
+</ul>
+
+<br>
+<h2 id="original">How to configure the environment by yourself</h2>
+<p>
+It is not necessarily, to proceed exactly as we instructed in these pages, but enough if 
+you have installed the required libraries and configured the compile properties properly.
+</p>
+<p>
+If you would like to configure the working environment freely by your self, or if 
+you want to run OpenHRP3, on an OS/distribution other than the officially 
+supported, please refer the pages below.
+</p>
+
+<ul>
+ <li><a href="./required_programs.html">Required Softwares to compile/run OpenHRP3</a>
+ <p>
+Here we describe how to configure the system environment, to make OpenHRP3 executed.
+To compile/run OpenHRP3, you have to install the softwares described here, on your OS.
+ </p>
+ </li>
+
+ <li><a href="./howtomake.html">Compiling OpenHRP3 using 'CMake' command</a>
+ <p>
+In this page we describe how to compile the OpenHRP3 source code and generate the executable 
+files, using "CMake" command.
+ </p>
+ </li>
+</ul>
+
+
+
+
+
+
+
+</div>
+  </td>
+ </tr>
+</table>
+</div>
+
+
+
+<hr class="full_hr" />
+
+
+
+<div id="footer">
+<table id="footertable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+ <td id="footerctable"><div id="sigunature">
+  Administrator: OpenHRP Team, 
+  Humanoid Research Group, Intelligent Systems Research Institute, AIST
+ </div></td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>
