@@ -4,6 +4,7 @@ python:
 - '2.7'
 env:
   global: 
+    - secure: "IZWiCi1xbZoeThO9pffPVgwh+fQaalAS+Uzx/6CgHjD6Gt5hicKFJICaZS/oAVMOwiOTiCnmw7f4IvkG9FZaEOLGstoAo3HQbKT5vybKghIcBzNw5RiFT1EJ44ds98cLuf4mpSMfNgDjEDaFmFMMNtlWGoFBard10w1RMHOm1vvl5I5y+bAKHPZcJtctb8QeQJgTrsuurJqlPZ/ICwy2lha7XDogf8l+bR7i5tf3BUoCeytEF2JjEk3Wnv6Uu4y0yQzWu70MMg6I+nVB6GuqNXkI7La1vzVUjUe79Bq7pri09OpD3FhWxmN0ak+rYErSJ2dTO+0G2qVGjmQ7P/4lq88PF6wDD93abkPk+vxLpmTtgr/U48fyjBhyL74Vxmo+wPkB4RKxqSW4NCrYH1lxSy0Cpl6X/xpxJOy/uxjfMfed4DXPiTmEC6mqAsjL2kXX53yxt2kJBcdFNbMiEl7H9zGZE8Wm915wAn92Kd9vAymu9FInzdLpXhtEZ17pU0sd+EFk+hFVMk7/AtktrMhbPZGSa8xB9jQfOb0fhLs0j6zz/BVWWi2BT6yiy73+UNXhIQDQ4PLJ8212nSmH1/c0DpR8oMmCNiFsELlIhAIF3+klsDflWAd8n7Kxj10KZE6X3jjA0yNNVfu7ZzOLGoVFthj4/T8JR9kAwssICxuPQwc="
 script: source .travis.sh
 after_success:
 - set +x
@@ -33,4 +34,3 @@ after_success:
 - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git
   push --quiet https://$GH_TOKEN@github.com/$TRAVIS_REPO_SLUG.git gh-pages; fi
 dd:
-  secure: DgXdvPskIpatet/MJLj4E2MyO0n+qnpofq191U9j2EmffRLOxlYkUu3PgROoa7Vj7Y3wlKZxRNYaa3WLRcLLQXcBpyWIKg4RllcHkzRuKDb03pqi3vi3oKiNIxQXWzZg0+rETwYX9rLLie92AJ8SOCpWXtN48KELhVZ4u13pwJuB3wihn0wmwEFdIUg3cBL1Aw/oQuxcnfTLdDAjW0dYG+PW5+fAm6EBruLuUlHy0gcQwRwr6LqTfIXotKcAO79W13gHe6kCYOQtEKpjewO/00QghhP34mFFwziSiNkOxzFlPwbinl/0fRSyuIyBzTufrM8dXfK+2Cupk9prFds6EgAQhrTrtVKwxwD2UC4F6xe8wVApRouNMl+g0HaTx9oEuDadDo03EQUDD7xIBW8C1kOO3vYi4q3LodNnYWoz+3jlBL7of6SiQPO+Ygep3T/CENcbfNlWNzR0nfX5S960zh7bs07QApuZwWeRR6EFmVzNHiLfVNlJ1n8RlcXmj4EBZ+Gpu6ug6sEiQWh9I97tq+p278cOL0zE7adUQiYY77AmcyDxUsacjFZgSD1aJ/WZdM8Y8CzaA1abqEPP0N1vraJpzQ4yIDR2dsr4R8MB4pafyhlFy4cfRgbKw0XsL/IMKQdC0GgjsjViMicU5medqI2zdTLEB2Qv5YW3QQi+k9M=
