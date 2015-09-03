@@ -16,8 +16,8 @@ after_success:
   - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cd ~/;            fi
   - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git clone --branch gh-pages https://github.com/$TRAVIS_REPO_SLUG doc;  fi
   - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cd doc;           fi
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cp -r $TRAVIS_BUILD_DIR/_build/html ./; fi
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cp -r $TRAVIS_BUILD_DIR/_build/html-ja ./; fi
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cp -r $TRAVIS_BUILD_DIR/jp ./; fi
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then cp -r $TRAVIS_BUILD_DIR/en ./; fi
   - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git status;                  fi
   - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git add -f .;                  fi
   - if [ "$TRAVIS_PULL_REQUEST" == "false" -a "$TRAVIS_BRANCH" == "master" ]; then git commit -m "Build documents from $TRAVIS_COMMIT" . ; fi
