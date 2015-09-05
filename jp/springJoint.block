@@ -169,3 +169,35 @@ static void setVirtualJointForces(BodyCustomizerHandle customizerHandle)
 <h2>サンプルの実行</h2>
 GrxUIを起動し、プロジェクトspringJoint.xmlをloadします。<br>
 シミュレーションを開始すると、床の上に落ちた後、上の箱が上下に震動します。<br>
+
+<h2>デフォルトのゴムブッシュ用customizer</h2>
+上記のゴムブッシュをシミュレートするcustomizerサンプルはspringJoint.xml用の記述例でした。
+任意の個数・任意の自由度のゴムブッシュをシミュレートするための
+"BushCustomizer"がデフォルトで読み込まれます。<br>
+"BushCustomizer"を使うには、
+<ol>
+  <li> 使用しているロボットモデルのVRMLファイルにブッシュ用関節を定義し、別ファイルとして保存する
+  <li> BushCustomizer用パラメータファイルを記述する (confファイル)
+  <li> BUSH_CUSTOMIZER_CONFIG_PATH環境変数で上記パラメータファイルのパスを指定する
+  <li> プロジェクトファイルのロボットモデルパスに、ゴムブッシュ有りVRMLを記述する（基本的にはそれ以外のロボットモデルパスはゴムブッシュなしのもので構いません）。
+</ol>
+とすることで利用できます。<br>
+
+2のパラメータファイルは以下のような情報を与えてください。
+<table border="1" align="center">
+<tr><td>robot_model_name</td><td>ロボットモデル名</td></tr>
+<tr><td>bush_config</td><td>N個のブッシュのパラメータを空白で区切り記述します。各パラメータは、カンマで"ブッシュ関節名,バネ係数,ダンパ係数"を指定します。slide関節、rotate関節でそれぞれバネ係数は[N/m],[Nm/rad]、ダンパ係数は[N/(m/s)],[Nm/(rad/s)]です。</td></tr>
+</table>
+
+サンプルとなる記述例は
+<ul>
+  <li> 1のVRMLファイルはsample/model/sample1_bush.wrl (sample1.wrlをゴムブッシュ追加したもの)
+  <li> 2のパラメータファイルはsample/example/customizer/sample1_bush_customizer_param.conf
+</ul>
+にあり、２足ロボットの両足首にそれぞれZ軸直動ブッシュ、X・Y軸回転ブッシュが定義されています。
+<code>
+<pre>
+robot_model_name: SampleRobot
+bush_config: RLEG_BUSH_Z,5.0e5,1.0e3 RLEG_BUSH_ROLL,1.0e3,2.5e1 RLEG_BUSH_PITCH,1.0e3,2.5e1 LLEG_BUSH_Z,5.0e5,1.0e3 LLEG_BUSH_ROLL,1.0e3,2.5e1 LLEG_BUSH_PITCH,1.0e3,2.5e1
+</pre>
+</code>
