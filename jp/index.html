@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 
@@ -81,8 +81,9 @@
     
    <h2 id="h2_content_5">リンク</h2>
     <ul class="menu">
-     <li><a href="https://openrtp.jp/excade/wiki/excade">動作パターン設計ツール</a></li>
      <li><a href="http://www.openrtm.org/openrtm/" target="_blank">OpenRTM-aist</a></li>
+     <li><a href="http://www.choreonoid.org">Choreonoid</a></li>
+     <li><a href="https://github.com/fkanehiro/hrpsys-base">hrpsys-base</a></li>
      <li><a href="http://unit.aist.go.jp/is/humanoid/hrp-4c/hrp-4c.html" target="_blank">HRP-4Cモデル</a></li>
      <li><a href="http://code.google.com/p/rtm-ros-robotics/" target="_blank">RTM-ROS 相互運用プロジェクト</a></li>
      <!--<li><a href="http://www.is.aist.go.jp/humanoid/openhrp/Japanese/" target="_blank">旧バージョン(OpenHRP2)</a></li>-->
@@ -105,68 +106,16 @@
 
 <p> 本サイトでは、ロボットソフトウェアプラットフォーム "OpenHRP3" の情報を提供します。</p>
 <br>
+<p>OpenHRP3のソースコード、バイナリパッケージ、本HPのソースコードは以下の場所から入手可能です。</p>
+ソースコード：<a href=https://github.com/fkanehiro/openhrp3>https://github.com/fkanehiro/openhrp3</a><br>
+バイナリパッケージ（GrxUIを除く）：<a href=https://launchpad.net/~hrg/+archive/ubuntu/daily>https://launchpad.net/~hrg/+archive/ubuntu/daily</a><br>
+本HPのソースコード：<a href=https://github.com/fkanehiro/openhrp3-doc>https://github.com/fkanehiro/openhrp3-doc</a><br>
+<p>
+Eclipseを用いたグラフィカルユーザインタフェースにGrxUIについては今後更新は行わない予定です。より軽快・高速に動作し、拡張性の高い<a href=www.choreonoid.org>Choreonoid</a>を使用されることをおすすめします。OpenHRP3はロボット制御ソフトウェア開発のための計算ライブラリとしての使用や<a href=https://github.com/fkanehiro/hrpsys-base>hrpsys-base</a>に含まれる簡易シミュレータのシミュレーションエンジンとして今後もメンテナンスを続けます。
+</p>
 
 <h1>お知らせ</h1>
-
-<h3>2014年8月7日</h3>
-<p>
-リポジトリをgithubに移行しました。<br>
-<a href="https://github.com/fkanehiro/openhrp3.git">https://github.com/fkanehiro/openhrp3.git</a><br>
-このサイトより、どなたでも最新のソースコードを入手できます。<br>
-また、今後はバグレポート、ご意見などはgithub上で承りますので、よろしくお願いします。<br>
-
-
-<h3>2012年12月25日</h3>
-<p>
-バージョン 3.1.4の配布を開始いたしました。<br>
-「ダウンロード」ページから、OpenHRP version 3.1.4がダウンロード可能です。<br>
-主な変更点は<a href="./release_note_ver_3_1_4.html">リリースノートVer.3.1.4</a>をご覧ください。<br>
-</p>
-
-<h3>2012年7月3日</h3>
-<p>
-バージョン 3.1.3の配布を開始いたしました。<br>
-「ダウンロード」ページから、OpenHRP version 3.1.3がダウンロード可能です。<br>
-主な変更点は<a href="./release_note_ver_3_1_3.html">リリースノートVer.3.1.3</a>をご覧ください。<br>
-</p>
-
-<h3>2012年2月20日</h3>
-<p>
-バージョン 3.1.2の配布を開始いたしました。<br>
-「ダウンロード」ページから、OpenHRP version 3.1.2がダウンロード可能です。<br>
-主な変更点は<a href="./release_note_ver_3_1_2.html">リリースノートVer.3.1.2</a>をご覧ください。<br>
-</p>
-
-<h3>2011年5月9日</h3>
-<p>
-バージョン 3.1.1の配布を開始いたしました。<br>
-「ダウンロード」ページから、OpenHRP version 3.1.1がダウンロード可能です。<br>
-主な変更点は<a href="./release_note_ver_3_1_1.html">リリースノートVer.3.1.1</a>をご覧ください。<br>
-バージョン 3.0.8の配布も開始しました。直動関節の表示に関する不具合を修正しています。　<br />
-</p>
-
-<h3>2010年9月21日</h3>
-<p>
-バージョン 3.1.0-Releaseの配布を開始いたしました。<br>
-「ダウンロード」ページから、OpenHRP version 3.1.0-Release がダウンロード可能です。<br>
-今バージョンでUbuntu10.04への対応、GUI周りの改善、不具合を修正をしました。<br>
-主な変更点は<a href="./release_note_ver_3_1_0_release.html">リリースノートVer.3.1.0-Release</a>をご覧ください。<br>
-</p>
-
-<h4>2010年6月23日</h4>
-<p>
-バージョン 3.0.7の配布を開始いたしました。<br>
-Ver.3.0.7はVer.3.0.6のバグフィクスです。jdk1.5でコンパイルできない不具合を修正しました。<br>
-「ダウンロード」ページから、OpenHRP version 3.0.7 がダウンロード可能です。<br>
-主な変更点は<a href="./release_note_ver_3_0_7.html">リリースノートVer.3_0_7</a>をご覧ください。<br>
-</p>
-
-<h4>2010年6月22日</h4>
-<p>
-バージョン 3.0.6の配布を開始いたしました。<br>
-今バージョンで3.0系もOpenRTM-aist-1.0.0-Releaseに対応しました。<br>
-主な変更点は<a href="./release_note_ver_3_0_6.html">リリースノートVer.3_0_6</a>をご覧ください。<br>
-</p>
+新しいお知らせはありません
 
 <div style="text-align:right"><a href="./old_announce.html">旧アナウンス情報</a></div>
 
